@@ -8,6 +8,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-06
+
 ### Added
 
 - PQC status per algorithm family (`vulnerable`, `safe`, `hybrid`, `not_applicable`), with
@@ -21,4 +23,5 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/commits/main
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/scanoss/crypto-pqc-dataset/releases/tag/v1.0.0
