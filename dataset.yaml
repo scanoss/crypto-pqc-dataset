@@ -1,0 +1,356 @@
+# Copyright (c) 2026 SCANOSS
+# SPDX-License-Identifier: MIT
+#
+# Post-quantum classification of algorithm families. The format is described in
+# README.md and every change is listed in CHANGELOG.md.
+version: 1.0.0
+source_vintage: nist-2026-10
+deadlines:
+  cnsa2:
+    source: "CNSA 2.0"
+    migrate_by: 2030
+    citation: "CNSA 2.0 — CNSA 1.0 asymmetric algorithms are deprecated for new National Security Systems equipment by 2030"
+  nist-ir8547-signature:
+    source: "NIST IR 8547"
+    deprecated_after: 2030
+    disallowed_after: 2035
+    citation: "NIST IR 8547 (October 2026), Table 2 — quantum-vulnerable digital signature algorithms are deprecated after 2030 and disallowed after 2035"
+  nist-ir8547-key-establishment:
+    source: "NIST IR 8547"
+    deprecated_after: 2030
+    disallowed_after: 2035
+    citation: "NIST IR 8547 (October 2026), Table 4 — quantum-vulnerable key-establishment schemes are deprecated after 2030 and disallowed after 2035"
+  nist-ir8547-signature-and-key-establishment:
+    source: "NIST IR 8547"
+    deprecated_after: 2030
+    disallowed_after: 2035
+    citation: "NIST IR 8547 (October 2026), Tables 2 and 4 — quantum-vulnerable digital signature and key-establishment algorithms are deprecated after 2030 and disallowed after 2035"
+families:
+  - name: "3DES"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["DES3", "DESEDE", "DESEDE3", "TDEA", "TDES", "TRIPLEDES"]
+  - name: "AES"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "ARIA"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "Argon2"
+    pqc_status: not_applicable
+    aliases: ["ARGON2D", "ARGON2I", "ARGON2ID"]
+  - name: "BLAKE2"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["BLAKE2B", "BLAKE2S"]
+  - name: "Blowfish"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "CAST5"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["CAST128"]
+  - name: "Camellia"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "ChaCha20"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["CHACHA", "CHACHA20POLY1305", "XCHACHA20", "XChaCha20-Poly1305"]
+  - name: "DES"
+    pqc_status: not_applicable
+  - name: "DH"
+    pqc_status: vulnerable
+    takes_parameter: true
+    aliases: ["DH1", "DH14", "DH15", "DH16", "DH17", "DH18", "DH2", "DH22", "DH23", "DH24", "DH5", "DHE", "DIFFIEHELLMAN", "FFDH"]
+    deadlines: [cnsa2, nist-ir8547-key-establishment]
+  - name: "DSA"
+    pqc_status: vulnerable
+    takes_parameter: true
+    deadlines: [cnsa2]
+  - name: "EC"
+    pqc_status: vulnerable
+    takes_parameter: true
+    aliases: ["ECC", "Edwards25519", "elliptic curve group element sampling", "hash-to-curve", "P-224", "P-256", "P-384", "P-521", "prime256v1", "secp224r1", "secp256r1", "secp384r1", "secp521r1"]
+    deadlines: [cnsa2, nist-ir8547-signature-and-key-establishment]
+  - name: "ECDH"
+    pqc_status: vulnerable
+    takes_parameter: true
+    aliases: ["crypto_box-XChaCha20Poly1305", "crypto_box-XSalsa20Poly1305", "CURVE25519", "CURVE448", "DH19", "DH20", "DH21", "DH31", "DH32", "ECDHE", "X25519", "X448"]
+    deadlines: [cnsa2, nist-ir8547-key-establishment]
+  - name: "ECDSA"
+    pqc_status: vulnerable
+    takes_parameter: true
+    aliases: ["ES256", "ES384", "ES512"]
+    deadlines: [cnsa2, nist-ir8547-signature]
+  - name: "EdDSA"
+    pqc_status: vulnerable
+    aliases: ["ED25519", "Ed25519ctx", "Ed25519ph", "ED448", "Ed448ph"]
+    deadlines: [cnsa2, nist-ir8547-signature]
+  - name: "ElGamal"
+    pqc_status: vulnerable
+    takes_parameter: true
+    deadlines: [cnsa2]
+  - name: "FN-DSA"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["FALCON"]
+  - name: "GOST"
+    pqc_status: not_applicable
+    aliases: ["GOST2814789", "MAGMA"]
+  - name: "HKDF"
+    pqc_status: not_applicable
+  - name: "HMAC"
+    pqc_status: not_applicable
+    aliases: ["HmacMD5", "HmacSHA1", "HmacSHA224", "HmacSHA256", "HmacSHA384", "HmacSHA512"]
+  - name: "KMAC"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "GMAC"
+    pqc_status: not_applicable
+  - name: "IDEA"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "Kuznyechik"
+    pqc_status: not_applicable
+  - name: "LMS"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["HSS", "HSSLMS"]
+  - name: "MD2"
+    pqc_status: not_applicable
+  - name: "MD4"
+    pqc_status: not_applicable
+  - name: "MD5"
+    pqc_status: not_applicable
+  - name: "ML-DSA"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["DILITHIUM"]
+  - name: "ML-KEM"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["KYBER"]
+  - name: "PBKDF2"
+    pqc_status: not_applicable
+  - name: "Poly1305"
+    pqc_status: not_applicable
+  - name: "RC2"
+    pqc_status: not_applicable
+  - name: "RC4"
+    pqc_status: not_applicable
+    aliases: ["ARCFOUR"]
+  - name: "RIPEMD-160"
+    pqc_status: not_applicable
+    aliases: ["RIPEMD"]
+  - name: "RSA"
+    pqc_status: vulnerable
+    takes_parameter: true
+    aliases: ["PS256", "PS384", "PS512", "RS256", "RS384", "RS512", "RSA-OAEP", "RSA-PSS", "RSA/EC", "RSA/ECC", "RSA/ECDSA", "RSAEncryption", "RSAES-OAEP", "RSAES-PKCS1", "RSAES-PKCS1-v1_5", "RSASSA-PKCS1-v1_5", "RSASSAPKCS1", "RSASSAPSS"]
+    deadlines: [cnsa2, nist-ir8547-signature-and-key-establishment]
+  - name: "SEED"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "SHA-1"
+    pqc_status: not_applicable
+    aliases: ["SHA", "SHA160"]
+  - name: "SHA-2"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["SHA2", "SHA224", "SHA256", "SHA384", "SHA512", "SHA512224", "SHA512256"]
+  - name: "SHA-3"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["SHA3", "SHA3224", "SHA3256", "SHA3384", "SHA3512", "SHAKE", "SHAKE128", "SHAKE256"]
+  - name: "SLH-DSA"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["SLHDSASHA2128F", "SLHDSASHA2128S", "SLHDSASHA2192F", "SLHDSASHA2192S", "SLHDSASHA2256F", "SLHDSASHA2256S", "SLHDSASHAKE128F", "SLHDSASHAKE128S", "SLHDSASHAKE192F", "SLHDSASHAKE192S", "SLHDSASHAKE256F", "SLHDSASHAKE256S", "SPHINCS", "SPHINCSPLUS"]
+  - name: "SM2"
+    pqc_status: vulnerable
+    aliases: ["SM2DSA"]
+    deadlines: [cnsa2]
+  - name: "SM3"
+    pqc_status: not_applicable
+    aliases: ["SM3HASH"]
+  - name: "SM4"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "Streebog"
+    pqc_status: not_applicable
+    takes_parameter: true
+    aliases: ["GOST3411-2012", "GOSTR3411", "GOSTR34112012"]
+  - name: "GOST R 34.11-94"
+    pqc_status: not_applicable
+    aliases: ["GOST3411", "GOST3411-94"]
+  - name: "XMSS"
+    pqc_status: safe
+    takes_parameter: true
+    aliases: ["XMSSMT"]
+  - name: "bcrypt"
+    pqc_status: not_applicable
+  - name: "scrypt"
+    pqc_status: not_applicable
+  # Families added beyond the first curated table.
+  - name: "BLS"
+    pqc_status: vulnerable
+    aliases: ["BLS12-381", "BLS12-381 hash-to-curve"]
+  # Vulnerable, but outside NIST's approved algorithms, so no NIST schedule.
+  - name: "GOST R 34.10"
+    pqc_status: vulnerable
+    aliases: ["GOST R 34.10-2001", "GOST R 34.10-2012", "GOST3410", "GOST3410-2001", "GOST3410-2012", "ECGOST3410", "ECGOST3410-2001", "ECGOST3410-2012"]
+  - name: "secp256k1"
+    pqc_status: vulnerable
+    aliases: ["ECDSA-secp256k1", "ES256K"]
+  - name: "Brainpool"
+    pqc_status: vulnerable
+    aliases: ["brainpoolP224r1", "brainpoolP224t1", "brainpoolP256r1", "brainpoolP256t1", "brainpoolP320r1", "brainpoolP320t1", "brainpoolP384r1", "brainpoolP384t1", "brainpoolP512r1", "brainpoolP512t1", "DH27", "DH28", "DH29", "DH30"]
+  - name: "Rabin"
+    pqc_status: vulnerable
+  - name: "Dual_EC_DRBG"
+    pqc_status: vulnerable
+  - name: "ECIES"
+    pqc_status: vulnerable
+  - name: "MQV"
+    pqc_status: vulnerable
+    aliases: ["ECMQV"]
+    deadlines: [nist-ir8547-key-establishment]
+  - name: "SM9"
+    pqc_status: vulnerable
+  - name: "Schnorr"
+    pqc_status: vulnerable
+    aliases: ["BIP340-Schnorr", "EC-Schnorr-DCRv0", "MuSig2-BIP327-secp256k1", "Schnorr-BIP340-secp256k1"]
+  # A classical and a post-quantum algorithm combined, when no row names the pair.
+  - name: "Hybrid"
+    pqc_status: hybrid
+    aliases: ["sntrup761x25519", "sntrup761x25519-sha512"]
+  - name: "X25519MLKEM768"
+    pqc_status: hybrid
+    aliases: ["mlkem768x25519", "mlkem768x25519-sha256", "X25519Kyber768", "X25519Kyber768Draft00"]
+  - name: "SecP256r1MLKEM768"
+    pqc_status: hybrid
+    aliases: ["SecP256r1Kyber768"]
+  - name: "SecP384r1MLKEM1024"
+    pqc_status: hybrid
+  - name: "Ascon"
+    pqc_status: not_applicable
+  - name: "BLAKE3"
+    pqc_status: not_applicable
+  - name: "CAST6"
+    pqc_status: not_applicable
+    aliases: ["CAST-256"]
+  - name: "CMAC"
+    pqc_status: not_applicable
+  - name: "CTR_DRBG"
+    pqc_status: not_applicable
+  - name: "Fortuna"
+    pqc_status: not_applicable
+  - name: "HMAC_DRBG"
+    pqc_status: not_applicable
+  - name: "PBES2"
+    pqc_status: not_applicable
+  - name: "PBKDF1"
+    pqc_status: not_applicable
+  - name: "RABBIT"
+    pqc_status: not_applicable
+  - name: "RC5"
+    pqc_status: not_applicable
+  - name: "RC6"
+    pqc_status: not_applicable
+  - name: "SNOW3G"
+    pqc_status: not_applicable
+  - name: "SP800-108"
+    pqc_status: not_applicable
+  - name: "Salsa20"
+    pqc_status: not_applicable
+    aliases: ["XSalsa20"]
+  - name: "Serpent"
+    pqc_status: not_applicable
+  - name: "SipHash"
+    pqc_status: not_applicable
+  - name: "Skipjack"
+    pqc_status: not_applicable
+  - name: "Twofish"
+    pqc_status: not_applicable
+    takes_parameter: true
+  - name: "UMAC"
+    pqc_status: not_applicable
+  - name: "Whirlpool"
+    pqc_status: not_applicable
+  - name: "Yarrow"
+    pqc_status: not_applicable
+  - name: "ZUC"
+    pqc_status: not_applicable
+  # PQC-relevant families that producers name only in algorithmName.
+  - name: "Pairing"
+    pqc_status: vulnerable
+    aliases: ["alt_bn128 pairing", "bilinear pairing", "bilinear pairing (final exponentiation)", "bilinear pairing (Miller loop)", "BLS12-377", "BLS12-377 pairing", "BLS12-381 pairing", "BN254", "BN254 (bn128) pairing", "BN254 pairing", "BN256", "BN_SNARK1 (alt_bn128) pairing", "Boneh-Boyen", "Boneh-Franklin IBE", "Camenisch-Lysyanskaya", "Edwards-80 pairing", "Kim-Lee-Oh", "KZG", "MNT4-298 pairing", "MNT6-298 pairing", "pairing", "Pointcheval-Sanders", "Powers-of-Tau", "SOK-AKA", "vBNN-IBS", "Zhang-Safavi-Susilo"]
+  - name: "zkSNARK"
+    pqc_status: vulnerable
+    aliases: ["BCTV14 zkSNARK", "FFLONK", "GM17 zkSNARK", "Groth16", "Groth16 zkSNARK", "PGHR13"]
+  - name: "Paillier"
+    pqc_status: vulnerable
+    aliases: ["BGN", "Benaloh", "Damgard-Jurik", "Subgroup Paillier"]
+  - name: "FrodoKEM"
+    pqc_status: safe
+    aliases: ["Frodo"]
+  - name: "HQC"
+    pqc_status: safe
+    takes_parameter: true
+  - name: "BIKE"
+    pqc_status: safe
+  - name: "NTRU"
+    pqc_status: safe
+    aliases: ["NTRU-LPRime", "SNTRU-Prime", "SNTRUP761"]
+  - name: "SABER"
+    pqc_status: safe
+  - name: "NewHope"
+    pqc_status: safe
+  - name: "McEliece"
+    pqc_status: safe
+    aliases: ["Classic-McEliece"]
+  - name: "X-Wing"
+    pqc_status: hybrid
+  - name: "Composite-ML-KEM"
+    pqc_status: hybrid
+    aliases: ["KitchenSink-ML-KEM-768-X25519", "ML-KEM-1024-P384", "ML-KEM-768-P256", "QSF-ML-KEM-1024-P384", "QSF-ML-KEM-768-P256"]
+  - name: "Composite-ML-DSA"
+    pqc_status: hybrid
+  # every CycloneDX 1.7 algorithmFamily value resolves.
+  - name: "X3DH"
+    pqc_status: vulnerable
+  - name: "SRP"
+    pqc_status: vulnerable
+  - name: "J-PAKE"
+    pqc_status: vulnerable
+  - name: "SPAKE2"
+    pqc_status: vulnerable
+  - name: "SPAKE2PLUS"
+    pqc_status: vulnerable
+  - name: "OPAQUE"
+    pqc_status: vulnerable
+  - name: "3GPP-XOR"
+    pqc_status: not_applicable
+  - name: "A5/1"
+    pqc_status: not_applicable
+  - name: "A5/2"
+    pqc_status: not_applicable
+  - name: "CMEA"
+    pqc_status: not_applicable
+  - name: "HC"
+    pqc_status: not_applicable
+    aliases: ["HC-128", "HC-256"]
+  - name: "Hash_DRBG"
+    pqc_status: not_applicable
+  - name: "IKE-PRF"
+    pqc_status: not_applicable
+  - name: "MILENAGE"
+    pqc_status: not_applicable
+  - name: "PBES1"
+    pqc_status: not_applicable
+  - name: "PBMAC1"
+    pqc_status: not_applicable
+  - name: "TUAK"
+    pqc_status: not_applicable
+  - name: "yescrypt"
+    pqc_status: not_applicable
