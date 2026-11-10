@@ -82,6 +82,10 @@ the first family that resolves:
 4. `certificateAlgorithm` and `signatureAlgorithm` (a certificate's signature algorithm)
 5. the same keys, in the same order, as compound names, see below
 
+A post-quantum family paired with a hybrid is the hybrid. A hybrid KEM such as `X25519MLKEM768` is
+usually reported with `algorithmFamily: ML-KEM`, since CycloneDX has no hybrid family, and the pair
+in `algorithmName` or the classical half in `classicalAlgorithm`; either one makes it `hybrid`.
+
 Minor versions may read more keys, and so classify findings an earlier version left unassessed; the
 order of the keys read today does not change. They may also add statuses, so handle a status you do
 not know.

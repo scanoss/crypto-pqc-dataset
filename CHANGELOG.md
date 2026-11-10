@@ -8,6 +8,12 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+### Fixed
+
+- A hybrid KEM reported with the `ML-KEM` family and the pair in `algorithmName` (or the classical
+  half in `classicalAlgorithm`) is now `hybrid`; it was `safe`, so no hybrid finding was ever
+  classified as one.
+
 ## [1.0.0] - 2026-11-06
 
 ### Added
