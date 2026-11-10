@@ -267,10 +267,21 @@ var familySources = []string{
 
 // Classify resolves a finding's family from its producer metadata, so every
 // consumer reads the same fields in the same order: each key as a spelling
-// first, then each as a compound name. Minor versions may read more keys, and
-// so classify findings an earlier version left unassessed; the order of the
-// keys read today does not change.
+// first, then each as a compound name. A post-quantum family paired with a
+// hybrid is the hybrid (see pairedHybrid). Minor versions may read more keys,
+// and so classify findings an earlier version left unassessed; the order of
+// the keys read today does not change.
 func Classify(metadata map[string]string) (Family, bool) {
+	f, ok := classifyIdentity(metadata)
+	if ok && f.PQCStatus == Safe {
+		if h, paired := pairedHybrid(metadata, f); paired {
+			return h, true
+		}
+	}
+	return f, ok
+}
+
+func classifyIdentity(metadata map[string]string) (Family, bool) {
 	for _, key := range familySources {
 		if v := metadata[key]; v != "" {
 			if f, _, ok := Resolve(v); ok {
@@ -282,6 +293,29 @@ func Classify(metadata map[string]string) (Family, bool) {
 		if f, ok := classifyCompound(metadata[key]); ok {
 			return f, true
 		}
+	}
+	return Family{}, false
+}
+
+// pairedHybrid reports the hybrid a post-quantum family is half of. Detection
+// rules give a hybrid KEM the post-quantum family, since CycloneDX has no hybrid
+// family, and put the pair in the name ("X25519MLKEM768") or the classical half
+// in classicalAlgorithm; the name is the more specific identity.
+func pairedHybrid(metadata map[string]string, postQuantum Family) (Family, bool) {
+	for _, key := range familySources {
+		v := metadata[key]
+		if v == "" {
+			continue
+		}
+		if f, _, ok := Resolve(v); ok && f.PQCStatus == Hybrid {
+			return f, true
+		}
+		if f, ok := classifyCompound(v); ok && f.PQCStatus == Hybrid {
+			return f, true
+		}
+	}
+	if classical, _, ok := Resolve(metadata["classicalAlgorithm"]); ok && classical.PQCStatus == Vulnerable {
+		return combine([]Family{postQuantum, classical}, false)
 	}
 	return Family{}, false
 }
