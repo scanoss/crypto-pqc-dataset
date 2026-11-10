@@ -8,6 +8,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-10
+
 ### Fixed
 
 - A hybrid KEM reported with the `ML-KEM` family and the pair in `algorithmName` (or the classical
@@ -29,5 +31,6 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/scanoss/crypto-pqc-dataset/releases/tag/v1.0.0
