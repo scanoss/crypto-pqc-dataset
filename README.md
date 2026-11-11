@@ -129,11 +129,16 @@ The data lives in [`dataset.yaml`](dataset.yaml) and is embedded at build time.
 | `families[].aliases` | Other spellings of the family. |
 | `families[].takes_parameter` | Whether a trailing number is a parameter, such as a key size. |
 | `families[].deadlines` | Keys of `deadlines` entries, at most one per source; a family gets only the schedules its source states for it. |
+| `families[].kind` | Vulnerable families only: `signature`, `key-agreement` or `dual`, what the family is used for. The migration path falls back to it when a finding does not say its operation. |
 
 A spelling may belong to one family only; loading fails otherwise. Tests require every CycloneDX 1.7
 `algorithmFamily` value except HPKE to resolve, so any other family a CycloneDX producer can emit is
 classified. That vocabulary, in `testdata/cyclonedx-1.7-algorithm-families.txt`, is the
 `algorithmFamily` enumeration of the CycloneDX 1.7 specification.
+
+The migration path reads [`migration.yaml`](migration.yaml): the path for a known primitive and
+operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT.
+Every row cites its source.
 
 ### Sources
 

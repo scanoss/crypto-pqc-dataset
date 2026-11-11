@@ -65,7 +65,20 @@ type Family struct {
 	// family; a family no source dates has none. A source may contribute more
 	// than one.
 	Deadlines []Deadline
+	// Kind is set on vulnerable families only: what the family is used for.
+	Kind Kind
 }
+
+// Kind is what a vulnerable family is used for. It decides the migration path
+// when a finding does not say its operation.
+type Kind string
+
+// Family kinds.
+const (
+	KindSignature    Kind = "signature"
+	KindKeyAgreement Kind = "key-agreement"
+	KindDual         Kind = "dual"
+)
 
 // datasetFile and familyRow are the dataset.yaml format; a row names its
 // deadlines by key, which Family resolves.
@@ -82,6 +95,7 @@ type familyRow struct {
 	TakesParameter bool     `yaml:"takes_parameter"`
 	Aliases        []string `yaml:"aliases"`
 	Deadlines      []string `yaml:"deadlines"`
+	Kind           Kind     `yaml:"kind"`
 }
 
 // semver is the X.Y.Z form the release tag and Version share.
@@ -154,7 +168,13 @@ func (row familyRow) family(file datasetFile) (Family, error) {
 	if !storedStatuses[row.PQCStatus] {
 		return Family{}, fmt.Errorf("invalid pqc_status %q", row.PQCStatus)
 	}
-	f := Family{Name: row.Name, PQCStatus: row.PQCStatus, TakesParameter: row.TakesParameter, Aliases: row.Aliases}
+	switch {
+	case row.PQCStatus == Vulnerable && row.Kind != KindSignature && row.Kind != KindKeyAgreement && row.Kind != KindDual:
+		return Family{}, fmt.Errorf("vulnerable family without a valid kind (%q)", row.Kind)
+	case row.PQCStatus != Vulnerable && row.Kind != "":
+		return Family{}, fmt.Errorf("kind %q on a family that is not vulnerable", row.Kind)
+	}
+	f := Family{Name: row.Name, PQCStatus: row.PQCStatus, TakesParameter: row.TakesParameter, Aliases: row.Aliases, Kind: row.Kind}
 	for _, key := range row.Deadlines {
 		d, ok := file.Deadlines[key]
 		if !ok {
