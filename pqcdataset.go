@@ -87,6 +87,7 @@ type datasetFile struct {
 	SourceVintage string              `yaml:"source_vintage"`
 	Deadlines     map[string]Deadline `yaml:"deadlines"`
 	Families      []familyRow         `yaml:"families"`
+	Reference     reference           `yaml:",inline"`
 }
 
 type familyRow struct {
