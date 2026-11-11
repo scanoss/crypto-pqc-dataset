@@ -27,7 +27,6 @@ c/nettle
 c/nss
 c/openiked
 c/opensc
-c/openssl
 c/phc-winner-argon2
 c/pqclean
 c/relic
@@ -64,7 +63,6 @@ go/aws-kms-v2
 go/azkeys
 go/btcec
 go/circl
-go/crypto
 go/crypto11
 go/decred-secp256k1
 go/edwards25519
@@ -76,7 +74,6 @@ go/gnark-crypto
 go/go-ethereum
 go/go-jose-v2
 go/go-jose-v3
-go/go-jose-v4
 go/go-libp2p
 go/golang-fips-openssl
 go/golang-jwt
@@ -109,7 +106,6 @@ java/aws-kms
 java/aws-kms-v1
 java/azure-keyvault
 java/azure-keyvault-certificates
-java/bouncycastle
 java/commons-codec
 java/cryptography-kotlin
 java/cryptography-kotlin-random
@@ -126,7 +122,6 @@ java/jasypt
 java/java-jwt
 java/jbcrypt
 java/jca
-java/jjwt
 java/jose4j
 java/jsch
 java/jwks-rsa
@@ -189,7 +184,6 @@ javascript/noble-ed25519
 javascript/noble-hashes
 javascript/noble-post-quantum
 javascript/noble-secp256k1
-javascript/node-forge
 javascript/node-seal
 javascript/node-ssh
 javascript/node-tls
@@ -228,7 +222,6 @@ python/boto3
 python/certbot
 python/coincurve
 python/crypt
-python/cryptography
 python/ecdsa
 python/eth-account
 python/eth-hash
@@ -254,7 +247,6 @@ python/py-ecc
 python/pycryptodome
 python/pycryptodomex
 python/pyfhel
-python/pyjwt
 python/pykmip
 python/pynacl
 python/pyopenssl
@@ -283,7 +275,6 @@ rust/aria
 rust/ark-bls12-381
 rust/ark-ec
 rust/ark-ff
-rust/aws-lc-rs
 rust/aws-lc-sys
 rust/aws-sdk-kms
 rust/azure_security_keyvault
@@ -356,7 +347,6 @@ rust/poly1305
 rust/pqcrypto
 rust/pqcrypto-kyber
 rust/rcgen
-rust/ring
 rust/ripemd
 rust/rsa
 rust/rusoto_kms

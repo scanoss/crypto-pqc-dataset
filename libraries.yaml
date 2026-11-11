@@ -4,4 +4,204 @@
 # PQC support per crypto_rules library: one entry per library, keyed by its
 # id (<lang>/<library>) and by its purls. The format is described in README.md. Libraries not researched yet are listed in
 # testdata/libraries-pending.txt.
-[]
+- library: c/openssl
+  purls: ["pkg:github/openssl/openssl"]
+  kem:
+    status: available
+    since: "3.5.0"
+    apis: [EVP_PKEY_CTX_new_from_name, EVP_PKEY_Q_keygen, EVP_KEM_fetch, EVP_PKEY_encapsulate_init, EVP_PKEY_decapsulate_init, SSL_CTX_set1_groups_list, SSL_set1_groups_list]
+    sources: ["https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md", "https://docs.openssl.org/3.5/man7/EVP_PKEY-ML-KEM/", "https://docs.openssl.org/3.5/man7/EVP_KEM-ML-KEM/"]
+    note: "Algorithm names ML-KEM-512, ML-KEM-768, ML-KEM-1024; TLS groups X25519MLKEM768 (default keyshare), SecP256r1MLKEM768, SecP384r1MLKEM1024, MLKEM512/768/1024. 3.5.0-alpha1 and 3.5.0-beta1 set aside. Enabled in a default build (no-ml-kem is opt-out)."
+  signature:
+    status: available
+    since: "3.5.0"
+    apis: [EVP_PKEY_CTX_new_from_name, EVP_PKEY_Q_keygen, EVP_SIGNATURE_fetch, EVP_PKEY_sign_message_init, EVP_PKEY_verify_message_init]
+    sources: ["https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md", "https://docs.openssl.org/3.5/man7/EVP_SIGNATURE-ML-DSA/"]
+    note: "Algorithm names ML-DSA-44, ML-DSA-65, ML-DSA-87. 3.5.0-alpha1 and 3.5.0-beta1 set aside. Enabled in a default build (no-ml-dsa is opt-out)."
+  checked_at: 2026-11-11
+- library: go/crypto
+  purls: []
+  kem:
+    status: available
+    since: "1.24"
+    apis: [mlkem.GenerateKey768, mlkem.GenerateKey1024, mlkem.NewDecapsulationKey768, mlkem.NewDecapsulationKey1024, mlkem.NewEncapsulationKey768, mlkem.NewEncapsulationKey1024, mlkem.EncapsulationKey768.Encapsulate, mlkem.EncapsulationKey1024.Encapsulate, mlkem.DecapsulationKey768.Decapsulate, mlkem.DecapsulationKey1024.Decapsulate, tls.X25519MLKEM768, tls.SecP256r1MLKEM768, tls.SecP384r1MLKEM1024, tls.MLKEM1024, hpke.MLKEM768, hpke.MLKEM1024, hpke.MLKEM768X25519, hpke.MLKEM768P256, hpke.MLKEM1024P384]
+    sources: ["https://go.dev/doc/go1.24", "https://pkg.go.dev/crypto/mlkem", "https://go.dev/doc/go1.26", "https://go.dev/doc/go1.27"]
+    note: "Go 1.24 removed the experimental pre-standard X25519Kyber768Draft00. X25519MLKEM768 is on by default when Config.CurvePreferences is nil (GODEBUG tlsmlkem=0 reverts). Go 1.26 added the hybrids tls.SecP256r1MLKEM768 and tls.SecP384r1MLKEM1024 (on by default) and ML-KEM KEMs in crypto/hpke; Go 1.27 added tls.MLKEM1024."
+  signature:
+    status: available
+    since: "1.27"
+    apis: [mldsa.GenerateKey, mldsa.MLDSA44, mldsa.MLDSA65, mldsa.MLDSA87, mldsa.NewPrivateKey, mldsa.NewPublicKey, mldsa.PrivateKey.Sign, mldsa.PrivateKey.SignDeterministic, mldsa.Verify, tls.MLDSA44, tls.MLDSA65, tls.MLDSA87, x509.MLDSA44, x509.MLDSA65, x509.MLDSA87]
+    sources: ["https://go.dev/doc/go1.27", "https://pkg.go.dev/crypto/mldsa"]
+    note: "Go 1.27 also added ML-DSA keys and signatures to crypto/x509 and ML-DSA SignatureScheme values for TLS 1.3 in crypto/tls."
+  checked_at: 2026-11-11
+- library: go/go-jose-v4
+  purls: [pkg:golang/github.com/go-jose/go-jose/v4]
+  kem:
+    status: none
+    sources: ["https://github.com/go-jose/go-jose/issues/271", "https://github.com/go-jose/go-jose/issues/194", "https://datatracker.ietf.org/doc/draft-ietf-jose-pqc-kem/06/"]
+    note: "No ML-KEM in JWE up to v4.1.9. The only ML-KEM request (#271) was closed as not planned by its requester, not by a maintainer; a maintainer's 2026-06 \"we're going to land PQC in v4\" in #194 asked for that request and was followed by ML-DSA only. draft-ietf-jose-pqc-kem-06 dropped JOSE and now covers COSE only."
+  signature:
+    status: available
+    since: "4.1.8"
+    apis: [jose.MLDSA44, jose.MLDSA65, jose.MLDSA87]
+    sources: ["https://github.com/go-jose/go-jose/releases/tag/v4.1.8", "https://github.com/go-jose/go-jose/pull/282", "https://github.com/go-jose/go-jose/blob/v4.1.8/mldsa.go"]
+    note: "ML-DSA-44/65/87 (RFC 9964) for JWS and AKP JWKs, with keys from Go's crypto/mldsa; requires building with Go 1.27 or later, older toolchains compile a stub that rejects ML-DSA keys."
+  checked_at: 2026-11-11
+- library: java/bouncycastle
+  purls:
+    - pkg:maven/org.bouncycastle/bcjmail-jdk18on
+    - pkg:maven/org.bouncycastle/bcmail-jdk15on
+    - pkg:maven/org.bouncycastle/bcmail-jdk18on
+    - pkg:maven/org.bouncycastle/bcmls-jdk18on
+    - pkg:maven/org.bouncycastle/bcpg-jdk18on
+    - pkg:maven/org.bouncycastle/bcpkix-jdk18on
+    - pkg:maven/org.bouncycastle/bcprov-jdk18on
+    - pkg:maven/org.bouncycastle/bctls-jdk18on
+  kem:
+    status: available
+    since: "1.79"
+    apis:
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMKeyPairGenerator.generateKeyPair
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMGenerator.<init>
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMExtractor.<init>
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters.ml_kem_512
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters.ml_kem_768
+      - org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters.ml_kem_1024
+      - org.bouncycastle.jcajce.spec.MLKEMParameterSpec.ml_kem_512
+      - org.bouncycastle.jcajce.spec.MLKEMParameterSpec.ml_kem_768
+      - org.bouncycastle.jcajce.spec.MLKEMParameterSpec.ml_kem_1024
+    sources:
+      - https://github.com/bcgit/bc-java/blob/r1rv79/docs/releasenotes.html
+      - https://github.com/bcgit/bc-java/tree/r1rv79/core/src/main/java/org/bouncycastle/pqc/crypto/mlkem
+      - https://github.com/bcgit/bc-java/blob/r1rv79/prov/src/main/java/org/bouncycastle/jcajce/spec/MLKEMParameterSpec.java
+      - https://github.com/bcgit/bc-java/blob/r1rv81/docs/releasenotes.html
+      - https://github.com/bcgit/bc-java/blob/r1rv81/tls/src/main/java/org/bouncycastle/tls/NamedGroup.java
+      - https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk15on/maven-metadata.xml
+    note: >-
+      1.78 shipped ML-KEM aligned with the FIPS 203 IPD draft (and Kyber since
+      1.72), set aside as pre-standard. BCJSSE (bctls) negotiates
+      X25519MLKEM768 / SecP256r1MLKEM768 under the IANA codepoints from 1.81.
+      bcmail-jdk15on stopped at 1.70: upgrading means moving to bcmail-jdk18on.
+  signature:
+    status: available
+    since: "1.79"
+    apis:
+      - org.bouncycastle.pqc.crypto.mldsa.MLDSAKeyPairGenerator.generateKeyPair
+      - org.bouncycastle.pqc.crypto.mldsa.MLDSASigner.<init>
+      - org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters.ml_dsa_44
+      - org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters.ml_dsa_65
+      - org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters.ml_dsa_87
+      - org.bouncycastle.jcajce.spec.MLDSAParameterSpec.ml_dsa_44
+      - org.bouncycastle.jcajce.spec.MLDSAParameterSpec.ml_dsa_65
+      - org.bouncycastle.jcajce.spec.MLDSAParameterSpec.ml_dsa_87
+    sources:
+      - https://github.com/bcgit/bc-java/blob/r1rv79/docs/releasenotes.html
+      - https://github.com/bcgit/bc-java/tree/r1rv79/core/src/main/java/org/bouncycastle/pqc/crypto/mldsa
+      - https://github.com/bcgit/bc-java/blob/r1rv79/prov/src/main/java/org/bouncycastle/jcajce/spec/MLDSAParameterSpec.java
+      - https://github.com/bcgit/bc-java/blob/r1rv81/docs/releasenotes.html
+      - https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk15on/maven-metadata.xml
+    note: >-
+      Dilithium (since 1.72) is pre-standard and set aside. MLDSASigner signs
+      and verifies through init(forSigning, ...). CMS SignedData with ML-DSA
+      from 1.81. bcmail-jdk15on stopped at 1.70: upgrading means moving to
+      bcmail-jdk18on.
+  checked_at: 2026-11-11
+- library: java/jjwt
+  purls: [pkg:maven/io.jsonwebtoken/jjwt-api]
+  kem:
+    status: none
+    sources: ["https://datatracker.ietf.org/doc/draft-ietf-jose-hpke-pq-pqt/"]
+    note: "No ML-KEM in 0.13.0 or main, and no issue or PR asks for it. draft-ietf-jose-hpke-pq-pqt registers ML-KEM for JWE, cited as context."
+  signature:
+    status: planned
+    sources: ["https://github.com/jwtk/jjwt/issues/1042", "https://github.com/jwtk/jjwt/pull/1072", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA in 0.13.0 (latest) or main. Issue #1042 (RFC 9964 ML-DSA for JOSE) is open; the maintainer welcomed a contribution, and community PR #1072 (AKP JWK for ML-DSA) is open awaiting his review. Until then, callers can plug in a custom SignatureAlgorithm (0.12.0+)."
+  checked_at: 2026-11-11
+- library: javascript/node-forge
+  purls: [pkg:npm/node-forge]
+  kem:
+    status: none
+    note: "No ML-KEM or Kyber in the source or changelog up to 1.4.3 (2026-11-03); no issue, PR or roadmap item mentions it."
+  signature:
+    status: none
+    note: "No ML-DSA or Dilithium in the source or changelog up to 1.4.3 (2026-11-03); signatures are RSA and Ed25519 only, and no issue, PR or roadmap item mentions ML-DSA."
+  checked_at: 2026-11-11
+- library: python/cryptography
+  purls: [pkg:pypi/cryptography]
+  kem:
+    status: available
+    since: "48.0.0"
+    apis:
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM768PrivateKey.generate
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM1024PrivateKey.generate
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM768PublicKey.encapsulate
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM768PrivateKey.decapsulate
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM1024PublicKey.encapsulate
+      - cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM1024PrivateKey.decapsulate
+      - cryptography.hazmat.primitives.hpke.KEM.MLKEM768
+      - cryptography.hazmat.primitives.hpke.KEM.MLKEM1024
+      - cryptography.hazmat.primitives.hpke.KEM.MLKEM768_X25519
+      - cryptography.hazmat.primitives.hpke.KEM.MLKEM1024_P384
+      - cryptography.hazmat.primitives.hpke.MLKEM768X25519PrivateKey
+      - cryptography.hazmat.primitives.hpke.MLKEM768X25519PublicKey
+      - cryptography.hazmat.primitives.hpke.MLKEM1024P384PrivateKey
+      - cryptography.hazmat.primitives.hpke.MLKEM1024P384PublicKey
+    sources:
+      - "https://cryptography.io/en/latest/changelog/#v48-0-0"
+      - "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/mlkem/"
+      - "https://cryptography.io/en/latest/hazmat/primitives/hpke/"
+    note: "The mlkem module and the HPKE ML-KEM KEMs first shipped in 47.0.0, but only when built against AWS-LC or BoringSSL; the PyPI wheels (OpenSSL) get them from 48.0.0, which supports OpenSSL 3.5.0 or later. ML-KEM-512 is not exposed."
+  signature:
+    status: available
+    since: "48.0.0"
+    apis:
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA44PrivateKey.generate
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA65PrivateKey.generate
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA87PrivateKey.generate
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA44PrivateKey.sign
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA65PrivateKey.sign
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA87PrivateKey.sign
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA44PublicKey.verify
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA65PublicKey.verify
+      - cryptography.hazmat.primitives.asymmetric.mldsa.MLDSA87PublicKey.verify
+    sources:
+      - "https://cryptography.io/en/latest/changelog/#v48-0-0"
+      - "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/mldsa/"
+    note: "The mldsa module first shipped in 47.0.0, but only when built against AWS-LC or BoringSSL; the PyPI wheels (OpenSSL) get it from 48.0.0, which supports OpenSSL 3.5.0 or later. X.509 signing with ML-DSA keys and sign_mu/verify_mu came in 49.0.0."
+  checked_at: 2026-11-11
+- library: python/pyjwt
+  purls: [pkg:pypi/pyjwt]
+  kem:
+    status: not_applicable
+    note: "JWS-only library: HMAC and signature algorithms, no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in 2.15.1 or main, and no issue, PR or discussion about it. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from PyJWT."
+  checked_at: 2026-11-11
+- library: rust/aws-lc-rs
+  purls: [pkg:cargo/aws-lc-rs]
+  kem:
+    status: available
+    since: "1.12.0"
+    apis: [aws_lc_rs.kem.DecapsulationKey.generate, aws_lc_rs.kem.EncapsulationKey.new, aws_lc_rs.kem.ML_KEM_512, aws_lc_rs.kem.ML_KEM_768, aws_lc_rs.kem.ML_KEM_1024]
+    sources: ["https://github.com/aws/aws-lc-rs/releases/tag/v1.12.0", "https://github.com/aws/aws-lc-rs/releases/tag/v1.10.0", "https://docs.rs/aws-lc-rs/1.12.0/aws_lc_rs/kem/index.html"]
+    note: "1.10.0 and 1.11.x shipped ML-KEM only in the unstable::kem module; 1.12.0 made the kem API stable and left unstable::kem as deprecated aliases."
+  signature:
+    status: available
+    since: "1.18.0"
+    apis: [aws_lc_rs.signature.PqdsaKeyPair.generate, aws_lc_rs.signature.ML_DSA_44_SIGNING, aws_lc_rs.signature.ML_DSA_65_SIGNING, aws_lc_rs.signature.ML_DSA_87_SIGNING, aws_lc_rs.signature.ML_DSA_44, aws_lc_rs.signature.ML_DSA_65, aws_lc_rs.signature.ML_DSA_87]
+    sources: ["https://github.com/aws/aws-lc-rs/releases/tag/v1.18.0", "https://github.com/aws/aws-lc-rs/releases/tag/v1.13.0", "https://docs.rs/aws-lc-rs/1.18.0/aws_lc_rs/signature/index.html"]
+    note: "1.13.0 to 1.17.x shipped ML-DSA only in unstable::signature behind the opt-in unstable feature; 1.18.0 moved it to aws_lc_rs::signature with no feature flag and left unstable::signature as deprecated aliases."
+  checked_at: 2026-11-11
+- library: rust/ring
+  purls: [pkg:cargo/ring]
+  kem:
+    status: none
+    sources: ["https://github.com/briansmith/ring/issues/1685"]
+    note: "No ML-KEM in ring 0.17.14 (latest on crates.io) nor on main (0.17.16000, 2026-11-07). Issue #1685 (add Kyber / ML-KEM) was closed as not planned on 2025-02-25."
+  signature:
+    status: none
+    sources: ["https://github.com/briansmith/ring/issues/1452"]
+    note: "No ML-DSA in ring 0.17.14 nor on main; issue #1452 (post-quantum algorithms) closed in favour of #1685, which covers KEM only and is not planned."
+  checked_at: 2026-11-11
