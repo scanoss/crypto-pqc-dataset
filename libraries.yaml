@@ -306,6 +306,95 @@
     sources: ["https://github.com/go-jose/go-jose/releases/tag/v4.1.8", "https://github.com/go-jose/go-jose/pull/282", "https://github.com/go-jose/go-jose/blob/v4.1.8/mldsa.go"]
     note: "ML-DSA-44/65/87 (RFC 9964) for JWS and AKP JWKs, with keys from Go's crypto/mldsa; requires building with Go 1.27 or later, older toolchains compile a stub that rejects ML-DSA keys."
   checked_at: 2026-11-11
+- library: java/aerogear-otp-java
+  purls: [pkg:maven/org.jboss.aerogear/aerogear-otp-java]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/apache-sshd
+  purls: [pkg:maven/org.apache.sshd/sshd-common, pkg:maven/org.apache.sshd/sshd-core]
+  kem:
+    status: available
+    since: "2.15.0"
+    apis: [org.apache.sshd.common.kex.BuiltinDHFactories.mlkem768x25519, org.apache.sshd.common.kex.BuiltinDHFactories.mlkem768nistp256, org.apache.sshd.common.kex.BuiltinDHFactories.mlkem1024nistp384]
+    sources: ["https://github.com/apache/mina-sshd/blob/sshd-2.15.0/CHANGES.md", "https://github.com/apache/mina-sshd/blob/sshd-2.15.0/sshd-core/src/main/java/org/apache/sshd/common/kex/BuiltinDHFactories.java", "https://github.com/apache/mina-sshd/blob/sshd-2.20.1/docs/standards.md", "https://github.com/apache/mina-sshd/issues/803"]
+    note: "Hybrid SSH key exchanges mlkem768x25519-sha256, mlkem768nistp256-sha256 and mlkem1024nistp384-sha384, in the default kex list ahead of the classical ones. Requires Bouncy Castle on the classpath, an optional dependency of sshd-core that Maven does not pull in; without it the methods are not offered. Issue #803 (ML-KEM from the JDK 24 provider) shipped only in the 3.0.0-M2 and later milestones, not in a stable release. sntrup761x25519-sha512@openssh.com (2.13.0) and sntrup761x25519-sha512 (2.14.0) are not ML-KEM. Pure ML-KEM is tracked in issue #928, not released."
+  signature:
+    status: planned
+    sources: ["https://github.com/apache/mina-sshd/issues/928", "https://github.com/apache/mina-sshd/pull/932", "https://github.com/apache/mina-sshd/pull/944", "https://datatracker.ietf.org/doc/draft-sfluhrer-ssh-mldsa/"]
+    note: "No ML-DSA in 2.20.1 (latest), 3.0.0-M7 or the dev_3.0 branch: host keys are RSA, DSA, ECDSA and Ed25519. In open issue #928 the maintainer agreed to review ML-DSA contributions on dev_3.0 (3.0 line); community PRs #932 and #944 (ML-DSA keys and signatures) are open. draft-sfluhrer-ssh-mldsa (individual draft) is cited as context."
+  checked_at: 2026-11-11
+- library: java/argon2-jvm
+  purls: [pkg:maven/de.mkammerer/argon2-jvm]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/aws-kms
+  purls: [pkg:maven/software.amazon.awssdk/kms]
+  kem:
+    status: available
+    since: "2.57.4"
+    apis:
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_KEM_512
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_KEM_768
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_KEM_1024
+      - software.amazon.awssdk.services.kms.model.EncapsulationAlgorithmSpec.ML_KEM
+      - software.amazon.awssdk.services.kms.KmsClient.encapsulate
+      - software.amazon.awssdk.services.kms.KmsClient.decapsulate
+    sources:
+      - "https://github.com/aws/aws-sdk-java-v2/releases/tag/2.57.4"
+      - "https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/kms/model/EncapsulationAlgorithmSpec.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-KEM keys (FIPS 203) in AWS KMS, created with KmsClient.createKey and key usage ENCAPSULATE_DECAPSULATE; released 2026-10-26. 2.57.4 also adds ML_KEM_512/768/1024 to DataKeyPairSpec. The key operations run in the KMS service, not in the SDK."
+  signature:
+    status: available
+    since: "2.31.63"
+    apis:
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_DSA_44
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_DSA_65
+      - software.amazon.awssdk.services.kms.model.KeySpec.ML_DSA_87
+      - software.amazon.awssdk.services.kms.model.SigningAlgorithmSpec.ML_DSA_SHAKE_256
+    sources:
+      - "https://github.com/aws/aws-sdk-java-v2/blob/master/changelogs/2.31.x-CHANGELOG.md"
+      - "https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/kms/model/KeySpec.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-DSA keys (FIPS 204) in AWS KMS, created with KmsClient.createKey and used through KmsClient.sign and KmsClient.verify with ML_DSA_SHAKE_256; released 2025-06-12. 2.31.63 also adds MessageType.EXTERNAL_MU for signing a precomputed mu. The key operations run in the KMS service, not in the SDK."
+  checked_at: 2026-11-11
+- library: java/aws-kms-v1
+  purls: [pkg:maven/com.amazonaws/aws-java-sdk-kms]
+  kem:
+    status: none
+    sources: ["https://github.com/aws/aws-sdk-java/blob/master/CHANGELOG.md", "https://aws.amazon.com/blogs/developer/announcing-end-of-support-for-aws-sdk-for-java-v1-x-on-december-31-2025/"]
+    note: "No ML-KEM in 1.12.797, the last release (2025-12-29): KeyAgreementAlgorithmSpec offers ECDH only and EncryptionAlgorithmSpec RSA OAEP, SM2PKE and SYMMETRIC_DEFAULT. AWS SDK for Java 1.x reached end-of-support on 2025-12-31 and receives no further releases."
+  signature:
+    status: none
+    sources: ["https://github.com/aws/aws-sdk-java/blob/master/CHANGELOG.md", "https://aws.amazon.com/blogs/developer/the-aws-sdk-for-java-1-x-is-in-maintenance-mode-effective-july-31-2024/", "https://aws.amazon.com/blogs/developer/announcing-end-of-support-for-aws-sdk-for-java-v1-x-on-december-31-2025/", "https://github.com/aws/aws-sdk-java-v2/blob/master/changelogs/2.31.x-CHANGELOG.md"]
+    note: "No ML-DSA in 1.12.797, the last release: KeySpec stops at RSA, ECC, HMAC, SM2 and SYMMETRIC_DEFAULT, and SigningAlgorithmSpec at RSASSA, ECDSA and SM2DSA. The SDK entered maintenance mode on 2024-07-31 with no API updates for existing services, so the KMS ML-DSA key specs never reached it, and it reached end-of-support on 2025-12-31. KMS ML-DSA is exposed by the successor, AWS SDK for Java 2.x (software.amazon.awssdk:kms), since 2.31.63."
+  checked_at: 2026-11-11
+- library: java/azure-keyvault
+  purls: [pkg:maven/com.azure/azure-security-keyvault-keys]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/keyvault/azure-security-keyvault-keys/CHANGELOG.md", "https://github.com/Azure/azure-rest-api-specs/blob/main/specification/keyvault/data-plane/Keys/main.tsp"]
+    note: "No ML-KEM or Kyber up to 4.12.1 (2026-11-02) or main; key types are RSA, EC and oct, and the Key Vault REST API through 2026-07-01-preview defines no ML-KEM key type or algorithm. No azure-sdk-for-java issue or PR mentions ML-KEM."
+  signature:
+    status: planned
+    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-net/pull/61580", "https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/keyvault/azure-security-keyvault-keys/CHANGELOG.md"]
+    note: "No ML-DSA in 4.12.1 (2026-11-02), 4.12.0-beta.2 or main. The Key Vault REST API added ML-DSA keys in preview version 2026-05-01-preview: key types AKP and AKP-HSM with ML-DSA-44, ML-DSA-65 and ML-DSA-87, sign/verify in pure or external-mu mode. No Java SDK release or PR targets it yet; the .NET Key Vault Keys SDK has an open PR (#61580) adding AKP keys."
+  checked_at: 2026-11-11
+- library: java/azure-keyvault-certificates
+  purls: [pkg:maven/com.azure/azure-security-keyvault-certificates]
+  kem:
+    status: none
+    sources: ["https://learn.microsoft.com/en-us/azure/key-vault/certificates/about-certificates"]
+    note: "Certificate client for the Azure Key Vault service: certificate keys are RSA or EC only (CertificateKeyType RSA, RSA-HSM, EC, EC-HSM in 4.11.1 and main), no ML-KEM, and no issue or PR asks for it."
+  signature:
+    status: none
+    sources: ["https://learn.microsoft.com/en-us/azure/key-vault/certificates/about-certificates", "https://learn.microsoft.com/en-us/azure/key-vault/keys/about-keys"]
+    note: "No ML-DSA in 4.11.1 (latest) or main: certificate policies take only RSA or EC keys (P-256, P-384, P-521, P-256K), as the Key Vault service supports, and no issue or PR asks for ML-DSA."
+  checked_at: 2026-11-11
 - library: java/bouncycastle
   purls:
     - pkg:maven/org.bouncycastle/bcjmail-jdk18on
@@ -365,6 +454,240 @@
       from 1.81. bcmail-jdk15on stopped at 1.70: upgrading means moving to
       bcmail-jdk18on.
   checked_at: 2026-11-11
+- library: java/commons-codec
+  purls: [pkg:maven/commons-codec/commons-codec]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/cryptography-kotlin
+  purls: [pkg:maven/dev.whyoleg.cryptography/cryptography-core-jvm]
+  kem:
+    status: planned
+    sources: ["https://github.com/whyoleg/cryptography-kotlin/issues/15", "https://github.com/whyoleg/cryptography-kotlin/blob/0.6.0/CHANGELOG.md"]
+    note: "No ML-KEM or Kyber in 0.6.0 (latest, 2026-04-02) or main (2026-10-13); key establishment is RSA-OAEP, ECDH, DH and XDH (X25519, X448). The maintainer's pinned roadmap issue #15 lists MLKEM (kem, PQC), together with a KEM operation and DHKEM, for 0.7.0, not yet released."
+  signature:
+    status: planned
+    sources: ["https://github.com/whyoleg/cryptography-kotlin/issues/15", "https://github.com/whyoleg/cryptography-kotlin/blob/0.6.0/CHANGELOG.md"]
+    note: "No ML-DSA or Dilithium in 0.6.0 (latest, 2026-04-02) or main (2026-10-13); signatures are RSA (PKCS#1 v1.5, PSS), ECDSA, DSA and EdDSA (Ed25519, Ed448). The maintainer's pinned roadmap issue #15 lists MLDSA (signature, PQC) for 0.7.0, not yet released."
+  checked_at: 2026-11-11
+- library: java/cryptography-kotlin-random
+  purls: [pkg:maven/dev.whyoleg.cryptography/cryptography-random-jvm]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/dss-cades
+  purls:
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-cades
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-document
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-model
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-spi
+  kem:
+    status: none
+    sources:
+      - https://github.com/esig/dss/blob/6.5.1/dss-enumerations/src/main/java/eu/europa/esig/dss/enumerations/EncryptionAlgorithm.java
+    note: >-
+      DSS is a signature library with no KEM API; key algorithms up to 6.5.1
+      (2026-10-14) and the develop branch are RSA, RSASSA-PSS, DSA, ECDSA,
+      X25519, X448 and EdDSA, with no ML-KEM or Kyber.
+  signature:
+    status: none
+    sources:
+      - https://github.com/esig/dss/blob/6.5.1/dss-enumerations/src/main/java/eu/europa/esig/dss/enumerations/SignatureAlgorithm.java
+      - https://github.com/esig/dss/releases/tag/6.5
+    note: >-
+      No ML-DSA or Dilithium in EncryptionAlgorithm / SignatureAlgorithm up to
+      6.5.1 or on the develop branch, and no release note mentions it. 6.5
+      updates its cryptographic suites to ETSI TS 119 312 v2.1.1 (DSS-3954),
+      which lists ML-DSA, but DSS cannot yet create or validate ML-DSA
+      signatures. The project tracks work in a Jira that needs a login; GitHub
+      issues are disabled.
+  checked_at: 2026-11-11
+- library: java/dss-pades
+  purls: [pkg:maven/eu.europa.ec.joinup.sd-dss/dss-document, pkg:maven/eu.europa.ec.joinup.sd-dss/dss-model, pkg:maven/eu.europa.ec.joinup.sd-dss/dss-pades, pkg:maven/eu.europa.ec.joinup.sd-dss/dss-spi]
+  kem:
+    status: none
+    note: "DSS is a signature creation and validation framework with no key-encapsulation API; no ML-KEM or Kyber in the source up to 6.5.1 (latest, 2026-10-14) or on develop (6.6-SNAPSHOT)."
+  signature:
+    status: none
+    sources: ["https://github.com/esig/dss/releases", "https://www.rfc-editor.org/rfc/rfc9881", "https://www.rfc-editor.org/rfc/rfc9882"]
+    note: "No ML-DSA in the EncryptionAlgorithm / SignatureAlgorithm enumerations up to 6.5.1 (latest, 2026-10-14) nor on develop (6.6-SNAPSHOT, 2026-11-04); signatures are RSA, RSASSA-PSS, DSA, ECDSA, plain ECDSA and EdDSA. No release note from 6.0 to 6.5.1 and no GitHub pull request mentions ML-DSA or post-quantum. RFC 9881 (ML-DSA in X.509) and RFC 9882 (ML-DSA in CMS) are context only."
+  checked_at: 2026-11-11
+- library: java/dss-xades
+  purls:
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-document
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-model
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-spi
+    - pkg:maven/eu.europa.ec.joinup.sd-dss/dss-xades
+  kem:
+    status: none
+    note: "DSS creates and validates AdES signatures and has no KEM API; no ML-KEM in 6.5.1 (latest) or the develop branch (6.6-SNAPSHOT)."
+  signature:
+    status: none
+    sources: ["https://github.com/esig/dss/releases", "https://ec.europa.eu/digital-building-blocks/sites/spaces/DIGITAL/pages/467109114/DSS+releases"]
+    note: "No ML-DSA in 6.5.1 (latest, October 2026) or the develop branch (6.6-SNAPSHOT): the EncryptionAlgorithm enum has no ML-DSA (its asymmetric values are RSA, RSASSA-PSS, DSA, ECDSA, PLAIN-ECDSA, EdDSA, X25519 and X448), and no release note mentions ML-DSA or post-quantum signatures. Issues are disabled on the GitHub mirror and no public roadmap item was found."
+  checked_at: 2026-11-11
+- library: java/favre-bcrypt
+  purls: [pkg:maven/at.favre.lib/bcrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/fusionauth-jwt
+  purls: [pkg:maven/io.fusionauth/fusionauth-jwt]
+  kem:
+    status: none
+    sources: ["https://github.com/FusionAuth/fusionauth-jwt/blob/7.0.0/src/main/java/io/fusionauth/jwt/domain/Algorithm.java", "https://github.com/FusionAuth/fusionauth-issues/issues/2636"]
+    note: "JWS-only library: no JWE or key agreement in 7.0.0 (latest) or main, and no issue or PR asks for ML-KEM. FusionAuth/fusionauth-issues#2636 links Kyber only as background for a signing-algorithm request."
+  signature:
+    status: planned
+    sources: ["https://github.com/FusionAuth/fusionauth-jwt/issues/63", "https://github.com/FusionAuth/fusionauth-jwt/issues/76", "https://github.com/FusionAuth/fusionauth-issues/issues/2636", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA in 7.0.0 (latest) or main: the Algorithm enum stops at RSA, RSA-PSS, ECDSA, EdDSA and HMAC, and JWK parsing knows no AKP key type. Issue #63, opened by FusionAuth staff, and #76 ask for post-quantum JWS signing and are open; the product tracker issue #2636 says to investigate and implement. RFC 9964 (ML-DSA for JOSE) is cited as context."
+  checked_at: 2026-11-11
+- library: java/gcp-kms
+  purls: [pkg:maven/com.google.cloud/google-cloud-kms]
+  kem:
+    status: available
+    since: "2.77.0"
+    apis:
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.ML_KEM_768
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.ML_KEM_1024
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.KEM_XWING
+      - com.google.cloud.kms.v1.KeyManagementServiceClient.decapsulate
+    sources:
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+      - "https://github.com/googleapis/google-cloud-java/releases/tag/v1.68.0"
+      - "https://docs.cloud.google.com/kms/docs/key-encapsulation-mechanisms"
+      - "https://cloud.google.com/blog/products/identity-security/future-proofing-data-integrity-quantum-safe-digital-signatures-in-cloud-kms"
+      - "https://cloud.google.com/blog/products/identity-security/pqc-in-plaintext-google-clouds-post-quantum-cryptography-roadmap"
+    note: "Cloud KMS key encapsulation (ML_KEM_768, ML_KEM_1024 and the X-Wing hybrid KEM_XWING, purpose KEY_ENCAPSULATION), Preview from 2025-09-23 and generally available since July 2026. The client ships the enum values and KeyManagementServiceClient.decapsulate since 2.77.0; encapsulation is done by the caller with the public key, not by Cloud KMS."
+  signature:
+    status: available
+    since: "2.62.0"
+    apis:
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44_EXTERNAL_MU
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65_EXTERNAL_MU
+      - com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87_EXTERNAL_MU
+      - com.google.cloud.kms.v1.KeyManagementServiceClient.asymmetricSign
+    sources:
+      - "https://github.com/googleapis/google-cloud-java/releases/tag/v1.53.0"
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+      - "https://docs.cloud.google.com/kms/docs/algorithms"
+      - "https://cloud.google.com/java/docs/reference/google-cloud-kms/latest/com.google.cloud.kms.v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm"
+    note: "ML-DSA keys (FIPS 204) in Cloud KMS, software protection level only; the key operations run in the service, not in the client. PQ_SIGN_ML_DSA_65 ships since 2.62.0 (2025-02-26), when the service feature was Preview; ML-DSA-44, ML-DSA-87 and the external-mu variants since 2.89.0 (2026-02-25). The service made ML-DSA GA on 2026-07-16, so any client from 2.62.0 on reaches it."
+  checked_at: 2026-11-11
+- library: java/googleauth
+  purls: [pkg:maven/com.warrenstrange/googleauth]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/hutool-crypto
+  purls: [pkg:maven/cn.hutool/hutool-crypto]
+  kem:
+    status: none
+    note: "No ML-KEM or Kyber in the source up to 5.8.48 (latest on Maven Central) or the v5-dev branch (5.8.49); the asymmetric API is RSA, SM2 and ECIES encryption, with no KEM API. No issue mentions ML-KEM, Kyber or post-quantum. The Hutool 6 (org.dromara.hutool) and 7 (cn.hutool.v7) development branches have none either."
+  signature:
+    status: none
+    note: "No ML-DSA or Dilithium in the source up to 5.8.48 or the v5-dev branch (5.8.49); SignAlgorithm lists RSA, DSA and ECDSA only, plus SM2. Sign(String) and KeyUtil.generateKeyPair(String) pass a JCA name to the installed provider (Bouncy Castle is an optional dependency) and add no ML-DSA API. No issue mentions ML-DSA, Dilithium or post-quantum."
+  checked_at: 2026-11-11
+- library: java/i2p-eddsa
+  purls: [pkg:maven/net.i2p.crypto/eddsa]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://github.com/str4d/ed25519-java/releases/tag/v0.3.0", "https://github.com/str4d/ed25519-java/issues/94"]
+    note: "No ML-DSA or Dilithium in 0.3.0 (latest release, 2018-05-05) or master (last commit 2019-08-04); the only algorithm is Ed25519, and no issue or PR mentions post-quantum algorithms. Issue #94 (open since 2025-02-19) asks for a release after 0.3.0 and whether anyone still reviews PRs, with no maintainer reply."
+  checked_at: 2026-11-11
+- library: java/jasypt
+  purls: [pkg:maven/org.jasypt/jasypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/java-jwt
+  purls: ["pkg:maven/com.auth0/java-jwt"]
+  kem:
+    status: none
+    sources: ["https://github.com/auth0/java-jwt/blob/4.6.2/README.md", "https://github.com/auth0/java-jwt/issues/340"]
+    note: "JWS-only library with no JWE, key agreement or KEM API up to 4.6.2 (2026-10-13), and no issue, PR or discussion mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/auth0/java-jwt/blob/4.6.2/CHANGELOG.md", "https://github.com/auth0/java-jwt/blob/4.6.2/README.md", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA or Dilithium in 4.6.2 (latest) or master; JWS algorithms are HMAC, RSA PKCS#1 v1.5, RSASSA-PSS (4.6.0) and ECDSA, and no issue, PR or discussion asks for ML-DSA. RFC 9964 defines ML-DSA for JOSE, cited as context. Meanwhile, a caller can plug in its own signature by subclassing the abstract Algorithm (protected constructor, abstract sign and verify)."
+  checked_at: 2026-11-11
+- library: java/jbcrypt
+  purls: [pkg:maven/org.mindrot/jbcrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/jca
+  purls: []
+  kem:
+    status: available
+    since: "24"
+    apis:
+      - java.security.KeyPairGenerator.getInstance
+      - javax.crypto.KEM.getInstance
+      - javax.crypto.KEM.newEncapsulator
+      - javax.crypto.KEM.newDecapsulator
+      - javax.crypto.KEM.Encapsulator.encapsulate
+      - javax.crypto.KEM.Decapsulator.decapsulate
+      - java.security.spec.NamedParameterSpec.ML_KEM_512
+      - java.security.spec.NamedParameterSpec.ML_KEM_768
+      - java.security.spec.NamedParameterSpec.ML_KEM_1024
+      - javax.net.ssl.SSLParameters.setNamedGroups
+    sources:
+      - https://openjdk.org/jeps/496
+      - https://www.oracle.com/java/technologies/javase/24-relnote-issues.html
+      - https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/security/spec/NamedParameterSpec.html
+      - https://openjdk.org/jeps/527
+      - https://www.oracle.com/java/technologies/javase/27-relnote-issues.html
+      - https://docs.oracle.com/en/java/javase/27/docs/specs/security/standard-names.html
+      - https://github.com/openjdk/jdk25u/commit/83e90e7d76e9ca804384d47a4d529e91f79d8981
+      - https://github.com/openjdk/jdk21u/commit/6de158a4cc3f099956af964392b0125bb5769376
+      - https://github.com/openjdk/jdk17u/commit/a52c6bd7ad79bc3e7ef28dcada121ceffcb80175
+    note: >-
+      SunJCE provides KeyPairGenerator, KEM and KeyFactory under the names
+      "ML-KEM", "ML-KEM-512", "ML-KEM-768" and "ML-KEM-1024" (default
+      ML-KEM-768); pre-standard Kyber is not implemented. JDK 27 (JEP 527)
+      adds the TLS 1.3 hybrid groups X25519MLKEM768 (first in the default
+      list), SecP256r1MLKEM768 and SecP384r1MLKEM1024, selected by name with
+      SSLParameters.setNamedGroups or jdk.tls.namedGroups; the 25.0.5 update
+      also ships them. The 21.0.13 and 17.0.21 updates backport ML-KEM by
+      algorithm name only, without the NamedParameterSpec constants or the
+      hybrid TLS groups.
+  signature:
+    status: available
+    since: "24"
+    apis:
+      - java.security.KeyPairGenerator.getInstance
+      - java.security.Signature.getInstance
+      - java.security.spec.NamedParameterSpec.ML_DSA_44
+      - java.security.spec.NamedParameterSpec.ML_DSA_65
+      - java.security.spec.NamedParameterSpec.ML_DSA_87
+    sources:
+      - https://openjdk.org/jeps/497
+      - https://www.oracle.com/java/technologies/javase/24-relnote-issues.html
+      - https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/security/spec/NamedParameterSpec.html
+      - https://www.oracle.com/java/technologies/javase/26-relnote-issues.html
+      - https://github.com/openjdk/jdk21u/commit/ae88cd99b00226bf1f237869865adcbe31b66503
+      - https://github.com/openjdk/jdk17u/commit/e3fd235d5866de965c63e1746a1cea4e1cdb3c0e
+    note: >-
+      The SUN provider offers KeyPairGenerator, Signature and KeyFactory under
+      the names "ML-DSA", "ML-DSA-44", "ML-DSA-65" and "ML-DSA-87" (default
+      ML-DSA-65); pre-standard Dilithium is not implemented, and JEP 497 leaves
+      out HashML-DSA and context strings. JDK 26 adds ML-DSA signed JARs (jarsigner and the
+      JarSigner API). SunJSSE has no ML-DSA TLS signature scheme up to JDK 27.
+      The 21.0.13 and 17.0.21 updates backport ML-DSA by algorithm name only,
+      without the NamedParameterSpec constants.
+  checked_at: 2026-11-11
 - library: java/jjwt
   purls: [pkg:maven/io.jsonwebtoken/jjwt-api]
   kem:
@@ -375,6 +698,351 @@
     status: planned
     sources: ["https://github.com/jwtk/jjwt/issues/1042", "https://github.com/jwtk/jjwt/pull/1072", "https://www.rfc-editor.org/rfc/rfc9964"]
     note: "No ML-DSA in 0.13.0 (latest) or main. Issue #1042 (RFC 9964 ML-DSA for JOSE) is open; the maintainer welcomed a contribution, and community PR #1072 (AKP JWK for ML-DSA) is open awaiting his review. Until then, callers can plug in a custom SignatureAlgorithm (0.12.0+)."
+  checked_at: 2026-11-11
+- library: java/jose4j
+  purls: [pkg:maven/org.bitbucket.b_c/jose4j]
+  kem:
+    status: none
+    sources: ["https://bitbucket.org/b_c/jose4j/src/master/Release%20Notes.md", "https://datatracker.ietf.org/doc/draft-ietf-jose-hpke-pq-pqt/02/", "https://developer.atlassian.com/cloud/bitbucket/changelog/"]
+    note: "No ML-KEM in 0.9.7 (latest, 2026-09-09) or master: JWE key management offers RSA, ECDH-ES (incl. X25519/X448), AES and PBES2 only, and no open or merged PR asks for it. The project's Bitbucket issue tracker has been removed, so no issue can be searched. draft-ietf-jose-hpke-pq-pqt-02 registers ML-KEM for JWE, cited as context."
+  signature:
+    status: none
+    sources: ["https://bitbucket.org/b_c/jose4j/src/master/Release%20Notes.md", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA or AKP JWK in 0.9.7 (latest, 2026-09-09) or master; the newest JWS algorithm family is EdDSA (0.9.0). No open or merged PR asks for it. jose4j relies solely on the JCA, but its own API exposes no ML-DSA algorithm identifier. RFC 9964 defines ML-DSA for JOSE, cited as context."
+  checked_at: 2026-11-11
+- library: java/jsch
+  purls: []
+  kem:
+    status: available
+    since: "0.2.22"
+    apis: [com.jcraft.jsch.JSch.getSession, com.jcraft.jsch.JSch.setConfig, com.jcraft.jsch.Session.setConfig]
+    sources: ["https://github.com/mwiede/jsch/releases/tag/jsch-0.2.22", "https://github.com/mwiede/jsch/blob/jsch-0.2.22/src/main/java/com/jcraft/jsch/JSch.java", "https://github.com/mwiede/jsch/releases/tag/jsch-0.2.25", "https://github.com/mwiede/jsch/blob/jsch-0.2.25/src/main/java/com/jcraft/jsch/JSch.java", "https://github.com/mwiede/jsch/issues/1078"]
+    note: "Hybrid SSH key exchange mlkem768x25519-sha256 mlkem768nistp256-sha256 and mlkem1024nistp384-sha384, picked with setConfig(\"kex\", ...) or KexAlgorithms in an OpenSSH config. Shipped by the maintained fork com.github.mwiede:jsch; the original com.jcraft:jsch stopped at 0.1.55 (2018) without it, so upgrading means moving to the fork. 0.2.22 added them, running on the optional BouncyCastle bcprov-jdk18on dependency; from 0.2.25 mlkem768x25519-sha256 is first in the default list and the ML-KEM half uses the JDK's JEP 496 on Java 24 or later."
+  signature:
+    status: planned
+    sources: ["https://github.com/mwiede/jsch/issues/1078", "https://datatracker.ietf.org/doc/draft-sfluhrer-ssh-mldsa/"]
+    note: "No ML-DSA in 2.28.8 (latest) or master. In issue #1078 the fork's main contributor said he follows the IETF SSHM discussions on PQC signatures and will likely add ML-DSA, pure, hybrid or both. draft-sfluhrer-ssh-mldsa-08 (individual draft, ssh-mldsa-44/65/87) is cited as context."
+  checked_at: 2026-11-11
+- library: java/jwks-rsa
+  purls: [pkg:maven/com.auth0/jwks-rsa]
+  kem:
+    status: none
+    sources: ["https://github.com/auth0/jwks-rsa-java/blob/0.24.2/src/main/java/com/auth0/jwk/Jwk.java"]
+    note: "No ML-KEM or Kyber in 0.24.2 (latest, 2026-10-29) or main; Jwk.getPublicKey builds only RSA and EC (P-256/384/521) public keys, and no issue, PR or discussion mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/auth0/jwks-rsa-java/blob/0.24.2/src/main/java/com/auth0/jwk/Jwk.java", "https://github.com/auth0/jwks-rsa-java/blob/0.24.2/CHANGELOG.md", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA or Dilithium in 0.24.2 (latest) or main: Jwk.getPublicKey accepts only kty RSA and EC and rejects any other key type, and no issue, PR or discussion asks for ML-DSA or AKP keys. RFC 9964 (ML-DSA for JOSE) is cited as context."
+  checked_at: 2026-11-11
+- library: java/kalium
+  purls: [pkg:maven/org.abstractj.kalium/kalium]
+  kem:
+    status: none
+    sources: ["https://github.com/abstractj/kalium", "https://repo1.maven.org/maven2/org/abstractj/kalium/kalium/maven-metadata.xml"]
+    note: "No ML-KEM in 0.8.0 (May 2018, the last release) or master, and no issue or PR asks for it; the repository is archived. Its Box and SealedBox use Curve25519 key agreement through libsodium, and its API binds only the libsodium functions it wraps."
+  signature:
+    status: none
+    sources: ["https://github.com/abstractj/kalium", "https://repo1.maven.org/maven2/org/abstractj/kalium/kalium/maven-metadata.xml"]
+    note: "No ML-DSA in 0.8.0 (May 2018, the last release) or master, and no issue or PR asks for it; the repository is archived. Its SigningKey and VerifyKey offer Ed25519 only."
+  checked_at: 2026-11-11
+- library: java/lambdaworks-scrypt
+  purls: [pkg:maven/com.lambdaworks/scrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/lazysodium
+  purls: ["pkg:maven/com.goterl/lazysodium-java"]
+  kem:
+    status: none
+    sources: ["https://github.com/terl/lazysodium-java/releases/tag/5.2.0", "https://github.com/terl/lazysodium-java/tree/5.2.0/src/main/java/com/goterl/lazysodium/interfaces", "https://github.com/jedisct1/libsodium/blob/master/ChangeLog"]
+    note: "No ML-KEM in 5.2.0 (2025-06-17, latest) or master, and no issue or PR proposes it. Lazysodium wraps libsodium through JNA: 5.2.0 bundles libsodium 1.0.20 and its interfaces declare no crypto_kem_* functions. libsodium itself added ML-KEM768 (crypto_kem_mlkem768_*) and the X-Wing hybrid (crypto_kem_*) in 1.0.22; lazysodium does not expose them."
+  signature:
+    status: none
+    sources: ["https://github.com/terl/lazysodium-java/tree/5.2.0/src/main/java/com/goterl/lazysodium/interfaces", "https://github.com/jedisct1/libsodium/blob/master/ChangeLog"]
+    note: "No ML-DSA in 5.2.0 (latest) or master, and no issue or PR proposes it. Lazysodium's Sign interface is Ed25519 only, the bundled libsodium 1.0.20 and the latest release 1.0.22 have no ML-DSA; libsodium master added ML-DSA-44 on 2026-10-15, unreleased, and lazysodium does not expose it."
+  checked_at: 2026-11-11
+- library: java/netty
+  purls: ["pkg:maven/io.netty/netty-handler"]
+  kem:
+    status: available
+    since: "4.2.8"
+    apis: [io.netty.handler.ssl.OpenSslContextOption.GROUPS, io.netty.handler.ssl.SslContextBuilder.option]
+    sources:
+      - https://netty.io/news/2025/12/11/4-2-8.html
+      - https://github.com/netty/netty/pull/15830
+      - https://github.com/netty/netty/blob/netty-4.2.8.Final/handler/src/main/java/io/netty/handler/ssl/OpenSsl.java
+      - https://github.com/netty/netty/blob/netty-4.2.8.Final/handler/src/main/java/io/netty/handler/ssl/OpenSslContextOption.java
+      - https://github.com/netty/netty/pull/17898
+    note: >-
+      TLS hybrid group X25519MLKEM768, only with the native provider
+      (SslProvider.OPENSSL or OPENSSL_REFCNT) backed by a netty-tcnative
+      BoringSSL or AWS-LC build, an optional dependency of netty-handler.
+      Since 4.2.8 Netty puts X25519MLKEM768 first in its default groups for
+      those builds; a caller selects groups by name through
+      SslContextBuilder.option(OpenSslContextOption.GROUPS, ...). GROUPS
+      exists since 4.1.115 and 4.2.0 and passes any name to the native
+      library, and an X25519MLKEM768 test through it dates from 4.2.5; both
+      set aside because Netty itself did not handle ML-KEM. The 4.1 line
+      (latest 4.1.140) has GROUPS but no ML-KEM default. Before 4.2.20 the
+      lowercase name x25519mlkem768 was not converted and failed; the
+      uppercase X25519MLKEM768 works. The JDK provider (the default without
+      netty-tcnative) has no Netty group selector and uses the JDK's own
+      named groups.
+  signature:
+    status: none
+    sources:
+      - https://github.com/netty/netty/blob/netty-4.2.20.Final/handler/src/main/java/io/netty/handler/ssl/SslContext.java
+      - https://github.com/netty/netty/pull/14741
+    note: >-
+      No ML-DSA API in netty-handler up to 4.2.20 and 4.1.140 (2026-11-02,
+      latest), and no issue or PR proposes one. PEM private keys given to
+      SslContextBuilder are parsed as RSA, DSA or EC only; TLS signatures
+      are left to the TLS provider. ML-DSA certificate generation (PR
+      #14741) is in netty-pkitesting, a separate test artifact.
+  checked_at: 2026-11-11
+- library: java/nimbus-jose-jwt
+  purls: [pkg:maven/com.nimbusds/nimbus-jose-jwt]
+  kem:
+    status: planned
+    sources: ["https://connect2id.com/blog/nimbus-jose-jwt-roadmap-2026", "https://bitbucket.org/connect2id/nimbus-jose-jwt/pull-requests/128", "https://datatracker.ietf.org/doc/draft-ietf-jose-hpke-pq-pqt/"]
+    note: "No ML-KEM in 10.10 (latest, 2026-09-17) or master. The maintainers' 2026 roadmap (2025-12-17) lists HPKE and ML-KEM for JWE; community PR #128 (ML-KEM JWE encrypter and decrypter over BouncyCastle) is open, reviewed by the maintainer in July 2025, unmerged. It followed draft-ietf-jose-pqc-kem, whose -06 now covers COSE only; draft-ietf-jose-hpke-pq-pqt registers ML-KEM for JWE, cited as context."
+  signature:
+    status: planned
+    sources: ["https://bitbucket.org/connect2id/nimbus-jose-jwt/pull-requests/135", "https://bitbucket.org/connect2id/nimbus-jose-jwt/pull-requests/134", "https://connect2id.com/blog/nimbus-jose-jwt-roadmap-2026", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in 10.10 (latest, 2026-09-17) or master. The maintainer's PR #135 (branch ml-dsa-dev, open since 2026-10-07) reworks community PR #134 into ML-DSA-44/65/87 JWS and AKP JWKs (RFC 9964) and lists it under the unreleased 11.0 in its changelog; on 2026-10-07 he said he is getting it into shape for an official release. The 2026 roadmap also lists ML-DSA and SLH-DSA for JWS."
+  checked_at: 2026-11-11
+- library: java/oauth2-oidc-sdk
+  purls: [pkg:maven/com.nimbusds/oauth2-oidc-sdk]
+  kem:
+    status: none
+    sources: ["https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/11.39/CHANGELOG.txt", "https://connect2id.com/blog/nimbus-jose-jwt-roadmap-2026"]
+    note: "No ML-KEM in 11.39 (latest, 2026-11-05) or master (12.0, unreleased). JWE is delegated to nimbus-jose-jwt (10.9.1 in 11.39), which has no ML-KEM in 10.10 (latest, 2026-09-17) or master either; its 2026 roadmap lists ML-KEM for JWE, a plan of the delegate, not of this SDK. The Bitbucket issue tracker can no longer be searched."
+  signature:
+    status: none
+    sources: ["https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/11.39/CHANGELOG.txt", "https://connect2id.com/blog/nimbus-jose-jwt-roadmap-2026", "https://www.rfc-editor.org/rfc/rfc9964"]
+    note: "No ML-DSA in 11.39 (latest, 2026-11-05) or master (12.0, unreleased). JWS signing (private_key_jwt, ID tokens) is delegated to nimbus-jose-jwt, which has no ML-DSA in 10.10 (latest, 2026-09-17) or master; its 2026 roadmap lists ML-DSA for JWS, a plan of the delegate, not of this SDK. RFC 9964 defines ML-DSA for JOSE, cited as context."
+  checked_at: 2026-11-11
+- library: java/okhttp
+  purls: ["pkg:maven/com.squareup.okhttp3/okhttp"]
+  kem:
+    status: planned
+    sources:
+      - https://github.com/lysine-dev/okhttp/issues/9497
+      - https://github.com/lysine-dev/okhttp/pull/9517
+      - https://github.com/lysine-dev/okhttp/blob/parent-5.5.1/okhttp/src/commonJvmAndroid/kotlin/okhttp3/ConnectionSpec.kt
+      - https://openjdk.org/jeps/527
+    note: >-
+      No ML-KEM API in 5.5.1 (2026-10-22, latest) or main (2026-11-10):
+      ConnectionSpec sets only TLS versions and cipher suites, and the TLS
+      key exchange groups are left to the platform TLS provider (JDK,
+      Conscrypt, Android). Issue #9497 asks for named groups in
+      ConnectionSpec to select X25519MLKEM768; the open PR #9517, by an
+      OkHttp collaborator, adds NamedGroup and
+      ConnectionSpec.Builder.namedGroups. Without it, a client on JDK 27 or
+      later offers X25519MLKEM768 by default (JEP 527) with no OkHttp change.
+  signature:
+    status: none
+    sources:
+      - https://github.com/lysine-dev/okhttp/blob/parent-5.5.1/CHANGELOG.md
+      - https://github.com/lysine-dev/okhttp/blob/parent-5.5.1/okhttp/src/commonJvmAndroid/kotlin/okhttp3/CertificatePinner.kt
+    note: >-
+      No ML-DSA in 5.5.1 (latest) or main, and no issue or PR proposes it.
+      OkHttp signs nothing; certificate chains are verified by the platform
+      trust manager, and CertificatePinner pins SHA-256 or SHA-1 hashes of
+      the certificate's public key, whatever its algorithm.
+  checked_at: 2026-11-11
+- library: java/password4j
+  purls: [pkg:maven/com.password4j/password4j]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/pgpainless
+  purls: [pkg:maven/org.pgpainless/pgpainless-core]
+  kem:
+    status: none
+    sources: ["https://github.com/pgpainless/pgpainless/blob/2.0.4/pgpainless-core/src/main/kotlin/org/pgpainless/algorithm/PublicKeyAlgorithm.kt", "https://github.com/pgpainless/pgpainless/blob/2.0.4/CHANGELOG.md", "https://www.rfc-editor.org/rfc/rfc9980"]
+    note: "No ML-KEM in 2.0.4 (latest) or main: PublicKeyAlgorithm lists only classical algorithms (RSA, ElGamal, DSA, ECDH, ECDSA, EdDSA, X25519, X448, Ed25519, Ed448), and no issue or PR asks for it. RFC 9980 (Post-Quantum Cryptography in OpenPGP) defines the ML-KEM-768+X25519 and ML-KEM-1024+X448 composites, cited as context. PGPainless builds on BouncyCastle (bcpg-jdk18on); its own API does not expose them."
+  signature:
+    status: none
+    sources: ["https://github.com/pgpainless/pgpainless/blob/2.0.4/pgpainless-core/src/main/kotlin/org/pgpainless/algorithm/PublicKeyAlgorithm.kt", "https://github.com/pgpainless/pgpainless/blob/2.0.4/CHANGELOG.md", "https://www.rfc-editor.org/rfc/rfc9980"]
+    note: "No ML-DSA in 2.0.4 (latest) or main, and no issue or PR asks for it. RFC 9980 defines the ML-DSA-65+Ed25519 and ML-DSA-87+Ed448 composites, cited as context. PGPainless builds on BouncyCastle (bcpg-jdk18on); its own API does not expose them."
+  checked_at: 2026-11-11
+- library: java/santuario
+  purls: [pkg:maven/org.apache.santuario/xmlsec]
+  kem:
+    status: planned
+    sources: ["https://issues.apache.org/jira/browse/SANTUARIO-633", "https://issues.apache.org/jira/browse/SANTUARIO-634", "https://github.com/apache/santuario-xml-security-java/pull/652", "https://www.w3.org/TR/xmlsec-generic-hybrid/", "https://datatracker.ietf.org/doc/draft-eastlake-rfc9231bis-xmlsec-uris/"]
+    note: "No ML-KEM in 4.0.4 (latest) or main. SANTUARIO-633 and SANTUARIO-634 are open and assigned to a committer; PR #652 (ML-KEM-512/768/1024 key transport through the W3C Generic Hybrid Cipher structure) is open, under review. Its algorithm URIs come from draft-eastlake-rfc9231bis-xmlsec-uris-09, not yet an RFC."
+  signature:
+    status: planned
+    sources: ["https://issues.apache.org/jira/browse/SANTUARIO-632", "https://issues.apache.org/jira/browse/SANTUARIO-634", "https://github.com/apache/santuario-xml-security-java/pull/651", "https://datatracker.ietf.org/doc/draft-eastlake-rfc9231bis-xmlsec-uris/"]
+    note: "No ML-DSA in 4.0.4 (latest) or main. SANTUARIO-632 is open and assigned to a committer; PR #651 (ML-DSA-44/65/87 for the DOM, JSR-105 and StAX signature paths) was approved by a committer on 2026-10-08 and is not merged. Its algorithm URIs come from draft-eastlake-rfc9231bis-xmlsec-uris-09, not yet an RFC."
+  checked_at: 2026-11-11
+- library: java/spring-security-crypto
+  purls: [pkg:maven/org.springframework.security/spring-security-crypto]
+  kem:
+    status: none
+    sources: ["https://github.com/spring-projects/spring-security/issues/18103", "https://github.com/spring-projects/spring-security/tree/7.1.2/crypto/src/main/java/org/springframework/security/crypto/encrypt"]
+    note: "No ML-KEM in 7.1.2 (latest stable) or main: public-key encryption is RSA only (RsaSecretEncryptor, RsaRawEncryptor, RsaAlgorithm DEFAULT and OAEP) over the JCA. Issue #18103 (Java 25 PQC, ML-KEM, in Spring Security) is open but still waiting for triage, with no maintainer reply; a contributor pointed to PR #19175, which adds EdDSA to the JOSE encoder, not PQC. It is cited as a request, not a plan."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: java/sshj
+  purls: [pkg:maven/com.hierynomus/sshj]
+  kem:
+    status: none
+    sources: ["https://github.com/hierynomus/sshj/issues/1017", "https://github.com/hierynomus/sshj/pull/1037", "https://www.rfc-editor.org/rfc/rfc10042"]
+    note: "No ML-KEM in 0.41.2 (latest) or master: key exchange is DH, ECDH (NIST P-curves) and curve25519-sha256 only, and sntrup761x25519 is not offered either. Issue #1017 asks for mlkem768x25519-sha256 (RFC 10042) and community PR #1037 implements it; both are open with no reply from the maintainer, so they are a request, not a plan."
+  signature:
+    status: none
+    sources: ["https://datatracker.ietf.org/doc/draft-ietf-sshm-composite-sigs/", "https://datatracker.ietf.org/doc/draft-sfluhrer-ssh-mldsa/"]
+    note: "No ML-DSA in 0.41.2 (latest) or master: host and user keys are RSA, DSA, ECDSA and Ed25519 only, and no issue or PR asks for ML-DSA. draft-ietf-sshm-composite-sigs (ML-DSA composites with Ed25519 and ECDSA) and draft-sfluhrer-ssh-mldsa (ML-DSA) define post-quantum SSH signatures, cited as context."
+  checked_at: 2026-11-11
+- library: java/tink
+  purls: [pkg:maven/com.google.crypto.tink/tink]
+  kem:
+    status: available
+    since: "1.22.0"
+    apis:
+      - com.google.crypto.tink.hybrid.HpkeParameters.KemId.X_WING
+      - com.google.crypto.tink.hybrid.PredefinedHybridParameters.HPKE_XWING_HKDF_SHA256_CHACHA20_POLY1305
+    sources:
+      - https://github.com/tink-crypto/tink-java/blob/v1.22.0/src/main/java/com/google/crypto/tink/hybrid/HpkeParameters.java
+      - https://github.com/tink-crypto/tink-java/blob/v1.22.0/src/main/java/com/google/crypto/tink/hybrid/internal/HpkePrivateKeyManager.java
+      - https://github.com/tink-crypto/tink-java/releases/tag/v1.24.0
+      - https://repo1.maven.org/maven2/com/google/crypto/tink/tink/1.22.0/tink-1.22.0.pom
+      - https://github.com/google/conscrypt/releases/tag/2.6.0
+    note: >-
+      ML-KEM only inside the X-Wing hybrid HPKE KEM (no standalone ML-KEM KEM id);
+      it is in the source of 1.22.0 although the release notes do not mention it,
+      and the predefined HPKE_XWING_HKDF_SHA256_CHACHA20_POLY1305 parameters arrived in 1.24.0. X-Wing keys and HPKE
+      run on Conscrypt: it must be installed as a JCA provider, and Tink declares
+      org.conscrypt:conscrypt-openjdk-uber only as an optional dependency;
+      Conscrypt ships X-Wing from 2.6.0. On Android, 1.24.0 adds X-Wing on
+      Android 17, or Android 12 with SDK Extensions 22. The purl is the live
+      artifact published from tink-crypto/tink-java, which continued it after
+      google/tink was archived.
+  signature:
+    status: available
+    since: "1.22.0"
+    apis:
+      - com.google.crypto.tink.signature.MlDsaParameters.create
+      - com.google.crypto.tink.signature.MlDsaParameters.MlDsaInstance.ML_DSA_44
+      - com.google.crypto.tink.signature.MlDsaParameters.MlDsaInstance.ML_DSA_65
+      - com.google.crypto.tink.signature.MlDsaParameters.MlDsaInstance.ML_DSA_87
+      - com.google.crypto.tink.signature.MlDsaSignKeyManager.registerPair
+      - com.google.crypto.tink.signature.SignatureConfig2026.get
+      - com.google.crypto.tink.signature.PredefinedSignatureParameters.ML_DSA_65
+      - com.google.crypto.tink.jwt.JwtMlDsaParameters.create
+      - com.google.crypto.tink.jwt.JwtMlDsaParameters.Algorithm.ML_DSA_44
+      - com.google.crypto.tink.jwt.JwtMlDsaParameters.Algorithm.ML_DSA_65
+      - com.google.crypto.tink.jwt.JwtMlDsaParameters.Algorithm.ML_DSA_87
+    sources:
+      - https://github.com/tink-crypto/tink-java/releases/tag/v1.22.0
+      - https://github.com/tink-crypto/tink-java/blob/v1.22.0/src/main/java/com/google/crypto/tink/signature/MlDsaSignKeyManager.java
+      - https://github.com/tink-crypto/tink-java/blob/v1.22.0/src/main/java/com/google/crypto/tink/signature/SignatureConfig2026.java
+      - https://github.com/tink-crypto/tink-java/releases/tag/v1.24.0
+      - https://repo1.maven.org/maven2/com/google/crypto/tink/tink/1.22.0/tink-1.22.0.pom
+      - https://github.com/google/conscrypt/releases/tag/2.6.0
+    note: >-
+      ML-DSA-44/65/87 from 1.22.0, the first release where MlDsaSignKeyManager
+      (key generation) is public; 1.19.0 shipped MlDsaParameters (ML-DSA-65/87 only;
+      ML_DSA_44 from 1.22.0) and 1.21.0 added PEM import of ML-DSA-65/87, but key generation and the signing configuration were not
+      public, so they are set aside. SignatureConfig.register() does not add
+      ML-DSA: register MlDsaSignKeyManager and use SignatureConfig2026. Keys,
+      signing and verifying run on Conscrypt, installed as a JCA provider
+      (optional Maven dependency, ML-DSA from Conscrypt 2.6.0). Named parameters
+      "ML_DSA_44", "ML_DSA_65", "ML_DSA_87" (and _RAW) can be passed to
+      KeyTemplates.get. 1.24.0 added JWT ML-DSA and the composite
+      MLDSA44-Ed25519-SHA512 and MLDSA65-Ed25519-SHA512 signatures.
+  checked_at: 2026-11-11
+- library: java/tink-kms
+  purls: [pkg:maven/com.google.crypto.tink/tink-awskms, pkg:maven/com.google.crypto.tink/tink-gcpkms]
+  kem:
+    status: none
+    sources: ["https://github.com/tink-crypto/tink-java-gcpkms/tree/v1.12.0/src/main/java/com/google/crypto/tink/integration/gcpkms", "https://github.com/tink-crypto/tink-java-awskms/tree/v2.2.0/src/main/java/com/google/crypto/tink/integration/awskms"]
+    note: "No ML-KEM and no KEM or asymmetric-decrypt API: tink-awskms 2.2.0 (latest) exposes only a KMS-backed AEAD, and tink-gcpkms 1.12.0 (latest) an AEAD, a MAC and asymmetric signing. No issue or PR in either repository asks for one."
+  signature:
+    status: available
+    since: "1.12.0"
+    apis:
+      - com.google.crypto.tink.integration.gcpkms.GcpKmsPublicKeySign.builder
+      - com.google.crypto.tink.integration.gcpkms.GcpKmsPublicKeyVerify.builder
+    sources:
+      - https://github.com/tink-crypto/tink-java-gcpkms/releases/tag/v1.12.0
+      - https://github.com/tink-crypto/tink-java-gcpkms/blob/v1.12.0/src/main/java/com/google/crypto/tink/integration/gcpkms/GcpKmsPublicKeySign.java
+      - https://github.com/tink-crypto/tink-java-gcpkms/blob/v1.12.0/src/main/java/com/google/crypto/tink/integration/gcpkms/GcpKmsPublicKeyVerify.java
+      - https://repo1.maven.org/maven2/com/google/crypto/tink/tink-gcpkms/maven-metadata.xml
+    note: >-
+      tink-gcpkms only. GcpKmsPublicKeySign signs with a Cloud KMS asymmetric
+      key (RSA and ECDSA since 1.11.0); 1.12.0 adds ML-DSA-44/65/87 and their
+      external-mu variants. The parameter set is the key version's Cloud KMS
+      algorithm (PQ_SIGN_ML_DSA_44/65/87, from google-cloud-kms), not a Tink
+      selector. Verifying ML-DSA locally needs a Conscrypt provider installed.
+      tink-awskms has no signing API.
+  checked_at: 2026-11-11
+- library: java/totp
+  purls: [pkg:maven/dev.samstevens.totp/totp]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: java/vault-java-driver
+  purls: ["pkg:maven/com.bettercloud/vault-java-driver"]
+  kem:
+    status: none
+    sources: ["https://github.com/BetterCloud/vault-java-driver/blob/master/src/main/java/com/bettercloud/vault/SslConfig.java", "https://github.com/BetterCloud/vault-java-driver/blob/master/src/main/java/com/bettercloud/vault/api/pki/RoleOptions.java", "https://repo1.maven.org/maven2/com/bettercloud/vault-java-driver/maven-metadata.xml"]
+    note: "HTTP client for the Vault server: transit and PKI operations run server-side, and key types (RoleOptions.keyType, documented as rsa or ec) are strings sent to the server. TLS to Vault is built on the JDK's SSLContext (\"TLS\"), which picks the key exchange; the client exposes no group selector. The last release, 5.1.0 (2019-12-16), is unmaintained; the fork io.github.jopenlibs:vault-java-driver (7.0.0) also leaves the key exchange to the JDK (SSLContext \"TLSv1.3\") and has no ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/BetterCloud/vault-java-driver/blob/master/src/main/java/com/bettercloud/vault/SslConfig.java", "https://repo1.maven.org/maven2/com/bettercloud/vault-java-driver/maven-metadata.xml", "https://github.com/jopenlibs/vault-java-driver/blob/master/src/main/java/io/github/jopenlibs/vault/SslConfig.java"]
+    note: "The PEM client key for Vault's TLS certificate auth is loaded with KeyFactory.getInstance(\"RSA\") only (SslConfig.clientKeyPemUTF8 / clientKeyPemFile); a JKS keystore defers to the JDK. No ML-DSA in 5.1.0, and no issue or PR mentions post-quantum. The last release, 5.1.0 (2019-12-16), is unmaintained; the fork io.github.jopenlibs:vault-java-driver (7.0.0) still hard-codes RSA and has no ML-DSA."
+  checked_at: 2026-11-11
+- library: java/wolfssl-jsse
+  purls: [pkg:maven/com.wolfssl/wolfssl-jsse]
+  kem:
+    status: available
+    since: "1.18.0"
+    apis:
+      - com.wolfssl.WolfSSLContext.useSupportedCurves
+      - com.wolfssl.WolfSSLContext.setGroups
+      - com.wolfssl.WolfSSLSession.useSupportedCurves
+      - com.wolfssl.WolfSSLSession.useKeyShare
+      - com.wolfssl.WolfSSL.MLKEMEnabled
+      - com.wolfssl.WolfSSL.WOLFSSL_X25519MLKEM768
+      - com.wolfssl.WolfSSL.WOLFSSL_SECP256R1MLKEM768
+      - com.wolfssl.WolfSSL.WOLFSSL_SECP384R1MLKEM1024
+      - com.wolfssl.WolfSSL.WOLFSSL_ML_KEM_512
+      - com.wolfssl.WolfSSL.WOLFSSL_ML_KEM_768
+      - com.wolfssl.WolfSSL.WOLFSSL_ML_KEM_1024
+    sources:
+      - https://github.com/wolfSSL/wolfssljni/blob/v1.18.0-stable/ChangeLog.md
+      - https://github.com/wolfSSL/wolfssljni/pull/361
+      - https://github.com/wolfSSL/wolfssljni/blob/v1.18.0-stable/src/java/com/wolfssl/WolfSSL.java
+      - https://github.com/wolfSSL/wolfssljni/blob/v1.18.0-stable/examples/README.md
+      - https://github.com/wolfSSL/wolfssl/blob/v5.9.1-stable/ChangeLog.md
+    note: >-
+      TLS 1.3 named groups X25519MLKEM768, SecP256r1MLKEM768 and SecP384r1MLKEM1024
+      (hybrids) and ML-KEM-512/768/1024 (pure), selected through the JNI methods above,
+      SSLParameters.setNamedGroups (JDK 20+), the jdk.tls.namedGroups System property or
+      the wolfjsse.enabledSupportedCurves Security property (group names as strings).
+      Requires native wolfSSL built with ML-KEM, which is on by default from wolfSSL 5.9.1;
+      the pure ML-KEM groups also need --enable-tls-mlkem-standalone. The OQS-codepoint
+      hybrids (WOLFSSL_SECP256R1MLKEM512, WOLFSSL_X448MLKEM768, ...) need an experimental
+      native build and are set aside. No Kyber or ML-KEM before 1.18.0.
+  signature:
+    status: none
+    sources:
+      - https://github.com/wolfSSL/wolfssljni/blob/v1.18.0-stable/ChangeLog.md
+      - https://github.com/wolfSSL/wolfssljni/pull/361
+      - https://github.com/wolfSSL/wolfssl/blob/v5.9.2-stable/ChangeLog.md
+    note: >-
+      Since 1.18.0 the JSSE provider can authenticate TLS 1.3 with ML-DSA-44/65/87
+      certificates, but only when native wolfSSL is built with --enable-mldsa, which is
+      off by default, so a default install has no ML-DSA. There is no standalone ML-DSA
+      sign/verify API in the Java package.
   checked_at: 2026-11-11
 - library: javascript/blake3-wasm
   purls: [pkg:npm/blake3-wasm]
