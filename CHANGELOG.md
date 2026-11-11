@@ -8,6 +8,15 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+### Added
+
+- Vulnerable families carry a `kind` (`signature`, `key-agreement` or `dual`), and `migration.yaml`
+  holds the cited path rules, key and signature sizes, and JOSE/JWT libraries the migration path reads.
+- `libraries.yaml` records ML-KEM and ML-DSA support per `crypto_rules` library, starting
+  with 10; tests require every other `crypto_rules` library to get an entry or stay pending.
+- `MigrationPath` and `ComponentPath` give a vulnerable finding and a component their migration path
+  (`upgrade`, `swap`, `redesign` or `blocked`), with `inferred` and `size_risk`.
+
 ## [1.1.0] - 2026-11-10
 
 ### Fixed

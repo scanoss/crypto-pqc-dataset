@@ -129,11 +129,53 @@ The data lives in [`dataset.yaml`](dataset.yaml) and is embedded at build time.
 | `families[].aliases` | Other spellings of the family. |
 | `families[].takes_parameter` | Whether a trailing number is a parameter, such as a key size. |
 | `families[].deadlines` | Keys of `deadlines` entries, at most one per source; a family gets only the schedules its source states for it. |
+| `families[].kind` | Vulnerable families only: `signature`, `key-agreement` or `dual`, what the family is used for. The migration path falls back to it when a finding does not say its operation. |
 
 A spelling may belong to one family only; loading fails otherwise. Tests require every CycloneDX 1.7
 `algorithmFamily` value except HPKE to resolve, so any other family a CycloneDX producer can emit is
 classified. That vocabulary, in `testdata/cyclonedx-1.7-algorithm-families.txt`, is the
 `algorithmFamily` enumeration of the CycloneDX 1.7 specification.
+
+The migration path reads [`migration.yaml`](migration.yaml): the path for a known primitive and
+operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT,
+with their purls. Every row cites its source.
+
+### Migration path
+
+`MigrationPath` says what moving one quantum-vulnerable finding to ML-KEM / ML-DSA takes:
+
+| Path | Meaning |
+|---|---|
+| `upgrade` | The crypto is in a dependency whose newer version ships ML-KEM / ML-DSA. |
+| `swap` | Replace the algorithm; the sign/verify shape stays. |
+| `redesign` | The API shape changes (key agreement or key transport → KEM). |
+| `blocked` | No PQC alternative yet in the dependency or library. |
+
+A finding inside a dependency is `upgrade` or `blocked`, from `libraries.yaml`. A finding in the
+project's code takes its path from its primitive and operation; when the operation is unknown, from
+the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a JOSE/JWT library.
+`ComponentPath` returns a component's worst path and the count per path. Findings that are not
+`vulnerable` get no path.
+
+### PQC support per library
+
+[`libraries.yaml`](libraries.yaml) says, for each `crypto_rules` library, whether it offers ML-KEM
+(`kem`) and ML-DSA (`signature`). It feeds the `upgrade` and `blocked` migration paths.
+
+| Key | Meaning |
+|---|---|
+| `library` | The library id, `<lang>/<library>`. |
+| `purls` | The library's purls, without a version: a library published as several packages lists each. Two libraries may share a purl only if they say the same about PQC. |
+| `kem`, `signature` | `status`: `available`, `planned`, `none` or `not_applicable`. |
+| `kem.since`, `kem.apis`, `kem.sources` | Required when `available`: the first version with the API, its fully qualified names and the sources. `planned` requires `sources`. |
+| `checked_at` | `YYYY-MM-DD`, not in the future; required for `planned` and `none`. |
+
+Tests keep it complete and current:
+
+- `testdata/crypto-rules-libraries.txt` lists the `crypto_rules` libraries: id and purls.
+- Every library in that list has an entry, or is listed in `testdata/libraries-pending.txt`, and
+  every entry's purls match the list.
+- A `planned` or `none` entry checked more than three months ago fails, so it is researched again.
 
 ### Sources
 
