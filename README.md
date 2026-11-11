@@ -137,8 +137,28 @@ classified. That vocabulary, in `testdata/cyclonedx-1.7-algorithm-families.txt`,
 `algorithmFamily` enumeration of the CycloneDX 1.7 specification.
 
 The migration path reads [`migration.yaml`](migration.yaml): the path for a known primitive and
-operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT.
-Every row cites its source.
+operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT,
+with their purls. Every row cites its source.
+
+### PQC support per library
+
+[`libraries.yaml`](libraries.yaml) says, for each `crypto_rules` library, whether it offers ML-KEM
+(`kem`) and ML-DSA (`signature`). It feeds the `upgrade` and `blocked` migration paths.
+
+| Key | Meaning |
+|---|---|
+| `library` | The library id, `<lang>/<library>`. |
+| `purls` | The library's purls, without a version: a library published as several packages lists each. Two libraries may share a purl only if they say the same about PQC. |
+| `kem`, `signature` | `status`: `available`, `planned`, `none` or `not_applicable`. |
+| `kem.since`, `kem.apis`, `kem.sources` | Required when `available`: the first version with the API, its fully qualified names and the sources. `planned` requires `sources`. |
+| `checked_at` | `YYYY-MM-DD`, not in the future; required for `planned` and `none`. |
+
+Tests keep it complete and current:
+
+- `testdata/crypto-rules-libraries.txt` lists the `crypto_rules` libraries: id and purls.
+- Every library in that list has an entry, or is listed in `testdata/libraries-pending.txt`, and
+  every entry's purls match the list.
+- A `planned` or `none` entry checked more than three months ago fails, so it is researched again.
 
 ### Sources
 

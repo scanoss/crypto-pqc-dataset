@@ -1,0 +1,7 @@
+# Copyright (c) 2026 SCANOSS
+# SPDX-License-Identifier: MIT
+#
+# PQC support per crypto_rules library: one entry per library, keyed by its
+# id (<lang>/<library>) and by its purls. The format is described in README.md. Libraries not researched yet are listed in
+# testdata/libraries-pending.txt.
+[]
