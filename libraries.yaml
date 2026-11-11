@@ -2063,8 +2063,116 @@
       off by default, so a default install has no ML-DSA. There is no standalone ML-DSA
       sign/verify API in the Java package.
   checked_at: 2026-11-11
+- library: javascript/argon2
+  purls: ["pkg:npm/argon2"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/aws-sdk-client-kms
+  purls: ["pkg:npm/%40aws-sdk/client-kms"]
+  kem:
+    status: available
+    since: "3.1157.0"
+    apis: ["@aws-sdk/client-kms.KeySpec.ML_KEM_512", "@aws-sdk/client-kms.KeySpec.ML_KEM_768", "@aws-sdk/client-kms.KeySpec.ML_KEM_1024", "@aws-sdk/client-kms.EncapsulationAlgorithmSpec.ML_KEM", "@aws-sdk/client-kms.EncapsulateCommand", "@aws-sdk/client-kms.DecapsulateCommand"]
+    sources: ["https://github.com/aws/aws-sdk-js-v3/blob/v3.1157.0/clients/client-kms/CHANGELOG.md", "https://github.com/aws/aws-sdk-js-v3/blob/v3.1157.0/clients/client-kms/src/models/enums.ts", "https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/kms/command/EncapsulateCommand/", "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"]
+    note: "ML-KEM keys (FIPS 203) in AWS KMS, created with KeySpec ML_KEM_512/768/1024 and key usage ENCAPSULATE_DECAPSULATE and used through EncapsulateCommand and DecapsulateCommand; released 2026-10-26, absent from 3.1156.0, and this release requires Node.js 20 or later. The key operations run in the KMS service, not in the SDK."
+  signature:
+    status: available
+    since: "3.829.0"
+    apis: ["@aws-sdk/client-kms.KeySpec.ML_DSA_44", "@aws-sdk/client-kms.KeySpec.ML_DSA_65", "@aws-sdk/client-kms.KeySpec.ML_DSA_87", "@aws-sdk/client-kms.SigningAlgorithmSpec.ML_DSA_SHAKE_256"]
+    sources: ["https://github.com/aws/aws-sdk-js-v3/blob/v3.829.0/clients/client-kms/CHANGELOG.md", "https://github.com/aws/aws-sdk-js-v3/blob/v3.829.0/clients/client-kms/src/models/models_0.ts", "https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/kms/command/SignCommand/", "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html", "https://registry.npmjs.org/@aws-sdk/client-kms"]
+    note: "ML-DSA keys (FIPS 204) in AWS KMS, used through SignCommand and VerifyCommand with ML_DSA_SHAKE_256; released 2025-06-12, absent from 3.828.0, and requires Node.js 18 or later. The key operations run in the KMS service, not in the SDK."
+  checked_at: 2026-11-11
+- library: javascript/aws-sdk-signature-v4
+  purls: ["pkg:npm/%40aws-sdk/signature-v4"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/azure-keyvault-keys
+  purls: ["pkg:npm/%40azure/keyvault-keys"]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/keyvault/keyvault-keys/CHANGELOG.md", "https://github.com/Azure/azure-rest-api-specs/blob/ec1ca1d8221a84e9201bc0b3a4f60789e51c0fba/specification/keyvault/data-plane/Keys/models.tsp"]
+    note: "No ML-KEM in 4.10.2 (latest stable, 2026-06-09), 4.11.0-beta.1 or main, whose key types are RSA, EC and oct; the Key Vault keys REST API, up to 2026-07-01-preview, defines no ML-KEM key type either."
+  signature:
+    status: none
+    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-rest-api-specs/blob/ec1ca1d8221a84e9201bc0b3a4f60789e51c0fba/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/keyvault/keyvault-keys/CHANGELOG.md"]
+    note: "No ML-DSA in 4.10.2 (latest stable), 4.11.0-beta.1 or main, whose key types are RSA, EC and oct. Microsoft added AKP keys with ML-DSA-44, ML-DSA-65 and ML-DSA-87 to the Key Vault keys REST API in 2026-05-01-preview (PR #41010, merged 2026-06-04), which this package has not adopted; no issue or PR in azure-sdk-for-js plans it."
+  checked_at: 2026-11-11
+- library: javascript/bcrypt
+  purls: [pkg:npm/bcrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/bcryptjs
+  purls: ["pkg:npm/bcryptjs"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/bitcoinjs-lib
+  purls: [pkg:npm/bitcoinjs-lib]
+  kem:
+    status: none
+    sources: ["https://github.com/bitcoinjs/bitcoinjs-lib/blob/v7.0.5/CHANGELOG.md", "https://github.com/bitcoinjs/bitcoinjs-lib/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in the source or changelog up to 7.0.5 (2026-10-26) or master; its keys are secp256k1, and no issue or PR mentions ML-KEM or Kyber."
+  signature:
+    status: none
+    sources: ["https://github.com/bitcoinjs/bitcoinjs-lib/blob/v7.0.5/CHANGELOG.md", "https://github.com/bitcoinjs/bitcoinjs-lib/issues/2311", "https://github.com/bitcoin/bips/blob/master/bip-0360.mediawiki"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to 7.0.5 (2026-10-26) or master; signatures are ECDSA and Schnorr over secp256k1. The open P2MR request (#2311, BIP 360, accepted for design tracking) adds no post-quantum signature, which BIP 360 leaves to a future proposal."
+  checked_at: 2026-11-11
 - library: javascript/blake3-wasm
   purls: [pkg:npm/blake3-wasm]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/blakejs
+  purls: ["pkg:npm/blakejs"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/bls-eth-wasm
+  purls: ["pkg:npm/bls-eth-wasm"]
+  kem:
+    status: none
+    sources: ["https://github.com/herumi/bls-eth-wasm/blob/v1.7.0/readme.md", "https://github.com/herumi/bls-eth-wasm/blob/v1.7.0/src/index.d.ts", "https://github.com/herumi/bls-eth-wasm/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No KEM API up to v1.7.0 (2026-09-17) or master: the WebAssembly build of herumi/bls offers only BLS signatures over pairing-friendly curves (BLS12-381 for Ethereum), and no issue or PR mentions ML-KEM or post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/herumi/bls-eth-wasm/blob/v1.7.0/readme.md", "https://github.com/herumi/bls-eth-wasm/blob/v1.7.0/src/index.d.ts", "https://github.com/herumi/bls-eth-wasm/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to v1.7.0 (2026-09-17) or master: signatures are BLS only (sign, verify, aggregate, fastAggregateVerify, multiVerify), and no issue or PR mentions ML-DSA or post-quantum support."
+  checked_at: 2026-11-11
+- library: javascript/circomlib
+  purls: [pkg:npm/circomlib]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://github.com/iden3/circomlib/tree/v2.0.5/circuits", "https://github.com/iden3/circomlib/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium in 2.0.5 (latest, 2022-06-17) or master; signatures are EdDSA over Baby Jubjub, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/crypto
+  purls: []
+  kem:
+    status: available
+    since: "26.4.0"
+    apis: ["crypto.generateKeyPair", "crypto.generateKeyPairSync", "crypto.encapsulate", "crypto.decapsulate"]
+    sources: ["https://nodejs.org/en/blog/release/v24.7.0", "https://nodejs.org/docs/v24.7.0/api/crypto.html", "https://github.com/nodejs/node/pull/63924", "https://nodejs.org/en/blog/release/v24.19.0", "https://nodejs.org/docs/v24.19.0/api/crypto.html", "https://nodejs.org/en/blog/release/v26.4.0", "https://nodejs.org/docs/v26.3.1/api/crypto.html", "https://nodejs.org/docs/v25.9.0/api/crypto.html", "https://nodejs.org/docs/v22.23.5/api/crypto.html", "https://nodejs.org/en/blog/release/v24.5.0", "https://nodejs.org/docs/v26.4.0/api/crypto.html"]
+    note: "ML-KEM-512/768/1024 through crypto.encapsulate and crypto.decapsulate came in 24.7.0 as a release candidate and are stable since 26.4.0, also in 24.19.0 on the 24.x line (24.7 to 24.18, 25.x and 26.0 to 26.3 only have the release candidate). Requires OpenSSL 3.5 or later, bundled by default since 24.5.0."
+  signature:
+    status: available
+    since: "24.6.0"
+    apis: ["crypto.generateKeyPair", "crypto.generateKeyPairSync", "crypto.sign", "crypto.verify"]
+    sources: ["https://nodejs.org/en/blog/release/v24.6.0", "https://github.com/nodejs/node/pull/59259", "https://nodejs.org/docs/v24.6.0/api/crypto.html", "https://nodejs.org/docs/v22.23.5/api/crypto.html", "https://nodejs.org/en/blog/release/v24.5.0"]
+    note: "Key types 'ml-dsa-44', 'ml-dsa-65' and 'ml-dsa-87' in the stable generateKeyPair, sign and verify, also in 25.0.0 and later lines but not in 22.x. Requires OpenSSL 3.5 or later, bundled by default since 24.5.0."
+  checked_at: 2026-11-11
+- library: javascript/crypto-js
+  purls: ["pkg:npm/crypto-js"]
   kem:
     status: not_applicable
   signature:
@@ -2075,12 +2183,300 @@
     status: not_applicable
   signature:
     status: not_applicable
+- library: javascript/crystals-kyber-js
+  purls: ["pkg:npm/crystals-kyber-js"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/elliptic
+  purls: ["pkg:npm/elliptic"]
+  kem:
+    status: none
+    sources: ["https://github.com/indutny/elliptic/blob/v6.6.1/README.md", "https://registry.npmjs.org/elliptic"]
+    note: "No ML-KEM or Kyber in 6.6.1 (latest, 2024-11-13), which is also the head of master; key agreement is ECDH only. No issue or PR mentions ML-KEM, Kyber or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/indutny/elliptic/blob/v6.6.1/README.md", "https://registry.npmjs.org/elliptic"]
+    note: "No ML-DSA or Dilithium in 6.6.1 (latest, 2024-11-13), which is also the head of master; signatures are ECDSA and EdDSA only. No issue or PR mentions ML-DSA, Dilithium or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/ethereumjs-util
+  purls: ["pkg:npm/ethereumjs-util"]
+  kem:
+    status: none
+    sources: ["https://github.com/ethereumjs/ethereumjs-monorepo/blob/ethereumjs-util@7.1.5/packages/util/src/signature.ts", "https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/util/CHANGELOG.md"]
+    note: "No ML-KEM up to 7.1.5, the last release, whose only public-key algorithm is secp256k1 ECDSA. The package continues as @ethereumjs/util since 8.0.0, which has no ML-KEM either up to 10.1.3 or master."
+  signature:
+    status: none
+    sources: ["https://github.com/ethereumjs/ethereumjs-monorepo/blob/ethereumjs-util@7.1.5/packages/util/src/signature.ts", "https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/util/CHANGELOG.md", "https://github.com/ethereumjs/ethereumjs-monorepo/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-DSA or Dilithium up to 7.1.5 (2022-06-03), the last release; signatures are secp256k1 ECDSA. The package continues as @ethereumjs/util since 8.0.0, which has no ML-DSA either up to 10.1.3 or master."
+  checked_at: 2026-11-11
+- library: javascript/ethereumjs-util-scoped
+  purls: ["pkg:npm/%40ethereumjs/util"]
+  kem:
+    status: none
+    sources: ["https://github.com/ethereumjs/ethereumjs-monorepo/blob/@ethereumjs/util@10.1.3/packages/util/src/signature.ts", "https://github.com/ethereumjs/ethereumjs-monorepo/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-KEM in 10.1.3 (latest, 2026-08-21) or master, whose only public-key algorithm is secp256k1 ECDSA, with no key agreement or encryption API. No issue or PR asks for ML-KEM, ML-DSA, Kyber or Dilithium."
+  signature:
+    status: none
+    sources: ["https://github.com/ethereumjs/ethereumjs-monorepo/releases/tag/%40ethereumjs%2Futil%4010.1.3", "https://github.com/ethereumjs/ethereumjs-monorepo/blob/@ethereumjs/util@10.1.3/packages/util/src/signature.ts", "https://github.com/ethereumjs/ethereumjs-monorepo/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-DSA or Dilithium in 10.1.3 (latest, 2026-08-21) or master; signatures are secp256k1 ECDSA. No issue or PR asks for ML-KEM, ML-DSA, Kyber or Dilithium."
+  checked_at: 2026-11-11
+- library: javascript/ethers
+  purls: [pkg:npm/ethers]
+  kem:
+    status: none
+    sources: ["https://github.com/ethers-io/ethers.js/releases/tag/v6.17.0", "https://github.com/ethers-io/ethers.js/blob/v6.17.0/src.ts/crypto/signing-key.ts", "https://github.com/ethers-io/ethers.js/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-KEM or Kyber in 6.17.0 (latest, 2026-06-18) or main; its only key agreement is secp256k1 ECDH through SigningKey.computeSharedSecret. No issue, PR or discussion in the project mentions post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://github.com/ethers-io/ethers.js/releases/tag/v6.17.0", "https://github.com/ethers-io/ethers.js/blob/v6.17.0/src.ts/crypto/signing-key.ts", "https://github.com/ethers-io/ethers.js/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-DSA or Dilithium in 6.17.0 (latest, 2026-06-18) or main; signatures are secp256k1 ECDSA. No issue, PR or discussion in the project mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: javascript/fast-jwt
+  purls: ["pkg:npm/fast-jwt"]
+  kem:
+    status: none
+    sources: ["https://github.com/nearform/fast-jwt/blob/v6.3.6/src/crypto.js"]
+    note: "No ML-KEM in 6.3.6 (latest) or master: a JWS-only library with HMAC, RSA, ECDSA and EdDSA signatures and no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://github.com/nearform/fast-jwt/blob/v6.3.6/src/crypto.js", "https://github.com/nearform/fast-jwt/issues/687", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in 6.3.6 (latest) or master: the algorithms are HS, RS, PS, ES and EdDSA, and the maintainers' security decisions log (#687, 2026-10-26) states fast-jwt supports no ML-DSA algorithm, without a plan to add one. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from fast-jwt."
+  checked_at: 2026-11-11
 - library: javascript/fast-sha256
   purls: [pkg:npm/fast-sha256]
   kem:
     status: not_applicable
   signature:
     status: not_applicable
+- library: javascript/google-cloud-kms
+  purls: ["pkg:npm/%40google-cloud/kms"]
+  kem:
+    status: available
+    since: "5.2.0"
+    apis: ["@google-cloud/kms.CryptoKeyVersionAlgorithm.ML_KEM_768", "@google-cloud/kms.CryptoKeyVersionAlgorithm.ML_KEM_1024", "@google-cloud/kms.CryptoKeyVersionAlgorithm.KEM_XWING", "@google-cloud/kms.CryptoKeyPurpose.KEY_ENCAPSULATION", "@google-cloud/kms.KeyManagementServiceClient.decapsulate"]
+    sources: ["https://github.com/googleapis/google-cloud-node/releases/tag/kms-v5.2.0", "https://github.com/googleapis/google-cloud-node/blob/kms-v5.2.0/packages/google-cloud-kms/protos/google/cloud/kms/v1/resources.proto", "https://github.com/googleapis/google-cloud-node/blob/kms-v5.2.0/packages/google-cloud-kms/src/v1/key_management_service_client.ts", "https://docs.cloud.google.com/kms/docs/release-notes", "https://docs.cloud.google.com/kms/docs/key-encapsulation-mechanisms", "https://cloud.google.com/blog/products/identity-security/future-proofing-data-integrity-quantum-safe-digital-signatures-in-cloud-kms", "https://registry.npmjs.org/@google-cloud/kms"]
+    note: "ML_KEM_768, ML_KEM_1024 and the X-Wing hybrid KEM_XWING ship since 5.2.0 (absent from 5.1.0, requires Node.js 18), and Cloud KMS made ML-KEM generally available in July 2026. Encapsulation is done by the caller with the public key; Cloud KMS only decapsulates."
+  signature:
+    status: available
+    since: "5.0.0"
+    apis: ["@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44", "@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65", "@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87", "@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44_EXTERNAL_MU", "@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65_EXTERNAL_MU", "@google-cloud/kms.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87_EXTERNAL_MU", "@google-cloud/kms.KeyManagementServiceClient.asymmetricSign"]
+    sources: ["https://github.com/googleapis/google-cloud-node/blob/kms-v5.0.0/packages/google-cloud-kms/protos/google/cloud/kms/v1/resources.proto", "https://github.com/googleapis/google-cloud-node/blob/kms-v4.5.0/packages/google-cloud-kms/protos/google/cloud/kms/v1/resources.proto", "https://github.com/googleapis/google-cloud-node/blob/kms-v5.4.0/packages/google-cloud-kms/protos/google/cloud/kms/v1/resources.proto", "https://github.com/googleapis/google-cloud-node/releases/tag/kms-v5.0.0", "https://docs.cloud.google.com/kms/docs/release-notes"]
+    note: "PQ_SIGN_ML_DSA_65 ships since 5.0.0 (2025-03-18, absent from 4.5.0; requires Node.js 18), when the service feature was Preview; ML-DSA-44, ML-DSA-87 and the external-mu variants since 5.4.0 (2026-02-19). The service made ML-DSA generally available on 2026-07-16, so any client from 5.0.0 on reaches it."
+  checked_at: 2026-11-11
+- library: javascript/hash-js
+  purls: ["pkg:npm/hash.js"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/iron-webcrypto
+  purls: ["pkg:npm/iron-webcrypto"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/jose
+  purls: ["pkg:npm/jose"]
+  kem:
+    status: planned
+    sources: ["https://github.com/panva/jose/commit/6d5baddbe72d8651883633532c9b38c330a8d7b3", "https://github.com/panva/jose/tree/hpke-new", "https://github.com/panva/jose/pull/870"]
+    note: "No ML-KEM in 6.2.17 (latest, 2026-11-09) or main; JWE key management is RSA-OAEP, ECDH-ES and symmetric. The maintainer's hpke-new branch (commit 2026-08-03, rebased 2026-10-13, no PR yet) adds HPKE-9/12/13 (MLKEM768-X25519, ML-KEM-768, ML-KEM-1024) from draft-ietf-jose-hpke-pq-pqt, while a draft-ietf-jose-pqc-kem PR (#870) was closed by the maintainer because browsers lack KMAC."
+  signature:
+    status: available
+    since: "6.1.0"
+    apis: ["jose.generateKeyPair", "jose.importJWK", "jose.importPKCS8", "jose.importSPKI", "jose.SignJWT", "jose.CompactSign", "jose.jwtVerify", "jose.compactVerify"]
+    sources: ["https://github.com/panva/jose/releases/tag/v6.1.0", "https://github.com/panva/jose/blob/v6.1.0/src/key/generate_key_pair.ts", "https://github.com/panva/jose/blob/v6.0.13/src/key/generate_key_pair.ts", "https://github.com/panva/jose/issues/262", "https://github.com/panva/jose/blob/v6.2.17/tap/env.ts", "https://github.com/panva/jose/blob/v6.2.17/src/lib/key.ts", "https://nodejs.org/docs/v26.13.1/api/webcrypto.html", "https://developer.chrome.com/blog/chrome-155-beta"]
+    note: "ML-DSA-44/65/87 selected by string as the JWS alg (and the AKP JWK alg) since 6.1.0, absent from 6.0.13. It signs only through the runtime's WebCrypto (a Node.js KeyObject is converted to a CryptoKey), which has ML-DSA in Chrome 155 and later and in Node.js 24.7.0 and later, where it is still in active development."
+  checked_at: 2026-11-11
+- library: javascript/js-sha256
+  purls: ["pkg:npm/js-sha256"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/js-sha3
+  purls: ["pkg:npm/js-sha3"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/jsonwebtoken
+  purls: ["pkg:npm/jsonwebtoken"]
+  kem:
+    status: none
+    sources: ["https://github.com/auth0/node-jsonwebtoken/blob/v9.0.3/README.md"]
+    note: "JWS-only library: HMAC, RSA and ECDSA signing algorithms, no JWE, key agreement or encryption, so no ML-KEM up to 9.0.3 (latest, 2025-12-04)."
+  signature:
+    status: none
+    sources: ["https://github.com/auth0/node-jsonwebtoken/blob/v9.0.3/sign.js", "https://github.com/auth0/node-jsonwebtoken/blob/v9.0.3/CHANGELOG.md", "https://www.rfc-editor.org/rfc/rfc9964.html", "https://github.com/auth0/node-jsonwebtoken/issues?q=ML-DSA"]
+    note: "No ML-DSA or Dilithium in 9.0.3 (latest, 2025-12-04) or master; the algorithm list stops at HS, RS, PS and ES 256-512, and no issue or PR mentions ML-DSA or post-quantum. RFC 9964 defines ML-DSA for JOSE; context only, not a plan from jsonwebtoken."
+  checked_at: 2026-11-11
+- library: javascript/jsrsasign
+  purls: ["pkg:npm/jsrsasign"]
+  kem:
+    status: none
+    sources: ["https://github.com/kjur/jsrsasign/blob/11.1.5/README.md", "https://github.com/kjur/jsrsasign/blob/11.1.5/ChangeLog.txt"]
+    note: "No ML-KEM or other KEM in 11.1.5, the final release: it generates RSA and EC keys and dropped RSA encryption in 11.0.0. jsrsasign reached end of support on 2026-08-14 and all its npm versions are deprecated."
+  signature:
+    status: none
+    sources: ["https://github.com/kjur/jsrsasign/blob/11.1.5/README.md", "https://www.rfc-editor.org/rfc/rfc9964.html", "https://github.com/kjur/jsrsasign/issues?q=ML-DSA"]
+    note: "No ML-DSA in 11.1.5, the final release, and no issue, PR or discussion about it; jsrsasign reached end of support on 2026-08-14. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only."
+  checked_at: 2026-11-11
+- library: javascript/jwa
+  purls: ["pkg:npm/jwa"]
+  kem:
+    status: none
+    sources: ["https://github.com/auth0/node-jwa/blob/v2.0.1/index.js"]
+    note: "No ML-KEM in 2.0.1 (latest) or master: a JWS-only library with HMAC, RSA and ECDSA signatures and no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://github.com/auth0/node-jwa/blob/v2.0.1/index.js", "https://www.rfc-editor.org/rfc/rfc9964.html", "https://github.com/auth0/node-jwa/issues?q=ML-DSA"]
+    note: "No ML-DSA in 2.0.1 (latest) or master, which accepts only HS, RS, PS, ES and none, and no issue or PR about it. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from jwa."
+  checked_at: 2026-11-11
+- library: javascript/jwk-to-pem
+  purls: ["pkg:npm/jwk-to-pem"]
+  kem:
+    status: none
+    sources: ["https://github.com/Brightspace/node-jwk-to-pem/blob/v2.0.7/src/jwk-to-pem.js", "https://github.com/Brightspace/node-jwk-to-pem/blob/v2.0.7/README.md", "https://github.com/Brightspace/node-jwk-to-pem/issues?q=quantum%20OR%20mlkem%20OR%20kyber%20OR%20pqc%20OR%20%22ML-KEM%22"]
+    note: "Converts only RSA and EC (P-256, P-384, P-521) JWKs to PEM up to 2.0.7 (latest, 2024-11-25) and on master; any other key type throws \"Unsupported key type\", and no issue or PR asks for ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/Brightspace/node-jwk-to-pem/blob/v2.0.7/src/jwk-to-pem.js", "https://github.com/Brightspace/node-jwk-to-pem/blob/v2.0.7/README.md", "https://github.com/Brightspace/node-jwk-to-pem/issues?q=quantum%20OR%20mldsa%20OR%20dilithium%20OR%20pqc%20OR%20%22ML-DSA%22"]
+    note: "Converts only RSA and EC (P-256, P-384, P-521) JWKs to PEM up to 2.0.7 (latest, 2024-11-25) and on master; any other key type throws \"Unsupported key type\", and no issue or PR asks for ML-DSA."
+  checked_at: 2026-11-11
+- library: javascript/jws
+  purls: ["pkg:npm/jws"]
+  kem:
+    status: none
+    sources: ["https://github.com/auth0/node-jws/blob/v4.0.1/readme.md"]
+    note: "No ML-KEM in 4.0.1 (latest) or master: a JWS-only library that signs with jwa's HMAC, RSA and ECDSA algorithms and has no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://github.com/auth0/node-jws/blob/v4.0.1/readme.md", "https://github.com/auth0/node-jws/blob/v4.0.1/package.json", "https://www.rfc-editor.org/rfc/rfc9964.html", "https://github.com/auth0/node-jws/issues?q=ML-DSA"]
+    note: "No ML-DSA in 4.0.1 (latest) or master: its algorithms are those of jwa 2.x (HS, RS, PS, ES and none), and no issue or PR asks for ML-DSA. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from jws."
+  checked_at: 2026-11-11
+- library: javascript/kbpgp
+  purls: ["pkg:npm/kbpgp"]
+  kem:
+    status: none
+    sources: ["https://github.com/keybase/kbpgp/blob/v2.1.20/src/const.iced", "https://github.com/keybase/kbpgp/blob/v2.1.20/CHANGELOG.md", "https://github.com/keybase/kbpgp/pulls?q=is%3Apr"]
+    note: "No ML-KEM or Kyber in the source or changelog up to 2.1.20 (latest, 2026-10-26) or master; public-key encryption is RSA, ElGamal and ECDH only. The repository has issues disabled and no pull request mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/keybase/kbpgp/blob/v2.1.20/src/const.iced", "https://github.com/keybase/kbpgp/blob/v2.1.20/CHANGELOG.md", "https://github.com/keybase/kbpgp/pulls?q=is%3Apr"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to 2.1.20 (latest, 2026-10-26) or master; signatures are RSA, DSA, ECDSA and EdDSA only. The repository has issues disabled and no pull request mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: javascript/keccak
+  purls: ["pkg:npm/keccak"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/liboqs-node
+  purls: ["pkg:npm/liboqs-node"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/libp2p-crypto
+  purls: [pkg:npm/libp2p-crypto]
+  kem:
+    status: none
+    sources: ["https://registry.npmjs.org/libp2p-crypto", "https://github.com/libp2p/js-libp2p-crypto/blob/v0.21.2/src/keys/index.js", "https://github.com/libp2p/js-libp2p-crypto/blob/v0.21.2/src/keys/ecdh.js", "https://github.com/libp2p/js-libp2p-crypto/blob/v0.22.0/package.json", "https://github.com/libp2p/js-libp2p-crypto/blob/master/README.md"]
+    note: "No ML-KEM in 0.21.2 (2022-01-20), the last release of this package: keys are RSA, Ed25519 and secp256k1, and key exchange is P-256/P-384/P-521 ECDH. The package continues as @libp2p/crypto (pkg:npm/%40libp2p/crypto) from 0.22.0 and this repository is archived, so move to that package."
+  signature:
+    status: none
+    sources: ["https://registry.npmjs.org/libp2p-crypto", "https://github.com/libp2p/js-libp2p-crypto/blob/v0.21.2/src/keys/index.js", "https://github.com/libp2p/js-libp2p-crypto/blob/v0.22.0/package.json", "https://github.com/libp2p/js-libp2p-crypto/blob/master/README.md"]
+    note: "No ML-DSA in 0.21.2 (2022-01-20), the last release of this package: signing keys are RSA, Ed25519 and secp256k1. The package continues as @libp2p/crypto (pkg:npm/%40libp2p/crypto) from 0.22.0 and this repository is archived, so move to that package."
+  checked_at: 2026-11-11
+- library: javascript/libp2p-crypto-scoped
+  purls: ["pkg:npm/%40libp2p/crypto"]
+  kem:
+    status: none
+    sources: ["https://github.com/libp2p/js-libp2p/blob/crypto-v5.2.0/packages/crypto/src/keys/ecdh/index.ts", "https://github.com/libp2p/js-libp2p/blob/crypto-v5.2.0/packages/crypto/src/keys/keys.proto", "https://github.com/libp2p/js-libp2p/issues/3683", "https://github.com/libp2p/js-libp2p/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20kyber%20OR%20dilithium"]
+    note: "No ML-KEM in 5.2.0 (latest, 2026-10-18) or main: key exchange is P-256/P-384/P-521 ECDH and keys are RSA, Ed25519, secp256k1 and ECDSA. Issue #3683 (open, no answer from the project) proposes a hybrid ML-KEM-768 handshake for the separate Noise encrypter package, not for @libp2p/crypto."
+  signature:
+    status: planned
+    sources: ["https://github.com/libp2p/js-libp2p/pull/3432", "https://github.com/libp2p/js-libp2p/blob/crypto-v5.2.0/packages/crypto/src/keys/keys.proto", "https://github.com/libp2p/js-libp2p/pull/3543"]
+    note: "No ML-DSA in 5.2.0 (latest, 2026-10-18) or main, whose key types are RSA, Ed25519, secp256k1 and ECDSA. Draft PR #3432 (open, last commit 2026-04-18) by a js-libp2p committer who merges and releases (#3543) adds ML-DSA-44/65/87 keys to @libp2p/crypto."
+  checked_at: 2026-11-11
+- library: javascript/libsodium-wrappers
+  purls: ["pkg:npm/libsodium-wrappers"]
+  kem:
+    status: available
+    since: "0.8.3"
+    apis: ["libsodium-wrappers.crypto_kem_mlkem768_keypair", "libsodium-wrappers.crypto_kem_mlkem768_seed_keypair", "libsodium-wrappers.crypto_kem_mlkem768_enc", "libsodium-wrappers.crypto_kem_mlkem768_dec", "libsodium-wrappers.crypto_kem_xwing_keypair", "libsodium-wrappers.crypto_kem_xwing_enc", "libsodium-wrappers.crypto_kem_xwing_dec", "libsodium-wrappers.crypto_kem_keypair", "libsodium-wrappers.crypto_kem_enc", "libsodium-wrappers.crypto_kem_dec"]
+    sources: ["https://github.com/jedisct1/libsodium.js/releases/tag/0.8.3", "https://github.com/jedisct1/libsodium.js/blob/0.8.3/API.md", "https://github.com/jedisct1/libsodium.js/blob/0.8.3/wrapper/symbols/crypto_kem_mlkem768_keypair.json", "https://github.com/jedisct1/libsodium.js/tree/0.8.2/wrapper/symbols", "https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE", "https://github.com/jedisct1/libsodium.js/pull/389"]
+    note: "ML-KEM-768 only (crypto_kem_mlkem768_*), and the default crypto_kem_*() is X-Wing (ML-KEM-768 + X25519), from libsodium 1.0.22; 0.8.2 and earlier have no crypto_kem function. The wrappers skip functions the installed libsodium core package lacks, so it needs libsodium 0.8.3 or later from npm, which a normal install resolves."
+  signature:
+    status: none
+    sources: ["https://github.com/jedisct1/libsodium.js/blob/0.8.4/API.md", "https://github.com/jedisct1/libsodium.js/tree/master/wrapper/symbols", "https://github.com/jedisct1/libsodium/commit/11216e4186b17093cbbe109664bf66e80cb6ee60", "https://github.com/jedisct1/libsodium.js/issues?q=ML-DSA"]
+    note: "No ML-DSA in 0.8.4 (latest, 2026-04-19) or master, whose signing functions are Ed25519 only, and no issue or PR asks for it. libsodium itself added ML-DSA-44 on its master on 2026-10-15, unreleased; context only, not a plan from libsodium.js."
+  checked_at: 2026-11-11
+- library: javascript/noble-bls12-381
+  purls: ["pkg:npm/%40noble/bls12-381"]
+  kem:
+    status: none
+    sources: ["https://registry.npmjs.org/@noble/bls12-381", "https://github.com/paulmillr/noble-bls12-381", "https://github.com/paulmillr/noble-bls12-381/blob/1.4.0/README.md", "https://github.com/paulmillr/noble-curves/blob/2.4.0/README.md"]
+    note: "Deprecated and archived: every version on npm says to switch to @noble/curves, and the last release, 1.4.0 (2022-09-30), offers only BLS12-381 signatures and pairings, with no ML-KEM or KEM API. Its successor @noble/curves has no ML-KEM either."
+  signature:
+    status: none
+    sources: ["https://registry.npmjs.org/@noble/bls12-381", "https://github.com/paulmillr/noble-bls12-381", "https://github.com/paulmillr/noble-bls12-381/blob/1.4.0/README.md", "https://github.com/paulmillr/noble-curves/blob/2.4.0/README.md"]
+    note: "Deprecated and archived: every version on npm says to switch to @noble/curves, and the last release, 1.4.0 (2022-09-30), offers only BLS signatures, with no ML-DSA or Dilithium. Its successor @noble/curves has no ML-DSA either."
+  checked_at: 2026-11-11
+- library: javascript/noble-ciphers
+  purls: ["pkg:npm/%40noble/ciphers"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/noble-curves
+  purls: ["pkg:npm/%40noble/curves"]
+  kem:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-curves/blob/2.4.0/README.md", "https://github.com/paulmillr/noble-curves/releases/tag/2.4.0", "https://github.com/paulmillr/noble-curves/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber API up to 2.4.0 (2026-08-27) or main, and no issue or PR asks for it; key agreement is ECDH only (getSharedSecret on the Weierstrass curves, X25519, X448). The README sends post-quantum users to the separate @noble/post-quantum package."
+  signature:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-curves/blob/2.4.0/README.md", "https://github.com/paulmillr/noble-curves/releases/tag/2.4.0", "https://github.com/paulmillr/noble-curves/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium API up to 2.4.0 (2026-08-27) or main, and no issue or PR asks for it; signatures are ECDSA, EdDSA, BIP-340 Schnorr, BLS and FROST. The README sends post-quantum users to the separate @noble/post-quantum package."
+  checked_at: 2026-11-11
+- library: javascript/noble-ed25519
+  purls: ["pkg:npm/%40noble/ed25519"]
+  kem:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-ed25519/blob/3.2.0/README.md", "https://github.com/paulmillr/noble-ed25519/blob/1.7.5/index.ts", "https://registry.npmjs.org/@noble/ed25519"]
+    note: "No ML-KEM or Kyber in 3.2.0 (latest, 2026-08-27), 1.7.5 (legacy-v1) or main; X25519 key agreement (getSharedSecret, curve25519) exists only in 1.x, and no issue, PR or discussion mentions ML-KEM. The README sends post-quantum users to the separate @noble/post-quantum package."
+  signature:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-ed25519/blob/3.2.0/README.md", "https://registry.npmjs.org/@noble/ed25519"]
+    note: "No ML-DSA or Dilithium in 3.2.0 (latest, 2026-08-27) or main; signatures are Ed25519 only, and no issue, PR or discussion mentions ML-DSA. The README sends post-quantum users to the separate @noble/post-quantum package."
+  checked_at: 2026-11-11
+- library: javascript/noble-hashes
+  purls: ["pkg:npm/%40noble/hashes"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/noble-post-quantum
+  purls: ["pkg:npm/%40noble/post-quantum"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/noble-secp256k1
+  purls: ["pkg:npm/%40noble/secp256k1"]
+  kem:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-secp256k1/blob/3.2.0/README.md", "https://registry.npmjs.org/@noble/secp256k1"]
+    note: "No ML-KEM or Kyber in 3.2.0 (latest, 2026-08-30), which is also the head of main; key agreement is secp256k1 ECDH only, and no issue, PR or discussion mentions ML-KEM. The README sends post-quantum users to the separate @noble/post-quantum package."
+  signature:
+    status: none
+    sources: ["https://github.com/paulmillr/noble-secp256k1/blob/3.2.0/README.md", "https://registry.npmjs.org/@noble/secp256k1"]
+    note: "No ML-DSA or Dilithium in 3.2.0 (latest, 2026-08-30), which is also the head of main; signatures are secp256k1 ECDSA and BIP-340 Schnorr only, and no issue, PR or discussion mentions ML-DSA. The README sends post-quantum users to the separate @noble/post-quantum package."
+  checked_at: 2026-11-11
 - library: javascript/node-forge
   purls: [pkg:npm/node-forge]
   kem:
@@ -2089,6 +2485,251 @@
   signature:
     status: none
     note: "No ML-DSA or Dilithium in the source or changelog up to 1.4.3 (2026-11-03); signatures are RSA and Ed25519 only, and no issue, PR or roadmap item mentions ML-DSA."
+  checked_at: 2026-11-11
+- library: javascript/node-seal
+  purls: ["pkg:npm/node-seal"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/node-ssh
+  purls: ["pkg:npm/node-ssh"]
+  kem:
+    status: none
+    sources: ["https://github.com/steelbrain/node-ssh/blob/v13.2.1/src/index.ts", "https://github.com/steelbrain/node-ssh/issues?q=ML-KEM%20OR%20mlkem%20OR%20quantum%20OR%20kyber%20OR%20sntrup", "https://github.com/mscdex/ssh2/blob/v1.17.0/lib/protocol/constants.js", "https://github.com/mscdex/ssh2/pull/1471"]
+    note: "No ML-KEM in 13.2.1 (latest, 2025-03-20) or main, and no issue or PR asks for it: key exchange is done by its ssh2 dependency, configured only through the ssh2 ConnectConfig that connect() forwards. ssh2 1.17.0 (latest) has no ML-KEM either; an ssh2 PR adding mlkem768x25519-sha256 (#1471) was reviewed by its maintainer in October 2025 and is still open."
+  signature:
+    status: none
+    sources: ["https://github.com/steelbrain/node-ssh/blob/v13.2.1/src/index.ts", "https://github.com/steelbrain/node-ssh/issues?q=dilithium%20OR%20mldsa%20OR%20ML-DSA", "https://github.com/mscdex/ssh2/blob/v1.17.0/lib/protocol/keyParser.js"]
+    note: "No ML-DSA in 13.2.1 (latest, 2025-03-20) or main, and no issue or PR asks for it: node-ssh reads the private key (privateKey or privateKeyPath) and hands it to ssh2, which signs and verifies. ssh2 1.17.0 (latest) parses only RSA, DSA, ECDSA and Ed25519 keys."
+  checked_at: 2026-11-11
+- library: javascript/node-tls
+  purls: []
+  kem:
+    status: none
+    sources: ["https://nodejs.org/docs/v26.13.1/api/tls.html", "https://github.com/nodejs/node/blob/v26.13.1/src/crypto/crypto_context.cc", "https://nodejs.org/en/blog/release/v24.5.0", "https://nodejs.org/en/blog/release/v22.20.0", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md"]
+    note: "The tls module has no ML-KEM API of its own: the ecdhCurve option passes an OpenSSL group-list string (X25519MLKEM768 included), and with the default 'auto' the groups are OpenSSL's, which offer X25519MLKEM768 from OpenSSL 3.5. Node.js bundles OpenSSL 3.5 since 24.5.0 and 22.20.0, so migrating means running one of those or a later release."
+  signature:
+    status: none
+    sources: ["https://nodejs.org/docs/v26.13.1/api/tls.html", "https://github.com/nodejs/node/blob/v26.13.1/src/crypto/crypto_context.cc", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://nodejs.org/en/blog/release/v24.5.0", "https://nodejs.org/en/blog/release/v22.20.0"]
+    note: "The tls module has no ML-DSA API of its own: the sigalgs option passes an OpenSSL sigalgs string, and the mldsa44/65/87 TLS schemes come from the bundled OpenSSL 3.5 or later, which lists them by default. Node.js bundles OpenSSL 3.5 since 24.5.0 and 22.20.0."
+  checked_at: 2026-11-11
+- library: javascript/noise-protocol
+  purls: [pkg:npm/noise-protocol]
+  kem:
+    status: none
+    sources: ["https://github.com/emilbayes/noise-protocol/blob/v3.0.2/dh.js", "https://github.com/emilbayes/noise-protocol/blob/v3.0.2/p256-dh.js", "https://github.com/emilbayes/noise-protocol/issues?q=quantum%20OR%20kyber%20OR%20mlkem%20OR%20kem"]
+    note: "No ML-KEM or Kyber in 3.0.2 (latest, 2023-01-12) or master: the default handshake uses X25519, and the only other DH function shipped for createHandshake is P-256 ECDH. No issue or PR mentions ML-KEM, Kyber or post-quantum handshakes."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: javascript/notp
+  purls: ["pkg:npm/notp"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/openpgp
+  purls: [pkg:npm/openpgp]
+  kem:
+    status: planned
+    sources: ["https://github.com/openpgpjs/openpgpjs/pull/2022", "https://github.com/openpgpjs/openpgpjs/blob/8bc35df4/src/enums.js", "https://github.com/openpgpjs/openpgpjs/releases/tag/v6.3.2"]
+    note: "No ML-KEM in 6.3.2 (latest, 2026-09-24). PR #2022 by a project member, merged for v7 on 2026-07-10 and on the default branch main but not yet released, adds ML-KEM-768+X25519 encryption keys (generateKey type 'pqc')."
+  signature:
+    status: planned
+    sources: ["https://github.com/openpgpjs/openpgpjs/pull/2022", "https://github.com/openpgpjs/openpgpjs/blob/8bc35df4/src/openpgp.js", "https://github.com/openpgpjs/openpgpjs/releases/tag/v6.3.2"]
+    note: "No ML-DSA in 6.3.2 (latest, 2026-09-24). PR #2022 by a project member, merged for v7 on 2026-07-10 and on the default branch main but not yet released, adds ML-DSA-65+Ed25519 signing keys (generateKey type 'pqc')."
+  checked_at: 2026-11-11
+- library: javascript/otplib
+  purls: ["pkg:npm/otplib"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/otplib-core
+  purls: ["pkg:npm/%40otplib/core"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/peculiar-x509
+  purls: ["pkg:npm/%40peculiar/x509"]
+  kem:
+    status: none
+    sources: ["https://github.com/PeculiarVentures/x509/blob/v3.1.0/src/ed_algorithm.ts", "https://github.com/PeculiarVentures/x509/releases/tag/v3.1.0", "https://github.com/PeculiarVentures/x509/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in the source or release notes up to 3.1.0 (latest, 2026-10-27) or master; the key-agreement algorithms it maps are X25519 and X448 (ECDH-ES), and no issue or PR mentions ML-KEM."
+  signature:
+    status: available
+    since: "2.1.0"
+    apis: ["@peculiar/x509.MlDsaAlgorithm", "@peculiar/x509.X509CertificateGenerator.create", "@peculiar/x509.X509CertificateGenerator.createSelfSigned", "@peculiar/x509.Pkcs10CertificateRequestGenerator.create", "@peculiar/x509.X509CrlGenerator.create"]
+    sources: ["https://github.com/PeculiarVentures/x509/releases/tag/v2.1.0", "https://github.com/PeculiarVentures/x509/pull/135", "https://github.com/PeculiarVentures/x509/blob/v2.1.0/src/ml_dsa_algorithm.ts", "https://github.com/PeculiarVentures/x509/blob/v2.1.0/src/index.ts", "https://github.com/PeculiarVentures/x509/tree/v2.0.0/src", "https://nodejs.org/api/webcrypto.html", "https://developer.chrome.com/blog/chrome-155-beta", "https://registry.npmjs.org/@peculiar/webcrypto"]
+    note: "2.1.0 maps the WebCrypto names ML-DSA-44/65/87 (passed as signingAlgorithm) to the FIPS 204 OIDs for certificates, CSRs and CRLs; 2.0.0 has no ML-DSA. Signing runs in the runtime's WebCrypto, which has ML-DSA in Chrome 155 and later and in Node.js 24.7.0 and later (still in active development there), while the @peculiar/webcrypto provider has none."
+  checked_at: 2026-11-11
+- library: javascript/pem
+  purls: ["pkg:npm/pem"]
+  kem:
+    status: none
+    sources: ["https://github.com/Dexus/pem/blob/v1.14.8/lib/pem.js", "https://github.com/Dexus/pem/blob/v1.14.8/HISTORY.md", "https://github.com/Dexus/pem/blob/master/lib/pem.ts", "https://github.com/Dexus/pem/issues?q=quantum%20OR%20mlkem%20OR%20kyber%20OR%20pqc%20OR%20%22ML-KEM%22"]
+    note: "No ML-KEM or Kyber in 1.14.8 (latest, 2023-06-02) or on master (unreleased 2.0.0); its key generators make only RSA keys and DH or EC parameters, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/Dexus/pem/blob/v1.14.8/lib/pem.js", "https://github.com/Dexus/pem/blob/master/lib/pem.ts", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md", "https://github.com/Dexus/pem/issues?q=quantum%20OR%20mldsa%20OR%20dilithium%20OR%20pqc%20OR%20%22ML-DSA%22"]
+    note: "No ML-DSA or Dilithium in 1.14.8 (latest, 2023-06-02) or on master (unreleased 2.0.0), and no issue or PR mentions it. CSRs and certificates are signed by the openssl binary with the key the caller passes (clientKey, serviceKey); an ML-DSA key there relies on that OpenSSL (3.5 added ML-DSA), not on pem's API."
+  checked_at: 2026-11-11
+- library: javascript/pkijs
+  purls: ["pkg:npm/pkijs"]
+  kem:
+    status: none
+    sources: ["https://github.com/PeculiarVentures/PKI.js/blob/v4.0.1/FEATURES.md", "https://github.com/PeculiarVentures/PKI.js/blob/v4.0.1/src/CryptoEngine/CryptoEngine.ts"]
+    note: "No ML-KEM or Kyber in the source or release notes up to 4.0.1 (latest, 2026-10-27) or master; CMS EnvelopedData key management is RSA-OAEP key transport and ECDH key agreement, and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/PeculiarVentures/PKI.js/blob/v4.0.1/FEATURES.md", "https://github.com/PeculiarVentures/PKI.js/blob/v4.0.1/src/CryptoEngine/CryptoEngine.ts"]
+    note: "No ML-DSA or Dilithium in the source or release notes up to 4.0.1 (latest, 2026-10-27) or master; signatures are RSASSA-PKCS1-v1_5, RSA-PSS and ECDSA, whose OIDs pkijs maps itself, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/scrypt-js
+  purls: ["pkg:npm/scrypt-js"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/secp256k1
+  purls: ["pkg:npm/secp256k1"]
+  kem:
+    status: none
+    sources: ["https://github.com/cryptocoinjs/secp256k1-node/blob/v5.0.2/API.md", "https://registry.npmjs.org/secp256k1"]
+    note: "No ML-KEM or Kyber in 5.0.2 (latest, 2026-08-07), which is also the head of master; key agreement is secp256k1 ECDH only. No issue or PR mentions ML-KEM, Kyber or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/cryptocoinjs/secp256k1-node/blob/v5.0.2/API.md", "https://registry.npmjs.org/secp256k1"]
+    note: "No ML-DSA or Dilithium in 5.0.2 (latest, 2026-08-07), which is also the head of master; signatures are secp256k1 ECDSA only. No issue or PR mentions ML-DSA, Dilithium or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/selfsigned
+  purls: ["pkg:npm/selfsigned"]
+  kem:
+    status: none
+    sources: ["https://github.com/jfromaniello/selfsigned/blob/v5.5.0/index.js"]
+    note: "Certificate generator with no KEM or key-agreement API, and no ML-KEM or Kyber up to 5.5.0 (latest, 2026-01-12) or master; its keys are RSA or ECDSA only."
+  signature:
+    status: none
+    sources: ["https://github.com/jfromaniello/selfsigned/blob/v5.5.0/index.js", "https://github.com/jfromaniello/selfsigned/blob/v5.5.0/CHANGELOG.md"]
+    note: "No ML-DSA or Dilithium up to 5.5.0 (latest, 2026-01-12) or master: keyType accepts only \"rsa\" (RSASSA-PKCS1-v1_5) or \"ec\" (ECDSA), also for an imported keyPair, and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: javascript/sjcl
+  purls: [pkg:npm/sjcl]
+  kem:
+    status: none
+    sources: ["https://github.com/bitwiseshiftleft/sjcl/blob/35b0641709cbefccb0b58b39b2862152a4f4f428/README.md", "https://github.com/bitwiseshiftleft/sjcl/blob/35b0641709cbefccb0b58b39b2862152a4f4f428/core/ecc.js", "https://github.com/bitwiseshiftleft/sjcl/issues?q=quantum"]
+    note: "No ML-KEM or Kyber up to 1.0.9 (latest, 2026-03-18) or master; its ECC module (ElGamal KEM, ECDH) and SRP ship in the package source but not in the default sjcl.js build. The README declares sjcl deprecated with no named successor, and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/bitwiseshiftleft/sjcl/blob/35b0641709cbefccb0b58b39b2862152a4f4f428/README.md", "https://github.com/bitwiseshiftleft/sjcl/blob/35b0641709cbefccb0b58b39b2862152a4f4f428/core/ecc.js", "https://github.com/bitwiseshiftleft/sjcl/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium up to 1.0.9 (latest, 2026-03-18) or master; signatures are ECDSA in the ECC module, which is not in the default sjcl.js build. The README declares sjcl deprecated with no named successor, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/sm-crypto
+  purls: ["pkg:npm/sm-crypto"]
+  kem:
+    status: none
+    sources: ["https://registry.npmjs.org/sm-crypto", "https://github.com/JuneAndGreen/sm-crypto/blob/24d38a724aae939597657dcd3f6612e0e2c2d2f2/src/index.js", "https://github.com/JuneAndGreen/sm-crypto/blob/24d38a724aae939597657dcd3f6612e0e2c2d2f2/src/sm2/index.js", "https://github.com/JuneAndGreen/sm-crypto/blob/24d38a724aae939597657dcd3f6612e0e2c2d2f2/CHANGELOG.md", "https://github.com/JuneAndGreen/sm-crypto/issues?q=quantum%20OR%20mlkem%20OR%20kyber%20OR%20pqc%20OR%20%22ML-KEM%22"]
+    note: "No ML-KEM or Kyber in 0.5.8 (latest, 2026-10-26) or master, which offer only SM2 (encryption, signature), SM3 and SM4; no issue or PR mentions ML-KEM or post-quantum. Its only public-key algorithm is SM2, including SM2 encryption (doEncrypt, doDecrypt), with no key exchange API."
+  signature:
+    status: none
+    sources: ["https://registry.npmjs.org/sm-crypto", "https://github.com/JuneAndGreen/sm-crypto/blob/24d38a724aae939597657dcd3f6612e0e2c2d2f2/src/sm2/index.js", "https://github.com/JuneAndGreen/sm-crypto/blob/24d38a724aae939597657dcd3f6612e0e2c2d2f2/CHANGELOG.md", "https://github.com/JuneAndGreen/sm-crypto/issues?q=quantum%20OR%20mldsa%20OR%20dilithium%20OR%20pqc%20OR%20%22ML-DSA%22"]
+    note: "No ML-DSA or Dilithium in 0.5.8 (latest, 2026-10-26) or master; signatures are SM2 only (doSignature, doVerifySignature), and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/snarkjs
+  purls: ["pkg:npm/snarkjs"]
+  kem:
+    status: none
+    sources: ["https://github.com/iden3/snarkjs/blob/v0.7.6/README.md", "https://github.com/iden3/snarkjs/blob/v0.7.6/main.js", "https://github.com/iden3/snarkjs/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to v0.7.6 (2026-01-12) or master; snarkjs is a zkSNARK library (Groth16, PLONK and FFLONK over the bn128 and BLS12-381 pairing curves, with powers-of-tau setup) with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/iden3/snarkjs/blob/v0.7.6/README.md", "https://github.com/iden3/snarkjs/blob/v0.7.6/main.js", "https://github.com/iden3/snarkjs/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to v0.7.6 (2026-01-12) or master; its proofs are Groth16, PLONK and FFLONK over pairing-friendly curves, and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: javascript/sodium-native
+  purls: ["pkg:npm/sodium-native"]
+  kem:
+    status: none
+    sources: ["https://github.com/holepunchto/sodium-native/blob/v5.2.1/binding.cc", "https://github.com/holepunchto/sodium-native/blob/v5.2.1/CMakeLists.txt", "https://github.com/holepunchto/sodium-native/issues?q=kem%20OR%20quantum%20OR%20kyber%20OR%20dilithium", "https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE"]
+    note: "No ML-KEM in 5.2.1 (latest, 2026-11-09) or main: it builds a libsodium commit older than 1.0.22, binds no crypto_kem function, key agreement is X25519 only, and no issue or PR mentions ML-KEM or post-quantum. libsodium 1.0.22 (2026-04-09) added ML-KEM768 and X-Wing; context only, not a plan from sodium-native."
+  signature:
+    status: none
+    sources: ["https://github.com/holepunchto/sodium-native/blob/v5.2.1/binding.cc", "https://github.com/holepunchto/sodium-native/issues?q=ML-DSA%20OR%20mldsa%20OR%20quantum%20OR%20dilithium"]
+    note: "No ML-DSA or Dilithium in 5.2.1 (latest, 2026-11-09) or main; signatures are Ed25519 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/sodium-plus
+  purls: ["pkg:npm/sodium-plus"]
+  kem:
+    status: none
+    sources: ["https://github.com/paragonie/sodium-plus/blob/v0.9.0/lib/sodiumplus.js", "https://github.com/paragonie/sodium-plus/issues?q=kem%20OR%20quantum%20OR%20kyber%20OR%20dilithium", "https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE"]
+    note: "No ML-KEM in 0.9.0 (latest, 2020-07-23) or master: its SodiumPlus API wraps only crypto_box, crypto_kx and crypto_scalarmult (X25519) for key exchange, and no issue or PR mentions ML-KEM or post-quantum. libsodium 1.0.22 (2026-04-09) added ML-KEM768 and X-Wing; context only, not a plan from sodium-plus."
+  signature:
+    status: none
+    sources: ["https://github.com/paragonie/sodium-plus/blob/v0.9.0/lib/sodiumplus.js", "https://github.com/paragonie/sodium-plus/issues?q=ML-DSA%20OR%20mldsa%20OR%20quantum%20OR%20dilithium"]
+    note: "No ML-DSA or Dilithium in 0.9.0 (latest, 2020-07-23) or master; signatures are Ed25519 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/speakeasy
+  purls: ["pkg:npm/speakeasy"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/ssh2
+  purls: ["pkg:npm/ssh2"]
+  kem:
+    status: planned
+    sources: ["https://github.com/mscdex/ssh2/blob/v1.17.0/lib/protocol/constants.js", "https://github.com/mscdex/ssh2/blob/master/lib/protocol/constants.js", "https://github.com/mscdex/ssh2/pull/1471", "https://github.com/mscdex/ssh2/issues/1478"]
+    note: "No ML-KEM key exchange in 1.17.0 (latest, 2025-08-20) or master. PR #1471, which adds mlkem768x25519-sha256, is open and was commented on by the maintainer on 2025-10-29 and reviewed on 2025-10-30."
+  signature:
+    status: none
+    sources: ["https://github.com/mscdex/ssh2/blob/v1.17.0/lib/protocol/constants.js", "https://github.com/mscdex/ssh2/blob/master/lib/protocol/constants.js", "https://github.com/mscdex/ssh2/blob/v1.17.0/lib/keygen.js"]
+    note: "No ML-DSA host key or user key in 1.17.0 (latest) or master: host key types stop at ssh-ed25519, ECDSA, RSA and ssh-dss, and utils.generateKeyPair at rsa, ecdsa and ed25519."
+  checked_at: 2026-11-11
+- library: javascript/tweetnacl
+  purls: [pkg:npm/tweetnacl]
+  kem:
+    status: none
+    sources: ["https://github.com/dchest/tweetnacl-js/blob/5bf1ff5fa15e89ae249401b0d5aa54c5c5955041/CHANGELOG.md", "https://github.com/dchest/tweetnacl-js/blob/5bf1ff5fa15e89ae249401b0d5aa54c5c5955041/nacl.d.ts", "https://github.com/dchest/tweetnacl-js/issues?q=quantum"]
+    note: "No ML-KEM or Kyber in the source or changelog up to 1.0.3 (latest, 2020-02-10) or master; public-key encryption is X25519-XSalsa20-Poly1305 (box), and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/dchest/tweetnacl-js/blob/5bf1ff5fa15e89ae249401b0d5aa54c5c5955041/CHANGELOG.md", "https://github.com/dchest/tweetnacl-js/blob/5bf1ff5fa15e89ae249401b0d5aa54c5c5955041/nacl.d.ts", "https://github.com/dchest/tweetnacl-js/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to 1.0.3 (latest, 2020-02-10) or master; signatures are Ed25519 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/web-push
+  purls: ["pkg:npm/web-push"]
+  kem:
+    status: none
+    sources: ["https://github.com/web-push-libs/web-push/blob/v4.0.0/src/encryption-helper.js", "https://www.rfc-editor.org/rfc/rfc8291.html", "https://github.com/web-push-libs/web-push/issues?q=quantum%20OR%20mlkem%20OR%20kyber%20OR%20pqc%20OR%20%22ML-KEM%22"]
+    note: "No ML-KEM or Kyber in the source or release notes up to 4.0.0 (latest, 2026-11-06) or master; payload encryption is the RFC 8291 P-256 ECDH key agreement with AES-128-GCM, and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/web-push-libs/web-push/blob/v4.0.0/src/vapid-helper.js", "https://www.rfc-editor.org/rfc/rfc8292.html", "https://github.com/web-push-libs/web-push/issues?q=quantum%20OR%20mldsa%20OR%20dilithium%20OR%20pqc%20OR%20%22ML-DSA%22"]
+    note: "No ML-DSA or Dilithium in the source or release notes up to 4.0.0 (latest, 2026-11-06) or master; VAPID signs with ES256 (ECDSA P-256) as RFC 8292 specifies, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: javascript/web3
+  purls: ["pkg:npm/web3"]
+  kem:
+    status: none
+    sources: ["https://github.com/web3/web3.js/blob/v4.16.0/packages/web3-eth-accounts/src/account.ts", "https://blog.chainsafe.io/web3-js-sunset/"]
+    note: "No ML-KEM in 4.16.0 (latest), whose only public-key algorithm is secp256k1 ECDSA, with no key agreement or public-key encryption (its encrypt is a password-based keystore). The project was sunset on 2025-03-04 with ethers.js and viem named as migration targets."
+  signature:
+    status: none
+    sources: ["https://github.com/web3/web3.js/blob/v4.16.0/packages/web3-eth-accounts/src/account.ts", "https://github.com/web3/web3.js", "https://blog.chainsafe.io/web3-js-sunset/", "https://github.com/web3/web3.js/issues?q=quantum%20OR%20ML-DSA%20OR%20ML-KEM%20OR%20Dilithium%20OR%20Kyber"]
+    note: "No ML-DSA or Dilithium in 4.16.0 (latest, 2024-12-03) or the 4.x branch; signatures are secp256k1 ECDSA. The project was sunset on 2025-03-04 and its repository is archived, with ethers.js and viem named as migration targets."
+  checked_at: 2026-11-11
+- library: javascript/webcrypto
+  purls: []
+  kem:
+    status: none
+    sources: ["https://nodejs.org/en/blog/release/v24.7.0", "https://nodejs.org/docs/v24.22.3/api/webcrypto.html", "https://nodejs.org/docs/v26.13.1/api/webcrypto.html", "https://developer.chrome.com/blog/chrome-155-beta", "https://chromestatus.com/feature/5198951632470016"]
+    note: "Node.js has ML-KEM-512/768/1024 in crypto.subtle (encapsulateKey, encapsulateBits, decapsulateKey, decapsulateBits) since 24.7.0, but only under the WICG Modern Algorithms extension, still Stability 1.1 (active development) in 24.22.3 and 26.13.1. Chrome enables ML-KEM in WebCrypto from 155, after an origin trial in 151 to 154; context only."
+  signature:
+    status: none
+    sources: ["https://nodejs.org/en/blog/release/v24.7.0", "https://nodejs.org/docs/v24.22.3/api/webcrypto.html", "https://nodejs.org/docs/v26.13.1/api/webcrypto.html", "https://developer.chrome.com/blog/chrome-155-beta", "https://chromestatus.com/feature/5198951632470016"]
+    note: "Node.js has ML-DSA-44/65/87 in crypto.subtle (generateKey, sign, verify) since 24.7.0, but only under the WICG Modern Algorithms extension, still Stability 1.1 (active development) in 24.22.3 and 26.13.1. Chrome enables ML-DSA in WebCrypto from 155, after an origin trial in 151 to 154; context only."
   checked_at: 2026-11-11
 - library: python/argon2-cffi
   purls: [pkg:pypi/argon2-cffi]
@@ -2745,4 +3386,19 @@
     status: none
     sources: ["https://github.com/briansmith/ring/issues/1452"]
     note: "No ML-DSA in ring 0.17.14 nor on main; issue #1452 (post-quantum algorithms) closed in favour of #1685, which covers KEM only and is not planned."
+  checked_at: 2026-11-11
+- library: typescript/crypto
+  purls: []
+  kem:
+    status: available
+    since: "26.4.0"
+    apis: ["crypto.generateKeyPair", "crypto.generateKeyPairSync", "crypto.encapsulate", "crypto.decapsulate"]
+    sources: ["https://nodejs.org/en/blog/release/v24.7.0", "https://nodejs.org/docs/v24.7.0/api/crypto.html", "https://github.com/nodejs/node/pull/63924", "https://nodejs.org/en/blog/release/v24.19.0", "https://nodejs.org/docs/v24.19.0/api/crypto.html", "https://nodejs.org/en/blog/release/v26.4.0", "https://nodejs.org/docs/v26.3.1/api/crypto.html", "https://nodejs.org/docs/v25.9.0/api/crypto.html", "https://nodejs.org/docs/v22.23.5/api/crypto.html", "https://nodejs.org/en/blog/release/v24.5.0", "https://nodejs.org/docs/v26.4.0/api/crypto.html"]
+    note: "ML-KEM-512/768/1024 through crypto.encapsulate and crypto.decapsulate came in 24.7.0 as a release candidate and are stable since 26.4.0, also in 24.19.0 on the 24.x line (24.7 to 24.18, 25.x and 26.0 to 26.3 only have the release candidate). Requires OpenSSL 3.5 or later, bundled by default since 24.5.0."
+  signature:
+    status: available
+    since: "24.6.0"
+    apis: ["crypto.generateKeyPair", "crypto.generateKeyPairSync", "crypto.sign", "crypto.verify"]
+    sources: ["https://nodejs.org/en/blog/release/v24.6.0", "https://github.com/nodejs/node/pull/59259", "https://nodejs.org/docs/v24.6.0/api/crypto.html", "https://nodejs.org/docs/v22.23.5/api/crypto.html", "https://nodejs.org/en/blog/release/v24.5.0"]
+    note: "Key types 'ml-dsa-44', 'ml-dsa-65' and 'ml-dsa-87' in the stable generateKeyPair, sign and verify, also in 25.0.0 and later lines but not in 22.x. Requires OpenSSL 3.5 or later, bundled by default since 24.5.0."
   checked_at: 2026-11-11
