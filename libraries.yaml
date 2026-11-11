@@ -278,6 +278,102 @@
     sources: ["https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/libraries", "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.mldsa", "https://github.com/dotnet/runtime/pull/119289", "https://github.com/dotnet/runtime/blob/v10.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs", "https://github.com/dotnet/runtime/blob/v11.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs"]
     note: "System.Security.Cryptography.MLDsa; needs OpenSSL 3.5 or later, or Windows CNG with PQC support (MLDsa.IsSupported). The .NET 10 what's-new page still calls MLDsa [Experimental], but dotnet/runtime#119289 (backported to 10.0) moved SYSLIB5006 to its PEM, PKCS#8, SubjectPublicKeyInfo, SignPreHash and SignMu members, as the 10.0.0 reference assembly shows. 11.0.0 also makes the PEM, PKCS#8 and SubjectPublicKeyInfo members and X509Certificate2 ML-DSA keys stable; CertificateRequest and X509SignatureGenerator.CreateForMLDsa stay experimental. SlhDsa and CompositeMLDsa are SYSLIB5006 in 10.0.0 and 11.0.0; the .NET 10 previews are set aside."
   checked_at: 2026-11-11
+- library: go/age
+  purls: [pkg:golang/filippo.io/age]
+  kem:
+    status: available
+    since: "1.3.0"
+    apis: [age.GenerateHybridIdentity, age.ParseHybridIdentity, age.ParseHybridRecipient, age.HybridRecipient.Wrap, age.HybridIdentity.Unwrap, tag.NewHybridRecipient]
+    sources: ["https://github.com/FiloSottile/age/releases/tag/v1.3.0", "https://pkg.go.dev/filippo.io/age@v1.3.0", "https://github.com/FiloSottile/age/blob/v1.3.0/pq.go", "https://github.com/FiloSottile/age/blob/v1.3.0/tag/tag.go"]
+    note: "Hybrid ML-KEM-768 + X25519 recipients (age1pq1...) built on HPKE; v1.2.1 and earlier have no post-quantum recipient. The tag package adds hybrid P-256 + ML-KEM-768 recipients for hardware-key plugins."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: go/argon2id
+  purls: [pkg:golang/github.com/alexedwards/argon2id]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: go/aws-kms
+  purls: [pkg:golang/github.com/aws/aws-sdk-go]
+  kem:
+    status: none
+    sources: ["https://github.com/aws/aws-sdk-go/blob/v1.55.8/service/kms/api.go", "https://aws.amazon.com/blogs/developer/announcing-end-of-support-for-aws-sdk-for-go-v1-on-july-31-2025/", "https://github.com/aws/aws-sdk-go-v2/blob/main/service/kms/CHANGELOG.md"]
+    note: "No ML-KEM in v1.55.8, the last release (2025-07-31): KeyAgreementAlgorithmSpec offers ECDH only and EncryptionAlgorithmSpec RSAES OAEP, SM2PKE and SYMMETRIC_DEFAULT; the SDK reached end-of-support on 2025-07-31. KMS ML-KEM is exposed by the successor module github.com/aws/aws-sdk-go-v2/service/kms since v1.62.0."
+  signature:
+    status: none
+    sources: ["https://github.com/aws/aws-sdk-go/blob/v1.55.8/service/kms/api.go", "https://aws.amazon.com/blogs/developer/announcing-end-of-support-for-aws-sdk-for-go-v1-on-july-31-2025/", "https://github.com/aws/aws-sdk-go-v2/blob/main/service/kms/CHANGELOG.md"]
+    note: "No ML-DSA in v1.55.8, the last release: KeySpec stops at RSA, ECC, HMAC, SM2 and SYMMETRIC_DEFAULT, and SigningAlgorithmSpec at RSASSA, ECDSA and SM2DSA; the SDK was in maintenance mode from 2024-07-31 and reached end-of-support on 2025-07-31. KMS ML-DSA is exposed by the successor module github.com/aws/aws-sdk-go-v2/service/kms since v1.41.0."
+  checked_at: 2026-11-11
+- library: go/aws-kms-v2
+  purls: [pkg:golang/github.com/aws/aws-sdk-go-v2/service/kms]
+  kem:
+    status: available
+    since: "1.62.0"
+    apis:
+      - types.KeySpecMlKem512
+      - types.KeySpecMlKem768
+      - types.KeySpecMlKem1024
+      - types.EncapsulationAlgorithmSpecMlKem
+      - kms.Client.Encapsulate
+      - kms.Client.Decapsulate
+    sources:
+      - "https://github.com/aws/aws-sdk-go-v2/blob/service/kms/v1.62.0/service/kms/CHANGELOG.md"
+      - "https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/kms@v1.62.0/types"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-KEM keys (FIPS 203) in AWS KMS, used through Client.Encapsulate and Client.Decapsulate with key usage ENCAPSULATE_DECAPSULATE; released 2026-10-26, absent from 1.61.6. The key operations run in the KMS service, not in the SDK."
+  signature:
+    status: available
+    since: "1.41.0"
+    apis:
+      - types.KeySpecMlDsa44
+      - types.KeySpecMlDsa65
+      - types.KeySpecMlDsa87
+      - types.SigningAlgorithmSpecMlDsaShake256
+    sources:
+      - "https://github.com/aws/aws-sdk-go-v2/blob/service/kms/v1.41.0/service/kms/CHANGELOG.md"
+      - "https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/kms@v1.41.0/types"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-DSA keys (FIPS 204) in AWS KMS, used through Client.Sign and Client.Verify with ML_DSA_SHAKE_256; released 2025-06-12, absent from 1.40.1. The key operations run in the KMS service, not in the SDK."
+  checked_at: 2026-11-11
+- library: go/azkeys
+  purls: [pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-go/blob/main/sdk/security/keyvault/azkeys/CHANGELOG.md", "https://github.com/Azure/azure-rest-api-specs/blob/main/specification/keyvault/data-plane/Keys/models.tsp"]
+    note: "No ML-KEM or Kyber up to v1.5.0 (2026-05-25), v1.6.0-beta.1 or main; key types are RSA, EC and oct, and the Key Vault REST API through 2026-07-01-preview defines no ML-KEM key type or algorithm. No azure-sdk-for-go issue or PR mentions ML-KEM."
+  signature:
+    status: planned
+    sources: ["https://github.com/Azure/azure-sdk-for-go/pull/27761", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-go/blob/main/sdk/security/keyvault/azkeys/CHANGELOG.md"]
+    note: "No ML-DSA in v1.5.0 (2026-05-25), v1.6.0-beta.1 or main, whose key types are RSA, EC and oct. A maintainer's PR (#27761) generated azkeys ML-DSA support (AKP and AKP-HSM keys with ML-DSA-44, ML-DSA-65 and ML-DSA-87, from the Key Vault REST API's 2026-05-01-preview) and then reverted it, saying azkeys moves to the new API version in a later release."
+  checked_at: 2026-11-11
+- library: go/btcec
+  purls: ["pkg:golang/github.com/btcsuite/btcd/btcec/v2"]
+  kem:
+    status: none
+    sources: ["https://github.com/btcsuite/btcd/releases/tag/btcec%2Fv2.5.1", "https://github.com/btcsuite/btcd/blob/btcec/v2.5.1/btcec/ciphering.go"]
+    note: "No ML-KEM or Kyber in v2.5.1 (latest, 2026-10-21) or master; its key agreement is secp256k1 ECDH (GenerateSharedSecret, ellswift). No issue, PR or discussion mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/btcsuite/btcd/releases/tag/btcec%2Fv2.5.1", "https://github.com/btcsuite/btcd/tree/btcec/v2.5.1/btcec"]
+    note: "No ML-DSA or Dilithium in v2.5.1 (latest, 2026-10-21) or master; signatures are secp256k1 ECDSA, BIP-340 Schnorr and MuSig2. No issue, PR or discussion mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: go/circl
+  purls: [pkg:golang/github.com/cloudflare/circl]
+  kem:
+    status: available
+    since: "1.4.0"
+    apis: [mlkem512.GenerateKeyPair, mlkem768.GenerateKeyPair, mlkem1024.GenerateKeyPair, mlkem512.Scheme, mlkem768.Scheme, mlkem1024.Scheme, mlkem512.PublicKey.EncapsulateTo, mlkem768.PublicKey.EncapsulateTo, mlkem1024.PublicKey.EncapsulateTo, mlkem512.PrivateKey.DecapsulateTo, mlkem768.PrivateKey.DecapsulateTo, mlkem1024.PrivateKey.DecapsulateTo, hybrid.X25519MLKEM768, xwing.GenerateKeyPair, xwing.Scheme, xwing.Encapsulate, xwing.Decapsulate, hpke.KEM_XWING]
+    sources: ["https://github.com/cloudflare/circl/releases/tag/v1.4.0", "https://pkg.go.dev/github.com/cloudflare/circl/kem/mlkem", "https://github.com/cloudflare/circl/blob/v1.4.0/kem/mlkem/mlkem768/kyber.go", "https://github.com/cloudflare/circl/releases/tag/v1.5.0", "https://github.com/cloudflare/circl/blob/v1.5.0/kem/hybrid/hybrid.go", "https://github.com/cloudflare/circl/releases/tag/v1.6.0", "https://github.com/cloudflare/circl/blob/v1.6.0/hpke/algs.go", "https://github.com/cloudflare/circl/blob/v1.6.5/kem/schemes/schemes.go"]
+    note: "Pre-standard Kyber (kem/kyber and the Kyber hybrids) is not counted; 1.5.0 added the TLS hybrid X25519MLKEM768 and 1.6.0 the X-Wing hybrid (X25519 + ML-KEM-768), also as an HPKE KEM. kem/schemes.ByName also selects them by name, such as \"ML-KEM-768\"."
+  signature:
+    status: available
+    since: "1.5.0"
+    apis: [mldsa44.GenerateKey, mldsa65.GenerateKey, mldsa87.GenerateKey, mldsa44.Scheme, mldsa65.Scheme, mldsa87.Scheme, mldsa44.SignTo, mldsa65.SignTo, mldsa87.SignTo, mldsa44.PrivateKey.Sign, mldsa65.PrivateKey.Sign, mldsa87.PrivateKey.Sign, mldsa44.Verify, mldsa65.Verify, mldsa87.Verify]
+    sources: ["https://github.com/cloudflare/circl/releases/tag/v1.5.0", "https://pkg.go.dev/github.com/cloudflare/circl/sign/mldsa", "https://github.com/cloudflare/circl/blob/v1.5.0/sign/mldsa/mldsa65/dilithium.go", "https://github.com/cloudflare/circl/blob/v1.6.5/sign/schemes/schemes.go"]
+    note: "Pre-standard Dilithium (sign/dilithium, eddilithium2, eddilithium3) is not counted. sign/schemes.ByName also selects ML-DSA by name, such as \"ML-DSA-65\"."
+  checked_at: 2026-11-11
 - library: go/crypto
   purls: []
   kem:
@@ -293,6 +389,129 @@
     sources: ["https://go.dev/doc/go1.27", "https://pkg.go.dev/crypto/mldsa"]
     note: "Go 1.27 also added ML-DSA keys and signatures to crypto/x509 and ML-DSA SignatureScheme values for TLS 1.3 in crypto/tls."
   checked_at: 2026-11-11
+- library: go/crypto11
+  purls: ["pkg:golang/github.com/ThalesIgnite/crypto11"]
+  kem:
+    status: none
+    sources: ["https://github.com/eclipse-keypont/crypto11/blob/v1.3.0/go.mod", "https://github.com/eclipse-keypont/crypto11/blob/v2.0.0-rc10/CHANGELOG.md", "https://github.com/eclipse-keypont/crypto11/releases/tag/v2.0.0-rc10"]
+    note: "No ML-KEM or Kyber in v1.2.5 (2021-09-09), the last release under this module path; v1.3.0 moved it to github.com/ThalesGroup/crypto11 and the project now lives at github.com/eclipse-keypont/crypto11. Its successor module github.com/eclipse-keypont/crypto11/v2 adds ML-KEM-512/768/1024 (Context.GenerateMLKEMKeyPair) only in release candidates up to v2.0.0-rc10 (2026-10-27), and moving there is a change of module path, not an upgrade."
+  signature:
+    status: none
+    sources: ["https://github.com/eclipse-keypont/crypto11/tree/v1.2.5", "https://github.com/eclipse-keypont/crypto11/blob/v2.0.0-rc10/CHANGELOG.md", "https://github.com/eclipse-keypont/crypto11/issues/138#issuecomment-5760583130"]
+    note: "No ML-DSA or Dilithium in v1.2.5, the last release under this module path (RSA, ECDSA and DSA signing), nor in the successor github.com/eclipse-keypont/crypto11 up to v2.0.0-rc10 or master (2026-10-27), which adds Ed25519 and ML-KEM only. A contributor wrote in issue #138 that v2 will add ML-DSA, but no release candidate has it yet."
+  checked_at: 2026-11-11
+- library: go/decred-secp256k1
+  purls: [pkg:golang/github.com/decred/dcrd/dcrec/secp256k1/v4]
+  kem:
+    status: none
+    sources: ["https://pkg.go.dev/github.com/decred/dcrd/dcrec/secp256k1/v4@v4.4.1"]
+    note: "Only secp256k1 ECDH (GenerateSharedSecret) up to v4.4.1, no ML-KEM."
+  signature:
+    status: none
+    sources: ["https://pkg.go.dev/github.com/decred/dcrd/dcrec/secp256k1/v4@v4.4.1"]
+    note: "Only secp256k1 ECDSA and Schnorr signatures up to v4.4.1, no ML-DSA."
+  checked_at: 2026-11-11
+- library: go/edwards25519
+  purls: [pkg:golang/filippo.io/edwards25519]
+  kem:
+    status: none
+    sources: ["https://github.com/FiloSottile/edwards25519/blob/v1.2.0/README.md", "https://pkg.go.dev/filippo.io/edwards25519@v1.2.0"]
+    note: "Low-level edwards25519 group library (points, scalars, Montgomery encoding for X25519) with no ML-KEM or Kyber up to v1.2.0 (2026-02-17, latest) or main; no issue or PR mentions post-quantum. Its README points key agreement to Go's crypto/ecdh."
+  signature:
+    status: none
+    sources: ["https://github.com/FiloSottile/edwards25519/blob/v1.2.0/README.md", "https://pkg.go.dev/filippo.io/edwards25519@v1.2.0"]
+    note: "No ML-DSA or Dilithium up to v1.2.0 (latest) or main; the group operations back Ed25519-style signatures, and no issue or PR mentions post-quantum. Its README points signatures to Go's crypto/ed25519."
+  checked_at: 2026-11-11
+- library: go/emmansun-gmsm
+  purls: [pkg:golang/github.com/emmansun/gmsm]
+  kem:
+    status: available
+    since: "0.32.0"
+    apis: [mlkem.GenerateKey512, mlkem.GenerateKey768, mlkem.GenerateKey1024, mlkem.NewDecapsulationKey768, mlkem.NewDecapsulationKey1024, mlkem.NewEncapsulationKey768, mlkem.NewEncapsulationKey1024, mlkem.EncapsulationKey768.Encapsulate, mlkem.EncapsulationKey1024.Encapsulate, mlkem.DecapsulationKey768.Decapsulate, mlkem.DecapsulationKey1024.Decapsulate]
+    sources: ["https://github.com/emmansun/gmsm/releases/tag/v0.32.0", "https://pkg.go.dev/github.com/emmansun/gmsm/mlkem"]
+    note: "The mlkem package requires Go 1.24 or later."
+  signature:
+    status: available
+    since: "0.31.0"
+    apis: [mldsa.GenerateKey44, mldsa.GenerateKey65, mldsa.GenerateKey87, mldsa.NewPrivateKey44, mldsa.NewPrivateKey65, mldsa.NewPrivateKey87, mldsa.NewPublicKey44, mldsa.NewPublicKey65, mldsa.NewPublicKey87, mldsa.PrivateKey65.Sign, mldsa.PublicKey65.Verify, smx509.MLDSA44, smx509.MLDSA65, smx509.MLDSA87]
+    sources: ["https://github.com/emmansun/gmsm/releases/tag/v0.31.0", "https://pkg.go.dev/github.com/emmansun/gmsm/mldsa", "https://github.com/emmansun/gmsm/releases/tag/v0.41.0"]
+    note: "The mldsa package requires Go 1.24 or later. ML-DSA in smx509 and pkcs7 came in 0.41.0."
+  checked_at: 2026-11-11
+- library: go/flynn-noise
+  purls: [pkg:golang/github.com/flynn/noise]
+  kem:
+    status: none
+    sources: ["https://github.com/flynn/noise/issues/37", "https://github.com/flynn/noise/pull/38"]
+    note: "No ML-KEM up to v1.1.0 (2024-02-02): DH25519 is the only DH function and the latest release. A user's 2021 request for Noise HFS with pre-standard Kyber1024 (#37, still open) and its PR (#38, closed unmerged by the requester's organization in 2025) got no answer from the project."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: go/gliderlabs-ssh
+  purls: [pkg:golang/github.com/gliderlabs/ssh]
+  kem:
+    status: none
+    sources: ["https://github.com/gliderlabs/ssh/blob/v0.3.8/server.go", "https://github.com/golang/crypto/blob/v0.38.0/ssh/mlkem.go"]
+    note: "No ML-KEM API in v0.3.8 (latest, 2024-12-12) or master, and no issue or PR asks for it: key exchange is left to golang.org/x/crypto/ssh, set only through the gossh.ServerConfig that ServerConfigCallback returns. x/crypto/ssh itself offers mlkem768x25519-sha256 first by default from v0.38.0 on Go 1.24 or later, so the x/crypto version in the caller's build decides."
+  signature:
+    status: none
+    sources: ["https://github.com/gliderlabs/ssh/blob/v0.3.8/util.go", "https://github.com/gliderlabs/ssh/blob/v0.3.8/options.go", "https://github.com/golang/crypto/blob/v0.58.0/ssh/keys.go", "https://github.com/golang/crypto/blob/v0.58.0/ssh/mldsa.go"]
+    note: "No ML-DSA API in v0.3.8 (latest) or master, and no issue or PR asks for it: host keys are gossh.Signer values parsed by x/crypto/ssh (HostKeyFile, HostKeyPEM), and a server with none gets a generated RSA-2048 key. x/crypto/ssh added ssh-mldsa-44/65/87 keys in v0.58.0, on Go 1.27 or later."
+  checked_at: 2026-11-11
+- library: go/gnark
+  purls: ["pkg:golang/github.com/consensys/gnark"]
+  kem:
+    status: none
+    sources: ["https://github.com/Consensys-Incorporated/gnark/releases/tag/v0.16.5", "https://github.com/Consensys-Incorporated/gnark/blob/v0.16.5/CHANGELOG.md", "https://github.com/Consensys-Incorporated/gnark/blob/v0.16.5/README.md"]
+    note: "No ML-KEM or Kyber in the source or changelog up to v0.16.5 (2026-11-09) or master; gnark is a zkSNARK library (Groth16 and PLONK over BN254, BLS12-381, BLS12-377 and BW6-761) with no KEM or encryption API."
+  signature:
+    status: none
+    sources: ["https://github.com/Consensys-Incorporated/gnark/blob/v0.16.5/CHANGELOG.md", "https://github.com/Consensys-Incorporated/gnark/tree/v0.16.5/std/signature", "https://github.com/Consensys-Incorporated/gnark/blob/v0.16.5/README.md"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to v0.16.5 (2026-11-09) or master; its in-circuit signature gadgets are ECDSA, EdDSA and BLS, and its proofs are Groth16 and PLONK over pairing-friendly curves."
+  checked_at: 2026-11-11
+- library: go/gnark-crypto
+  purls: ["pkg:golang/github.com/consensys/gnark-crypto"]
+  kem:
+    status: none
+    sources: ["https://github.com/Consensys/gnark-crypto/blob/v0.22.0/README.md"]
+    note: "Elliptic-curve and pairing library for zero-knowledge proofs (ECDSA, EdDSA, pairings, KZG commitments); no KEM, key-agreement or encryption API, and no ML-KEM or Kyber in the source up to v0.22.0 (2026-10-02) or master."
+  signature:
+    status: none
+    sources: ["https://github.com/Consensys/gnark-crypto/blob/v0.22.0/README.md", "https://github.com/Consensys/gnark-crypto/blob/v0.22.0/CHANGELOG.md", "https://github.com/Consensys/gnark-crypto/pull/832"]
+    note: "No ML-DSA or Dilithium in the source up to v0.22.0 (2026-10-02) or master; signatures are ECDSA and EdDSA only, and no issue, PR or discussion asks for ML-DSA. Its lattice-based SIS hash and the open post-quantum multiset-hash PR #832 are not signature schemes."
+  checked_at: 2026-11-11
+- library: go/go-ethereum
+  purls: [pkg:golang/github.com/ethereum/go-ethereum]
+  kem:
+    status: none
+    sources: ["https://github.com/ethereum/go-ethereum/releases/tag/v1.17.10", "https://pkg.go.dev/github.com/ethereum/go-ethereum@v1.17.10/crypto/ecies"]
+    note: "No ML-KEM up to v1.17.10; its key agreement is ECDH through crypto/ecies (ECIES)."
+  signature:
+    status: none
+    sources: ["https://github.com/ethereum/go-ethereum/releases/tag/v1.17.10", "https://pkg.go.dev/github.com/ethereum/go-ethereum@v1.17.10/crypto", "https://github.com/ethereum/go-ethereum/pull/34091", "https://eips.ethereum.org/EIPS/eip-8051"]
+    note: "No ML-DSA up to v1.17.10, whose signatures are secp256k1 ECDSA. An outside contributor's ML-DSA-65 precompile PR (#34091) was closed by a maintainer, who referred it to a fork or the AllCoreDevs process; EIP-8051, an ML-DSA verification precompile, is still a Draft."
+  checked_at: 2026-11-11
+- library: go/go-jose-v2
+  purls: [pkg:golang/gopkg.in/square/go-jose.v2]
+  kem:
+    status: none
+    sources: ["https://github.com/square/go-jose", "https://github.com/go-jose/go-jose/blob/main/README.md"]
+    note: "No ML-KEM up to v2.6.0, the last release; square/go-jose is deprecated and archived, with no further updates to v2."
+  signature:
+    status: none
+    sources: ["https://github.com/square/go-jose", "https://github.com/go-jose/go-jose/releases/tag/v4.1.8"]
+    note: "No ML-DSA up to v2.6.0, the last release; square/go-jose is deprecated and archived, with no further updates to v2. ML-DSA exists only in the successor github.com/go-jose/go-jose/v4 since v4.1.8, a different module."
+  checked_at: 2026-11-11
+- library: go/go-jose-v3
+  purls: [pkg:golang/github.com/go-jose/go-jose/v3]
+  kem:
+    status: none
+    sources: ["https://github.com/go-jose/go-jose/blob/v4.1.9/README.md", "https://github.com/go-jose/go-jose/releases/tag/v3.0.5"]
+    note: "No ML-KEM in JWE up to v3.0.5; v3 only receives critical security updates and the project recommends migrating to v4."
+  signature:
+    status: none
+    sources: ["https://github.com/go-jose/go-jose/blob/v4.1.9/README.md", "https://github.com/go-jose/go-jose/releases/tag/v3.0.5", "https://github.com/go-jose/go-jose/releases/tag/v4.1.8"]
+    note: "No ML-DSA in JWS up to v3.0.5; v3 only receives critical security updates. ML-DSA ships in the successor module github.com/go-jose/go-jose/v4 since v4.1.8."
+  checked_at: 2026-11-11
 - library: go/go-jose-v4
   purls: [pkg:golang/github.com/go-jose/go-jose/v4]
   kem:
@@ -305,6 +524,308 @@
     apis: [jose.MLDSA44, jose.MLDSA65, jose.MLDSA87]
     sources: ["https://github.com/go-jose/go-jose/releases/tag/v4.1.8", "https://github.com/go-jose/go-jose/pull/282", "https://github.com/go-jose/go-jose/blob/v4.1.8/mldsa.go"]
     note: "ML-DSA-44/65/87 (RFC 9964) for JWS and AKP JWKs, with keys from Go's crypto/mldsa; requires building with Go 1.27 or later, older toolchains compile a stub that rejects ML-DSA keys."
+  checked_at: 2026-11-11
+- library: go/go-libp2p
+  purls: [pkg:golang/github.com/libp2p/go-libp2p]
+  kem:
+    status: none
+    sources: ["https://github.com/libp2p/go-libp2p/blob/v0.51.0/p2p/security/tls/crypto.go", "https://go.dev/doc/go1.24", "https://github.com/libp2p/go-libp2p/issues/3523", "https://github.com/libp2p/specs/pull/727"]
+    note: "No ML-KEM API in 0.51.0 (latest, 2026-10-23) or master: Noise is X25519 only, and the TLS security transport leaves crypto/tls Config.CurvePreferences unset, so Go's default X25519MLKEM768 (Go 1.24+) applies with no go-libp2p selector. A maintainer closed the hybrid ML-KEM Noise request #3523 as needing a libp2p spec first; the spec PR libp2p/specs#727 is open with no review from the project."
+  signature:
+    status: planned
+    sources: ["https://github.com/libp2p/specs/pull/711", "https://github.com/libp2p/go-libp2p/pull/3377", "https://github.com/libp2p/go-libp2p/blob/v0.51.0/core/crypto/pb/crypto.proto"]
+    note: "No ML-DSA in 0.51.0 (latest) or master: peer identity keys are RSA, Ed25519, Secp256k1 and ECDSA. A go-libp2p maintainer opened libp2p/specs#711 (open) to add PKIX key types so peer IDs can use ML-DSA keys, after saying in go-libp2p#3377 (a community ML-DSA and Dilithium PR, closed) that such changes go through libp2p/specs before go-libp2p."
+  checked_at: 2026-11-11
+- library: go/golang-fips-openssl
+  purls: [pkg:golang/github.com/golang-fips/openssl/v2]
+  kem:
+    status: planned
+    sources: ["https://github.com/golang-fips/openssl/pull/310", "https://github.com/golang-fips/openssl/blob/28bc96e609c50e8f0d5129c67c5b7490191a5270/mlkem.go", "https://github.com/golang-fips/openssl/tags"]
+    note: "ML-KEM-768 and ML-KEM-1024 (GenerateKeyMLKEM768, GenerateKeyMLKEM1024, Encapsulate/Decapsulate) were merged into the default branch v2 by the maintainers in PR #310 (2025-11-04), but no release is tagged after v2.0.3, which has no ML-KEM. The API reports support at runtime only when the system OpenSSL provides ML-KEM (OpenSSL 3.5+)."
+  signature:
+    status: planned
+    sources: ["https://github.com/golang-fips/openssl/pull/445", "https://github.com/golang-fips/openssl/blob/28bc96e609c50e8f0d5129c67c5b7490191a5270/mldsa.go", "https://github.com/golang-fips/openssl/tags"]
+    note: "ML-DSA-44/65/87 (GenerateKeyMLDSA with MLDSA44, MLDSA65, MLDSA87) was merged into the default branch v2 in PR #445 (2026-05-14), but no release is tagged after v2.0.3, which has no ML-DSA. It needs OpenSSL 3.5+ at runtime."
+  checked_at: 2026-11-11
+- library: go/golang-jwt
+  purls: [pkg:golang/github.com/golang-jwt/jwt/v5]
+  kem:
+    status: none
+    sources: ["https://github.com/golang-jwt/jwt/blob/v5.3.1/README.md"]
+    note: "The library signs and verifies JWTs only (JWS); it has no JWE or key-agreement API, so it offers no ML-KEM up to v5.3.1."
+  signature:
+    status: planned
+    sources: ["https://github.com/golang-jwt/jwt/issues/508", "https://github.com/golang-jwt/jwt/pull/561"]
+    note: "No ML-DSA up to v5.3.1 (latest). In open issue #508 a collaborator agreed to add ML-DSA behind Go 1.27 build tags, and a maintainer opened PR #561 (ML-DSA-44/65/87 on crypto/mldsa), open and unreleased."
+  checked_at: 2026-11-11
+- library: go/google-cloud-kms
+  purls: [pkg:golang/cloud.google.com/go/kms]
+  kem:
+    status: available
+    since: "1.23.0"
+    apis:
+      - kmspb.CryptoKeyVersion_ML_KEM_768
+      - kmspb.CryptoKeyVersion_ML_KEM_1024
+      - kmspb.CryptoKeyVersion_KEM_XWING
+      - kmspb.CryptoKey_KEY_ENCAPSULATION
+      - kms.KeyManagementClient.Decapsulate
+    sources:
+      - "https://github.com/googleapis/google-cloud-go/releases/tag/kms%2Fv1.23.0"
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+      - "https://docs.cloud.google.com/kms/docs/key-encapsulation-mechanisms"
+      - "https://cloud.google.com/blog/products/identity-security/future-proofing-data-integrity-quantum-safe-digital-signatures-in-cloud-kms"
+    note: "Cloud KMS key encapsulation (ML_KEM_768, ML_KEM_1024 and the X-Wing hybrid KEM_XWING), Preview from 2025-09-23 and generally available since July 2026, so any client from 1.23.0 on reaches it. Encapsulation is done by the caller with the public key; Cloud KMS only decapsulates."
+  signature:
+    status: available
+    since: "1.21.0"
+    apis:
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_44
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_65
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_87
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_44_EXTERNAL_MU
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_65_EXTERNAL_MU
+      - kmspb.CryptoKeyVersion_PQ_SIGN_ML_DSA_87_EXTERNAL_MU
+      - kms.KeyManagementClient.AsymmetricSign
+    sources:
+      - "https://github.com/googleapis/google-cloud-go/releases/tag/kms%2Fv1.21.0"
+      - "https://github.com/googleapis/google-cloud-go/releases/tag/kms%2Fv1.26.0"
+      - "https://github.com/googleapis/google-cloud-go/blob/kms/v1.26.0/kms/apiv1/kmspb/resources.pb.go"
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+      - "https://cloud.google.com/blog/products/identity-security/future-proofing-data-integrity-quantum-safe-digital-signatures-in-cloud-kms"
+    note: "PQ_SIGN_ML_DSA_65 ships since 1.21.0 (2025-02-20), when the service feature was Preview; ML-DSA-44, ML-DSA-87 and the external-mu variants since 1.26.0 (2026-02-19). The service made ML-DSA GA on 2026-07-16, so any client from 1.21.0 on reaches it."
+  checked_at: 2026-11-11
+- library: go/gopenpgp
+  purls: [pkg:golang/github.com/ProtonMail/gopenpgp/v2]
+  kem:
+    status: none
+    sources: ["https://github.com/ProtonMail/gopenpgp/blob/v2.11.1/crypto/key.go", "https://github.com/ProtonMail/gopenpgp/releases/tag/v3.5.1", "https://github.com/ProtonMail/gopenpgp/issues/352"]
+    note: "No ML-KEM in the v2 module up to v2.11.1: crypto.GenerateKey makes only \"rsa\" or \"x25519\" keys. ML-KEM+ECDH keys came in the successor module github.com/ProtonMail/gopenpgp/v3 with profile.PQC() in 3.5.1, so upgrading means moving to v3."
+  signature:
+    status: none
+    sources: ["https://github.com/ProtonMail/gopenpgp/blob/v2.11.1/crypto/key.go", "https://github.com/ProtonMail/gopenpgp/releases/tag/v3.5.1", "https://github.com/ProtonMail/gopenpgp/issues/352"]
+    note: "No ML-DSA in the v2 module up to v2.11.1: crypto.GenerateKey makes only \"rsa\" or \"x25519\" keys. ML-DSA+EdDSA keys came in the successor module github.com/ProtonMail/gopenpgp/v3 with profile.PQC() in 3.5.1, so upgrading means moving to v3."
+  checked_at: 2026-11-11
+- library: go/gotp
+  purls: [pkg:golang/github.com/xlzd/gotp]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: go/herumi-bls-eth
+  purls: [pkg:golang/github.com/herumi/bls-eth-go-binary]
+  kem:
+    status: none
+    sources: ["https://github.com/herumi/bls-eth-go-binary/tree/v1.38.0", "https://github.com/herumi/bls-eth-go-binary/issues?q=quantum%20OR%20PQC%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No KEM API up to v1.38.0 (2026-10-05): the package offers only BLS signatures over BLS12-381, and no issue or PR in the project mentions ML-KEM or post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/herumi/bls-eth-go-binary/tree/v1.38.0", "https://pkg.go.dev/github.com/herumi/bls-eth-go-binary/bls@v1.38.0", "https://github.com/herumi/bls-eth-go-binary/issues?q=quantum%20OR%20PQC%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA up to v1.38.0 (2026-10-05): the API offers only BLS signatures over BLS12-381, and no issue or PR in the project mentions ML-DSA or post-quantum support."
+  checked_at: 2026-11-11
+- library: go/jamesruan-sodium
+  purls: ["pkg:golang/github.com/jamesruan/sodium"]
+  kem:
+    status: none
+    sources: ["https://github.com/jamesruan/sodium/blob/v1.0.14/README.md", "https://proxy.golang.org/github.com/jamesruan/sodium/@v/list", "https://proxy.golang.org/github.com/jamesruan/sodium/@v/v1.0.14.info", "https://github.com/jamesruan/sodium/issues?q=is%3Aissue%20OR%20is%3Apr", "https://github.com/jedisct1/libsodium/blob/1.0.22-RELEASE/ChangeLog"]
+    note: "No ML-KEM in v1.0.14 (2022-01-02, latest) or master, and no issue or PR asks for it; the cgo wrapper is built against libsodium 1.0.18 and binds only crypto_box, crypto_kx and crypto_scalarmult (X25519) for key exchange. libsodium itself added ML-KEM768 (crypto_kem_mlkem768_*) and the X-Wing hybrid in 1.0.22; this binding does not expose them."
+  signature:
+    status: none
+    sources: ["https://github.com/jamesruan/sodium/blob/v1.0.14/README.md", "https://proxy.golang.org/github.com/jamesruan/sodium/@v/list", "https://proxy.golang.org/github.com/jamesruan/sodium/@v/v1.0.14.info", "https://github.com/jamesruan/sodium/issues?q=is%3Aissue%20OR%20is%3Apr"]
+    note: "No ML-DSA in v1.0.14 (2022-01-02, latest) or master, and no issue or PR asks for it; its signing API (MakeSignKP, Sign, SignDetached) wraps libsodium's Ed25519 crypto_sign only."
+  checked_at: 2026-11-11
+- library: go/jwt-go
+  purls: [pkg:golang/github.com/dgrijalva/jwt-go]
+  kem:
+    status: none
+    sources: ["https://github.com/dgrijalva/jwt-go/blob/v3.2.0/README.md", "https://github.com/dgrijalva/jwt-go/blob/master/README.md"]
+    note: "JWS-only library (JWE is out of scope per its README) with no key agreement or KEM API up to v3.2.0 (last release). The repository is archived and points to its successor github.com/golang-jwt/jwt."
+  signature:
+    status: none
+    sources: ["https://github.com/dgrijalva/jwt-go/blob/master/README.md", "https://github.com/dgrijalva/jwt-go/issues/462", "https://github.com/golang-jwt/jwt/issues/508", "https://github.com/golang-jwt/jwt/pull/561"]
+    note: "No ML-DSA or Dilithium in v3.2.0 (last release) or master; the repository is archived and no longer maintained. Its successor github.com/golang-jwt/jwt (another module path) has an open maintainer PR adding ML-DSA for Go 1.27 (#561, issue #508), not released."
+  checked_at: 2026-11-11
+- library: go/jwx
+  purls: [pkg:golang/github.com/lestrrat-go/jwx]
+  kem:
+    status: none
+    sources: ["https://github.com/lestrrat-go/jwx/blob/v1.2.31/jwa/key_encryption_gen.go", "https://github.com/lestrrat-go/jwx/blob/v3.4.0/README.md", "https://github.com/lestrrat-go/jwx/blob/v4.6.0/Changes-v4.md"]
+    note: "No ML-KEM in v1.2.31, the last v1 release, whose asymmetric key management stops at RSA and ECDH-ES; the project tells v0/v1 users to migrate. ML-KEM for JWE ships only for the v4 module (github.com/lestrrat-go/jwx/v4) through the companion github.com/jwx-go/mlkem/v4, so upgrading means moving to that module path."
+  signature:
+    status: none
+    sources: ["https://github.com/lestrrat-go/jwx/blob/v1.2.31/jwa/signature_gen.go", "https://github.com/lestrrat-go/jwx/blob/v3.4.0/README.md", "https://github.com/lestrrat-go/jwx/blob/v4.6.0/Changes-v4.md", "https://github.com/lestrrat-go/jwx/blob/v4.6.0/Changes"]
+    note: "No ML-DSA in v1.2.31, the last v1 release, whose asymmetric signatures stop at RSA, ECDSA and EdDSA; the project tells v0/v1 users to migrate. ML-DSA ships only for the v4 module (github.com/lestrrat-go/jwx/v4): built in since v4.4.0 with Go 1.27, through the companion github.com/jwx-go/mldsa/v4 on Go 1.26, so upgrading means moving to that module path."
+  checked_at: 2026-11-11
+- library: go/jwx-v2
+  purls: [pkg:golang/github.com/lestrrat-go/jwx/v2]
+  kem:
+    status: none
+    sources: ["https://github.com/lestrrat-go/jwx/blob/v4.6.0/SECURITY.md", "https://github.com/lestrrat-go/jwx/discussions/1079", "https://github.com/lestrrat-go/jwx/blob/v4.6.0/Changes-v4.md"]
+    note: "No ML-KEM up to v2.1.7 (latest), and the project marks v2 unmaintained (\"Do not use\"). ML-KEM for JWE exists only in the v4 line (github.com/lestrrat-go/jwx/v4), through the companion module github.com/jwx-go/mlkem/v4."
+  signature:
+    status: none
+    sources: ["https://github.com/lestrrat-go/jwx/blob/v4.6.0/SECURITY.md", "https://github.com/lestrrat-go/jwx/discussions/1079", "https://github.com/lestrrat-go/jwx/blob/v4.6.0/Changes"]
+    note: "No ML-DSA up to v2.1.7 (latest), and the project marks v2 unmaintained (\"Do not use\"). ML-DSA ships natively in the successor github.com/lestrrat-go/jwx/v4 since 4.4.0 (Go 1.27 or later), another purl."
+  checked_at: 2026-11-11
+- library: go/kyber
+  purls: ["pkg:golang/go.dedis.ch/kyber/v3"]
+  kem:
+    status: none
+    sources: ["https://github.com/dedis/kyber/tree/v3.1.0", "https://github.com/dedis/kyber/releases/tag/v4.0.2", "https://github.com/dedis/kyber/issues/404"]
+    note: "Despite its name, not the Kyber KEM: an elliptic-curve and pairing toolbox (ECIES, ECDH over its groups) with no ML-KEM or pre-standard Kyber up to v3.1.0 or its successor module go.dedis.ch/kyber/v4 (v4.0.2, 2026-04-14). A 2019 post-quantum inquiry was closed by a maintainer as off-topic, with no plan (dedis/kyber#404)."
+  signature:
+    status: none
+    sources: ["https://github.com/dedis/kyber/tree/v3.1.0", "https://github.com/dedis/kyber/releases/tag/v4.0.2", "https://github.com/dedis/kyber/issues/404"]
+    note: "Signatures are Schnorr, EdDSA, DSS, BLS, BDN and threshold BLS; no ML-DSA or Dilithium up to v3.1.0 or go.dedis.ch/kyber/v4 v4.0.2. The 2019 post-quantum inquiry (dedis/kyber#404) was closed by a maintainer as off-topic, with no plan."
+  checked_at: 2026-11-11
+- library: go/library-go
+  purls: [pkg:golang/github.com/openshift/library-go]
+  kem:
+    status: planned
+    sources: ["https://github.com/openshift/library-go/pull/2347", "https://github.com/openshift/library-go/blob/ee0a87843ddac7115c55e3411336c2cd4fdc432c/pkg/crypto/crypto.go", "https://proxy.golang.org/github.com/openshift/library-go/@v/list"]
+    note: "PR #2347, merged into master on 2026-08-07, adds crypto.TLSGroupToCurveID and crypto.TLSGroupsToCurveIDs, which map the TLS groups X25519MLKEM768, SecP256r1MLKEM768 and SecP384r1MLKEM1024 to Go crypto/tls curve IDs (Go 1.26). The module publishes no tagged releases, so no released version has it."
+  signature:
+    status: none
+  checked_at: 2026-11-11
+- library: go/microsoft-go-crypto-openssl
+  purls: [pkg:golang/github.com/microsoft/go-crypto-openssl]
+  kem:
+    status: available
+    since: "0.5.0"
+    apis: [openssl.GenerateKeyMLKEM768, openssl.GenerateKeyMLKEM1024, openssl.NewDecapsulationKeyMLKEM768, openssl.NewDecapsulationKeyMLKEM1024, openssl.NewEncapsulationKeyMLKEM768, openssl.NewEncapsulationKeyMLKEM1024, openssl.EncapsulationKeyMLKEM768.Encapsulate, openssl.EncapsulationKeyMLKEM1024.Encapsulate, openssl.DecapsulationKeyMLKEM768.Decapsulate, openssl.DecapsulationKeyMLKEM1024.Decapsulate]
+    sources: ["https://github.com/microsoft/go-crypto-openssl/blob/v0.5.0/openssl/mlkem.go", "https://pkg.go.dev/github.com/microsoft/go-crypto-openssl/openssl", "https://proxy.golang.org/github.com/microsoft/go-crypto-openssl/@v/list", "https://pkg.go.dev/github.com/microsoft/go-crypto-openssl@v0.2.9/openssl"]
+    note: "v0.5.0 is the first release after v0.2.9 (no ML-KEM); there are no release notes, so since comes from the module proxy's version list and the source at the tag. ML-KEM runs through the system OpenSSL and needs OpenSSL 3.5 or later at runtime (openssl.SupportsMLKEM768 / SupportsMLKEM1024 report false on 1.1.1 and 3.0-3.4)."
+  signature:
+    status: available
+    since: "0.5.0"
+    apis: [openssl.GenerateKeyMLDSA, openssl.NewPrivateKeyMLDSA, openssl.NewPublicKeyMLDSA, openssl.MLDSA44, openssl.MLDSA65, openssl.MLDSA87, openssl.PrivateKeyMLDSA.Sign, openssl.PublicKeyMLDSA.Verify]
+    sources: ["https://github.com/microsoft/go-crypto-openssl/blob/v0.5.0/openssl/mldsa.go", "https://pkg.go.dev/github.com/microsoft/go-crypto-openssl/openssl", "https://proxy.golang.org/github.com/microsoft/go-crypto-openssl/@v/list", "https://pkg.go.dev/github.com/microsoft/go-crypto-openssl@v0.2.9/openssl"]
+    note: "v0.5.0 is the first release after v0.2.9 (no ML-DSA); there are no release notes, so since comes from the module proxy's version list and the source at the tag. ML-DSA runs through the system OpenSSL and needs OpenSSL 3.5 or later at runtime (openssl.SupportsMLDSA reports false on older versions)."
+  checked_at: 2026-11-11
+- library: go/miekg-pkcs11
+  purls: ["pkg:golang/github.com/miekg/pkcs11"]
+  kem:
+    status: none
+    sources: ["https://github.com/miekg/pkcs11/blob/v1.1.2/pkcs11t.h", "https://github.com/miekg/pkcs11/pull/191", "https://docs.oasis-open.org/pkcs11/pkcs11-spec/v3.2/pkcs11-spec-v3.2.html"]
+    note: "No CKM_ML_KEM, CKK_ML_KEM or C_EncapsulateKey binding in v1.1.2 (latest, 2026-01-22) or master, which are built on the PKCS#11 v2.40 headers; PKCS#11 v3.2 defines ML-KEM. A community PR adding v3.2 and ML-KEM (#191) is open with no maintainer review, so it is not a plan."
+  signature:
+    status: none
+    sources: ["https://github.com/miekg/pkcs11/blob/v1.1.2/pkcs11t.h", "https://github.com/miekg/pkcs11/pull/191", "https://docs.oasis-open.org/pkcs11/pkcs11-spec/v3.2/pkcs11-spec-v3.2.html"]
+    note: "No CKM_ML_DSA or CKK_ML_DSA constant in v1.1.2 (latest, 2026-01-22) or master, which are built on the PKCS#11 v2.40 headers; PKCS#11 v3.2 defines ML-DSA. A community PR adding v3.2 and ML-DSA (#191) is open with no maintainer review, so it is not a plan."
+  checked_at: 2026-11-11
+- library: go/pquerna-otp
+  purls: [pkg:golang/github.com/pquerna/otp]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: go/protonmail-go-crypto
+  purls: [pkg:golang/github.com/ProtonMail/go-crypto]
+  kem:
+    status: available
+    since: "1.5.0"
+    apis: [packet.PubKeyAlgoMlkem768X25519, packet.PubKeyAlgoMlkem1024X448, mlkem_ecdh.GenerateKey, mlkem_ecdh.Encrypt, mlkem_ecdh.Decrypt]
+    sources: ["https://github.com/ProtonMail/go-crypto/releases/tag/v1.5.0", "https://github.com/ProtonMail/go-crypto/pull/316", "https://github.com/ProtonMail/go-crypto/blob/v1.5.0/openpgp/packet/packet.go", "https://github.com/ProtonMail/go-crypto/blob/v1.5.0/openpgp/key_generation.go", "https://www.rfc-editor.org/rfc/rfc9980.html", "https://github.com/ProtonMail/go-crypto/blob/v1.1.6-proton/openpgp/packet/packet.go"]
+    note: "RFC 9980 composites ML-KEM-768+X25519 (35) and ML-KEM-1024+X448 (36, v6 keys only), selected through packet.Config.Algorithm. The earlier -proton tags are semver pre-releases and used draft codepoints (105/106 in v1.1.6-proton), so they are set aside."
+  signature:
+    status: available
+    since: "1.5.0"
+    apis: [packet.PubKeyAlgoMldsa65Ed25519, packet.PubKeyAlgoMldsa87Ed448, mldsa_eddsa.GenerateKey, mldsa_eddsa.Sign, mldsa_eddsa.Verify]
+    sources: ["https://github.com/ProtonMail/go-crypto/releases/tag/v1.5.0", "https://github.com/ProtonMail/go-crypto/pull/316", "https://github.com/ProtonMail/go-crypto/blob/v1.5.0/openpgp/packet/packet.go", "https://github.com/ProtonMail/go-crypto/blob/v1.5.0/openpgp/key_generation.go", "https://www.rfc-editor.org/rfc/rfc9980.html", "https://github.com/ProtonMail/go-crypto/blob/v1.1.6-proton/openpgp/packet/packet.go"]
+    note: "RFC 9980 composites ML-DSA-65+Ed25519 (30) and ML-DSA-87+Ed448 (31), selected through packet.Config.Algorithm and requiring v6 keys (Config.V6Keys). The earlier -proton tags are semver pre-releases and used draft codepoints (107/108 in v1.1.6-proton), so they are set aside."
+  checked_at: 2026-11-11
+- library: go/sigstore
+  purls: [pkg:golang/github.com/sigstore/sigstore]
+  kem:
+    status: none
+    sources: ["https://github.com/sigstore/sigstore/blob/v1.11.3/POLICY.md"]
+    note: "A signing library with no key-encapsulation API up to v1.11.3; its algorithm policy commits to ML-DSA only for post-quantum."
+  signature:
+    status: available
+    since: "1.11.0"
+    apis: [signature.LoadMLDSASigner, signature.LoadMLDSAVerifier, signature.LoadMLDSASignerVerifier, signature.NewMLDSASignerVerifier, signature.NewDefaultMLDSASignerVerifier, signature.MLDSASigner.SignMessage, signature.MLDSAVerifier.VerifySignature]
+    sources: ["https://github.com/sigstore/sigstore/releases/tag/v1.11.0", "https://github.com/sigstore/sigstore/blob/v1.11.0/pkg/signature/mldsa.go", "https://pkg.go.dev/github.com/sigstore/sigstore@v1.11.0/pkg/signature", "https://github.com/sigstore/sigstore/releases/tag/v1.10.11"]
+    note: "Requires Go 1.27 (keys from crypto/mldsa). v1.10.10 shipped the same code but v1.10.11 rolled it back to the Go 1.25 line, so 1.11.0 is the first version from which every later release has ML-DSA."
+  checked_at: 2026-11-11
+- library: go/square-go-jose
+  purls: [pkg:golang/github.com/square/go-jose]
+  kem:
+    status: none
+    sources: ["https://github.com/square/go-jose/blob/master/README.md", "https://proxy.golang.org/github.com/square/go-jose/@v/v2.6.0+incompatible.info"]
+    note: "Deprecated and archived (last release v2.6.0+incompatible, 2021-05-29) with no ML-KEM in any tag or branch. Development moved to github.com/go-jose/go-jose, a different module."
+  signature:
+    status: none
+    sources: ["https://github.com/square/go-jose/blob/master/README.md", "https://proxy.golang.org/github.com/square/go-jose/@v/v2.6.0+incompatible.info", "https://github.com/go-jose/go-jose/releases/tag/v4.1.8"]
+    note: "Deprecated and archived (last release v2.6.0+incompatible, 2021-05-29) with no ML-DSA in any tag or branch. Its successor github.com/go-jose/go-jose/v4 has ML-DSA since v4.1.8, so upgrading means moving to that module."
+  checked_at: 2026-11-11
+- library: go/supranational-blst
+  purls: [pkg:golang/github.com/supranational/blst]
+  kem:
+    status: none
+    sources: ["https://github.com/supranational/blst/releases/tag/v0.3.17", "https://pkg.go.dev/github.com/supranational/blst/bindings/go"]
+    note: "blst implements only BLS12-381 (BLS signatures, pairings, hash-to-curve) and has no KEM API; no ML-KEM up to v0.3.17 and no issue or pull request asking for it."
+  signature:
+    status: none
+    sources: ["https://github.com/supranational/blst/releases/tag/v0.3.17", "https://pkg.go.dev/github.com/supranational/blst/bindings/go"]
+    note: "No ML-DSA (or pre-standard Dilithium) up to v0.3.17, the latest release; no issue or pull request in the project mentions post-quantum signatures."
+  checked_at: 2026-11-11
+- library: go/tjfoc-gmsm
+  purls: [pkg:golang/github.com/tjfoc/gmsm]
+  kem:
+    status: none
+    sources: ["https://github.com/tjfoc/gmsm/releases/tag/v1.4.1", "https://github.com/tjfoc/gmsm/commits/master"]
+    note: "No ML-KEM or Kyber in v1.4.1 (latest release, 2021-07-09) or on master (last commit 2022-01-14); key agreement is SM2 and the gmtls ECDHE groups, and no issue, PR or comment mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/tjfoc/gmsm/releases/tag/v1.4.1", "https://github.com/tjfoc/gmsm/commits/master"]
+    note: "No ML-DSA or Dilithium in v1.4.1 (latest release, 2021-07-09) or on master (last commit 2022-01-14), and no issue, PR or comment mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: go/utls
+  purls: [pkg:golang/github.com/refraction-networking/utls]
+  kem:
+    status: available
+    since: "1.7.0"
+    apis: [tls.X25519MLKEM768, tls.HelloChrome_131, tls.HelloChrome_133]
+    sources: ["https://github.com/refraction-networking/utls/releases/tag/v1.7.0", "https://github.com/refraction-networking/utls/pull/322", "https://github.com/refraction-networking/utls/blob/v1.7.0/common.go", "https://github.com/refraction-networking/utls/blob/v1.7.0/u_common.go", "https://github.com/refraction-networking/utls/blob/v1.7.0/u_parrots.go", "https://github.com/refraction-networking/utls/blob/v1.7.0/go.mod", "https://github.com/refraction-networking/utls/releases/tag/v1.8.0", "https://github.com/refraction-networking/utls/blob/v1.6.7-chrome-131-support/cfkem.go"]
+    note: "X25519MLKEM768 is in the default curve preferences and the HelloChrome_131 spec from 1.7.0 (requires Go 1.24), and in HelloChrome_133 from 1.8.0. The pre-standard X25519Kyber768Draft00 (HelloChrome_115_PQ, HelloChrome_120_PQ) and the v1.6.7-chrome-131-support pre-release tag are set aside."
+  signature:
+    status: planned
+    sources: ["https://github.com/refraction-networking/utls/commit/db1bdf4", "https://github.com/refraction-networking/utls/blob/master/common.go", "https://github.com/refraction-networking/utls/blob/master/go.mod", "https://github.com/refraction-networking/utls/releases/tag/v1.8.2"]
+    note: "The maintainer's merge of Go 1.27.1 into master (2026-10-05) adds the TLS SignatureScheme values tls.MLDSA44, tls.MLDSA65 and tls.MLDSA87 and raises the minimum to Go 1.27; no release has it yet, the latest being v1.8.2 (2026-01-12)."
+  checked_at: 2026-11-11
+- library: go/vault-sdk
+  purls: ["pkg:golang/github.com/hashicorp/vault/sdk"]
+  kem:
+    status: none
+    sources: ["https://github.com/hashicorp/vault/blob/sdk/v0.26.0/sdk/helper/keysutil/policy.go", "https://developer.hashicorp.com/vault/docs/secrets/transit", "https://github.com/hashicorp/vault/issues/29673"]
+    note: "keysutil generates RSA keys and encrypts with RSA-OAEP in-process, and no release up to v0.26.0 (2026-09-24) or main has an ML-KEM key type. A user request for ML-KEM (issue 29673) has no answer from the project."
+  signature:
+    status: planned
+    sources: ["https://github.com/hashicorp/vault/commit/0f9c5392525608edf8e60d3e70df78001773cce0", "https://github.com/hashicorp/vault/blob/main/sdk/helper/certutil/helpers.go", "https://github.com/hashicorp/vault/blob/sdk/v0.26.0/sdk/helper/keysutil/policy_ce.go", "https://developer.hashicorp.com/vault/docs/secrets/transit"]
+    note: "ML-DSA-44/65/87 key generation and parsing in certutil was merged on main by HashiCorp after v0.26.0, the latest sdk release, and needs Go 1.27. The keysutil KeyType_ML_DSA constant is set aside: the transit ml-dsa key type is Vault Enterprise only, and the public module's build returns unsupported key type for it."
+  checked_at: 2026-11-11
+- library: go/wireguard
+  purls: [pkg:golang/golang.zx2c4.com/wireguard]
+  kem:
+    status: none
+    sources: ["https://git.zx2c4.com/wireguard-go/tree/device/noise-protocol.go?h=0.0.20250522", "https://git.zx2c4.com/wireguard-go/tree/device/noise-protocol.go", "https://www.wireguard.com/protocol/", "https://lists.zx2c4.com/pipermail/wireguard/2026-January/009457.html", "https://lists.zx2c4.com/pipermail/wireguard/2026-March/009555.html", "https://github.com/WireGuard/wireguard-go/pull/133"]
+    note: "The handshake is Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s with no ML-KEM up to the 0.0.20250522 tag and on master; the optional preshared key adds symmetric post-quantum resistance but is not ML-KEM. User requests (mailing list 2026-01, unmerged GitHub PR #133) have no answer from the project, and a 2026-03 list reply leaves a post-quantum handshake to WireGuard's author."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: go/xcrypto
+  purls: [pkg:golang/golang.org/x/crypto]
+  kem:
+    status: available
+    since: "0.38.0"
+    apis: [ssh.KeyExchangeMLKEM768X25519]
+    sources: ["https://github.com/golang/crypto/blob/v0.38.0/ssh/mlkem.go", "https://github.com/golang/crypto/blob/v0.39.0/ssh/common.go"]
+    note: "x/crypto/ssh negotiates the hybrid mlkem768x25519-sha256 key exchange first by default when built with Go 1.24 or later. v0.38.0 selected it by name only; v0.39.0 exported ssh.KeyExchangeMLKEM768X25519."
+  signature:
+    status: available
+    since: "0.58.0"
+    apis: [ssh.KeyAlgoMLDSA44, ssh.KeyAlgoMLDSA65, ssh.KeyAlgoMLDSA87, ssh.CertAlgoMLDSA44v01Go, ssh.CertAlgoMLDSA65v01Go, ssh.CertAlgoMLDSA87v01Go]
+    sources: ["https://github.com/golang/crypto/blob/v0.58.0/ssh/mldsa.go", "https://github.com/golang/crypto/blob/v0.58.0/ssh/keys.go", "https://github.com/golang/crypto/blob/v0.58.0/ssh/certs.go", "https://github.com/golang/crypto/blob/v0.58.0/ssh/mldsa_unsupported.go"]
+    note: "ssh-mldsa-44/65/87 host and user keys and certificates are compiled only with Go 1.27 or later and without the fips140v1.0 build tag; other builds reject ML-DSA keys."
   checked_at: 2026-11-11
 - library: java/aerogear-otp-java
   purls: [pkg:maven/org.jboss.aerogear/aerogear-otp-java]
