@@ -1592,6 +1592,136 @@
     status: none
     note: "No ML-DSA or Dilithium in the source or changelog up to 1.4.3 (2026-11-03); signatures are RSA and Ed25519 only, and no issue, PR or roadmap item mentions ML-DSA."
   checked_at: 2026-11-11
+- library: python/argon2-cffi
+  purls: [pkg:pypi/argon2-cffi]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/argon2-cffi-bindings
+  purls: [pkg:pypi/argon2-cffi-bindings]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/authlib
+  purls: ["pkg:pypi/authlib"]
+  kem:
+    status: none
+    sources: ["https://github.com/authlib/authlib/blob/v1.9.5/docs/jose/jwe.rst", "https://github.com/authlib/authlib/blob/v1.9.5/authlib/jose/rfc7518/jwe_algs.py", "https://github.com/authlib/authlib/blob/v1.9.5/docs/jose/index.rst", "https://github.com/authlib/authlib/pull/914", "https://github.com/authlib/joserfc/tree/1.8.0/src/joserfc"]
+    note: "No ML-KEM or Kyber in 1.9.5 (latest, 2026-11-05) or main; JWE key management is RSA-OAEP, RSA1_5, ECDH-ES and symmetric key wrap, and no issue or PR mentions ML-KEM. authlib.jose is deprecated since 1.7 in favour of joserfc and maintainers take no new work on it (PR #914); joserfc 1.8.0 (pkg:pypi/joserfc) has no ML-KEM either."
+  signature:
+    status: none
+    sources: ["https://github.com/authlib/authlib/issues/913", "https://github.com/authlib/authlib/blob/v1.9.5/docs/jose/index.rst", "https://github.com/authlib/authlib/pull/914", "https://github.com/authlib/joserfc/tree/1.8.0/src/joserfc", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA or Dilithium in 1.9.5 (latest, 2026-11-05) or main; the only ML-DSA-related issue, #913 (tolerate AKP keys in a JWK Set), came from a user and was closed because authlib.jose is deprecated in favour of joserfc, which has no ML-DSA in 1.8.0 either. RFC 9964 defines ML-DSA for JOSE; context only, not a plan from Authlib."
+  checked_at: 2026-11-11
+- library: python/aws-cryptographic-material-providers
+  purls: ["pkg:pypi/aws-cryptographic-material-providers"]
+  kem:
+    status: none
+    sources: ["https://github.com/aws/aws-cryptographic-material-providers-library/blob/v1.11.3-python/CHANGELOG-python.md", "https://github.com/awslabs/aws-encryption-sdk-specification/pull/319"]
+    note: "No ML-KEM in the source up to 1.11.3 (2026-09-03) or main; keyrings wrap data keys with RSA, ECDH or AES. An open draft spec PR for an AWS KMS ML-KEM keyring, reviewed by maintainers, lists Java as the only implementation and puts other languages out of scope."
+  signature:
+    status: none
+    sources: ["https://github.com/aws/aws-cryptographic-material-providers-library/blob/v1.11.3-python/CHANGELOG-python.md"]
+    note: "No ML-DSA in the source up to 1.11.3 (2026-09-03) or main; algorithm-suite signatures are ECDSA P-256/P-384, and no issue, PR or spec change mentions ML-DSA."
+  checked_at: 2026-11-11
+- library: python/aws-encryption-sdk
+  purls: [pkg:pypi/aws-encryption-sdk]
+  kem:
+    status: none
+    sources: ["https://github.com/aws/aws-encryption-sdk-python/blob/v4.0.7/src/aws_encryption_sdk/identifiers.py", "https://github.com/aws/aws-encryption-sdk-python/blob/v4.0.7/CHANGELOG.rst"]
+    note: "No ML-KEM or Kyber in the source or changelog up to 4.0.7 (2026-09-04) or master; raw data-key wrapping is AES-GCM or RSA (PKCS#1 v1.5, OAEP), and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/aws/aws-encryption-sdk-python/blob/v4.0.7/src/aws_encryption_sdk/identifiers.py", "https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/supported-algorithms.html"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to 4.0.7 (2026-09-04) or master; algorithm suites sign with ECDSA P-256/P-384 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: python/azure-iot-device
+  purls: [pkg:pypi/azure-iot-device]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-iot-sdk-python/blob/release_2024_07_17/azure-iot-device/azure/iot/device/common/mqtt_transport.py", "https://github.com/Azure/azure-iot-sdk-python/releases/tag/release_2025_01_27", "https://github.com/Azure/azure-iot-sdk-python/pull/1212"]
+    note: "No ML-KEM or Kyber in 2.14.0 (latest stable, 2024-07-17), 2.15.0rc1 or main, and no issue or PR mentions it; 2.14.0 pins its MQTT and HTTP TLS contexts to ssl.PROTOCOL_TLSv1_2. The 2.15.0rc1 pre-release (PR #1212) negotiates up to TLS 1.3 through ssl.PROTOCOL_TLS_CLIENT but sets no key-exchange groups, leaving them to Python's ssl and its linked OpenSSL."
+  signature:
+    status: none
+    sources: ["https://github.com/Azure/azure-iot-sdk-python/blob/release_2024_07_17/azure-iot-device/azure/iot/device/common/models/x509.py", "https://github.com/Azure/azure-iot-sdk-python/blob/release_2024_07_17/azure-iot-device/azure/iot/device/common/mqtt_transport.py"]
+    note: "No ML-DSA or Dilithium in 2.14.0 (latest stable, 2024-07-17), 2.15.0rc1 or main, and no issue or PR mentions it. X.509 authentication takes a certificate file, key file and pass phrase and hands them to Python's ssl load_cert_chain, with no signature algorithm of its own."
+  checked_at: 2026-11-11
+- library: python/azure-keyvault-keys
+  purls: ["pkg:pypi/azure-keyvault-keys"]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/keyvault/azure-keyvault-keys/CHANGELOG.md", "https://github.com/Azure/azure-rest-api-specs/blob/f1ae9f733365d5dec144d336fbe8e059d6ada1c6/specification/keyvault/data-plane/Keys/models.tsp"]
+    note: "No ML-KEM in 4.11.3 (latest stable, 2026-10-02), 4.12.0b3 or main, whose key types are RSA, EC and oct; the Key Vault keys REST API, up to 2026-05-01-preview, defines no ML-KEM key type either."
+  signature:
+    status: none
+    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-rest-api-specs/blob/f1ae9f733365d5dec144d336fbe8e059d6ada1c6/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/keyvault/azure-keyvault-keys/CHANGELOG.md"]
+    note: "No ML-DSA in 4.11.3 (latest stable), 4.12.0b3 or main, whose key types are RSA, EC and oct. Microsoft added AKP keys with ML-DSA-44, ML-DSA-65 and ML-DSA-87 sign/verify to the Key Vault keys REST API in 2026-05-01-preview (PR #41010, merged 2026-06-04), which this package has not adopted yet; no issue or PR in azure-sdk-for-python plans it."
+  checked_at: 2026-11-11
+- library: python/azure-keyvault-secrets
+  purls: ["pkg:pypi/azure-keyvault-secrets"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/bcrypt
+  purls: [pkg:pypi/bcrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/boto3
+  purls: [pkg:pypi/boto3]
+  kem:
+    status: available
+    since: "1.43.119"
+    apis: [kms.create_key, kms.encapsulate, kms.decapsulate]
+    sources:
+      - "https://github.com/boto/boto3/blob/1.43.119/CHANGELOG.rst"
+      - "https://github.com/boto/botocore/blob/1.43.119/botocore/data/kms/2014-11-01/service-2.json"
+      - "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kms/client/encapsulate.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-KEM keys in AWS KMS, selected by string: create_key(KeySpec=\"ML_KEM_512\"|\"ML_KEM_768\"|\"ML_KEM_1024\", KeyUsage=\"ENCAPSULATE_DECAPSULATE\"), then encapsulate/decapsulate with EncapsulationAlgorithm=\"ML_KEM\"; released 2026-10-26 with botocore 1.43.119, absent from 1.43.118. The key operations run in the KMS service, not in the SDK."
+  signature:
+    status: available
+    since: "1.38.36"
+    apis: [kms.create_key, kms.sign, kms.verify]
+    sources:
+      - "https://github.com/boto/boto3/blob/1.38.36/CHANGELOG.rst"
+      - "https://github.com/boto/botocore/blob/1.38.36/botocore/data/kms/2014-11-01/service-2.json"
+      - "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kms/client/sign.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-DSA keys in AWS KMS, selected by string: create_key(KeySpec=\"ML_DSA_44\"|\"ML_DSA_65\"|\"ML_DSA_87\", KeyUsage=\"SIGN_VERIFY\"), then sign/verify with SigningAlgorithm=\"ML_DSA_SHAKE_256\"; released 2025-06-12 with botocore 1.38.36, absent from 1.38.35. The key operations run in the KMS service, not in the SDK."
+  checked_at: 2026-11-11
+- library: python/certbot
+  purls: [pkg:pypi/certbot]
+  kem:
+    status: none
+    sources: ["https://github.com/certbot/certbot/blob/v5.10.0/certbot/src/certbot/crypto_util.py", "https://github.com/certbot/certbot/issues/10706"]
+    note: "No ML-KEM in 5.10.0 (latest, 2026-11-10) or main: make_key generates only rsa or ecdsa keys, and the project's post-quantum issue #10706 covers ML-DSA certificates only."
+  signature:
+    status: planned
+    sources: ["https://github.com/certbot/certbot/issues/10706", "https://github.com/certbot/certbot/pull/10707", "https://github.com/certbot/certbot/blob/v5.10.0/certbot/src/certbot/crypto_util.py"]
+    note: "No ML-DSA in 5.10.0 or main, where make_key accepts rsa or ecdsa and verify_signed_payload rejects the ML-DSA key types its type hint lists. In open issue #10706 the assigned core developer said the team plans ML-DSA certificates as core dev work once Let's Encrypt's timing is clear, and closed community PR #10707 (ml-dsa-44/65/87 key types)."
+  checked_at: 2026-11-11
+- library: python/coincurve
+  purls: [pkg:pypi/coincurve]
+  kem:
+    status: none
+    sources: ["https://ofek.dev/coincurve/history/", "https://ofek.dev/coincurve/api/"]
+    note: "Binding to libsecp256k1 offering only secp256k1 ECDH, ECDSA and Schnorr; no ML-KEM or Kyber up to 21.0.0 (2025-03-08) or on master, and no issue, PR or discussion asks for it."
+  signature:
+    status: none
+    sources: ["https://ofek.dev/coincurve/history/", "https://ofek.dev/coincurve/api/"]
+    note: "Signatures are secp256k1 ECDSA and BIP-340 Schnorr only; no ML-DSA or Dilithium up to 21.0.0 (2025-03-08) or on master, and no issue, PR or discussion asks for it."
+  checked_at: 2026-11-11
+- library: python/crypt
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
 - library: python/cryptography
   purls: [pkg:pypi/cryptography]
   kem:
@@ -1635,6 +1765,282 @@
       - "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/mldsa/"
     note: "The mldsa module first shipped in 47.0.0, but only when built against AWS-LC or BoringSSL; the PyPI wheels (OpenSSL) get it from 48.0.0, which supports OpenSSL 3.5.0 or later. X.509 signing with ML-DSA keys and sign_mu/verify_mu came in 49.0.0."
   checked_at: 2026-11-11
+- library: python/ecdsa
+  purls: [pkg:pypi/ecdsa]
+  kem:
+    status: none
+    sources: ["https://github.com/tlsfuzzer/python-ecdsa/blob/master/NEWS"]
+    note: "No ML-KEM or Kyber in the changelog or source up to 0.19.2 (2026-03-26) or master; key agreement is ECDH only, and no issue, PR or discussion mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/tlsfuzzer/python-ecdsa/blob/master/NEWS"]
+    note: "No ML-DSA or Dilithium in the changelog or source up to 0.19.2 (2026-03-26) or master; signatures are ECDSA and EdDSA only, and no issue, PR or discussion mentions ML-DSA."
+  checked_at: 2026-11-11
+- library: python/eth-account
+  purls: [pkg:pypi/eth-account]
+  kem:
+    status: none
+    sources: ["https://eth-account.readthedocs.io/en/stable/eth_account.html", "https://pypi.org/project/eth-account/0.14.0/"]
+    note: "Ethereum signing and password-keystore library (scrypt or PBKDF2 keyfiles): no KEM, key-agreement or public-key encryption API, and no ML-KEM, up to 0.14.0 (2026-08-23)."
+  signature:
+    status: none
+    sources: ["https://github.com/ApeWorX/eth-account/blob/v0.14.0/pyproject.toml", "https://github.com/ApeWorX/eth-account/issues?q=quantum", "https://eth-account.readthedocs.io/en/stable/eth_account.html"]
+    note: "No ML-DSA or Dilithium in the source up to 0.14.0 (2026-08-23) or main; signatures are secp256k1 ECDSA through eth-keys, and no issue or PR mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: python/eth-hash
+  purls: [pkg:pypi/eth-hash]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/eth-keys
+  purls: [pkg:pypi/eth-keys]
+  kem:
+    status: not_applicable
+    note: "Signature-only library: secp256k1 ECDSA sign, verify and public-key recovery, with no key agreement or encryption API."
+  signature:
+    status: none
+    sources: ["https://github.com/ApeWorX/eth-keys/releases/tag/v0.8.0", "https://github.com/ApeWorX/eth-keys/blob/v0.8.0/eth_keys/main.py", "https://github.com/ApeWorX/eth-keys/issues?q=quantum%20OR%20PQC%20OR%20ML-DSA%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium in 0.8.0 (latest, 2026-08-21) or main; signatures are secp256k1 ECDSA only. No issue, PR or comment in the project mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: python/fastecdsa
+  purls: [pkg:pypi/fastecdsa]
+  kem:
+    status: none
+    sources: ["https://pypi.org/project/fastecdsa/4.0.0/", "https://github.com/AntonKueltz/fastecdsa/blob/v4.0.0/CHANGELOG.md", "https://github.com/AntonKueltz/fastecdsa/blob/v4.0.0/tests/test_brainpool_ecdh.py"]
+    note: "No ML-KEM or Kyber in 4.0.0 (latest, 2026-09-24) or main, and no issue or PR mentions post-quantum. The library has no KEM API; key agreement is only raw ECDH through Point scalar multiplication."
+  signature:
+    status: none
+    sources: ["https://pypi.org/project/fastecdsa/4.0.0/", "https://github.com/AntonKueltz/fastecdsa/blob/v4.0.0/CHANGELOG.md", "https://github.com/AntonKueltz/fastecdsa/blob/v4.0.0/fastecdsa/eddsa.py"]
+    note: "No ML-DSA or Dilithium in 4.0.0 (latest, 2026-09-24) or main; signatures are ECDSA and, since 4.0.0, Ed25519 and Ed448. No issue or PR mentions post-quantum."
+  checked_at: 2026-11-11
+- library: python/flask_jwt_extended
+  purls: []
+  kem:
+    status: not_applicable
+    note: "JWS-only library: it signs and verifies JWTs through PyJWT, with no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://flask-jwt-extended.readthedocs.io/en/stable/options.html", "https://pyjwt.readthedocs.io/en/stable/algorithms.html"]
+    note: "Delegates signing to PyJWT (RS*, ES* via JWT_ALGORITHM and the PEM keys), which offers no ML-DSA; no ML-DSA in 4.7.4 or main, and no issue or PR about it."
+  checked_at: 2026-11-11
+- library: python/gmssl
+  purls: ["pkg:pypi/gmssl"]
+  kem:
+    status: none
+    sources: ["https://pypi.org/project/gmssl/#history", "https://github.com/duanhongyi/gmssl/blob/v3.2.2/README.md", "https://github.com/duanhongyi/gmssl/tree/master/gmssl", "https://github.com/duanhongyi/gmssl/issues?q=quantum"]
+    note: "Pure-Python SM2/SM3/SM4 only; SM2 public-key encryption is its only asymmetric encryption, with no ML-KEM or Kyber up to 3.2.2 (2022-06-21) or master. No issue or pull request mentions post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://pypi.org/project/gmssl/#history", "https://github.com/duanhongyi/gmssl/blob/v3.2.2/README.md", "https://github.com/duanhongyi/gmssl/tree/master/gmssl", "https://github.com/duanhongyi/gmssl/issues?q=quantum"]
+    note: "Signatures are SM2 only, with no ML-DSA or Dilithium up to 3.2.2 (2022-06-21) or master. No issue or pull request mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: python/gmssl-python
+  purls: [pkg:pypi/gmssl-python]
+  kem:
+    status: none
+    sources: ["https://pypi.org/project/gmssl-python/", "https://github.com/GmSSL/GmSSL-Python/blob/v2.2.2/README.md", "https://github.com/GmSSL/GmSSL-Python/commits/main", "https://github.com/GmSSL/GmSSL-Python/issues?q=is%3Aissue%20OR%20is%3Apr"]
+    note: "No ML-KEM or Kyber in 2.2.2 (latest, 2023-10-12) or main (2026-06-21): these ctypes bindings over the GmSSL C library expose only SM2, SM3, SM4, SM9 and ZUC, and no issue or PR mentions post-quantum."
+  signature:
+    status: none
+    sources: ["https://pypi.org/project/gmssl-python/", "https://github.com/GmSSL/GmSSL-Python/blob/v2.2.2/README.md", "https://github.com/GmSSL/GmSSL-Python/commits/main", "https://github.com/GmSSL/GmSSL-Python/issues?q=is%3Aissue%20OR%20is%3Apr"]
+    note: "No ML-DSA or Dilithium in 2.2.2 (latest, 2023-10-12) or main (2026-06-21): signatures are SM2 and SM9 only, and no issue or PR mentions post-quantum."
+  checked_at: 2026-11-11
+- library: python/google-cloud-kms
+  purls: [pkg:pypi/google-cloud-kms]
+  kem:
+    status: available
+    since: "3.6.0"
+    apis:
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.ML_KEM_768
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.ML_KEM_1024
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.KEM_XWING
+      - google.cloud.kms_v1.CryptoKey.CryptoKeyPurpose.KEY_ENCAPSULATION
+      - google.cloud.kms_v1.KeyManagementServiceClient.decapsulate
+    sources:
+      - "https://github.com/googleapis/google-cloud-python/releases/tag/google-cloud-kms-v3.6.0"
+      - "https://github.com/googleapis/google-cloud-python/blob/google-cloud-kms-v3.6.0/packages/google-cloud-kms/google/cloud/kms_v1/services/key_management_service/client.py"
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+      - "https://docs.cloud.google.com/kms/docs/key-encapsulation-mechanisms"
+      - "https://cloud.google.com/blog/products/identity-security/future-proofing-data-integrity-quantum-safe-digital-signatures-in-cloud-kms"
+    note: "ML_KEM_768, ML_KEM_1024 and the X-Wing hybrid KEM_XWING ship since 3.6.0 (2025-09-22, absent from 3.5.1), when the service feature was Preview; Cloud KMS has since made ML-KEM generally available, so any client from 3.6.0 on reaches it. Encapsulation is done by the caller with the public key; Cloud KMS only decapsulates."
+  signature:
+    status: available
+    since: "3.4.0"
+    apis:
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_44_EXTERNAL_MU
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_65_EXTERNAL_MU
+      - google.cloud.kms_v1.CryptoKeyVersion.CryptoKeyVersionAlgorithm.PQ_SIGN_ML_DSA_87_EXTERNAL_MU
+      - google.cloud.kms_v1.KeyManagementServiceClient.asymmetric_sign
+    sources:
+      - "https://github.com/googleapis/google-cloud-python/releases/tag/google-cloud-kms-v3.4.0"
+      - "https://github.com/googleapis/google-cloud-python/releases/tag/google-cloud-kms-v3.11.0"
+      - "https://github.com/googleapis/google-cloud-python/blob/google-cloud-kms-v3.11.0/packages/google-cloud-kms/google/cloud/kms_v1/types/resources.py"
+      - "https://docs.cloud.google.com/kms/docs/release-notes"
+    note: "PQ_SIGN_ML_DSA_65 ships since 3.4.0 (2025-02-24, absent from 3.3.1), when the service feature was Preview; ML-DSA-44, ML-DSA-87 and the external-mu variants since 3.11.0 (2026-02-19). The service made ML-DSA generally available on 2026-07-16, so any client from 3.4.0 on reaches it."
+  checked_at: 2026-11-11
+- library: python/gpg
+  purls: [pkg:pypi/gpg]
+  kem:
+    status: none
+    sources: ["https://github.com/gpg/gpgmepy/blob/master/NEWS", "https://github.com/gpg/gnupg/blob/master/NEWS", "https://github.com/gpg/gpgme/blob/master/NEWS"]
+    note: "No ML-KEM API in gpg 2.0.0 (latest, 2026-05-07): Context.create_key forwards an algorithm string to the installed GnuPG engine, whose composite Kyber+ECC keys (\"pqc\", experimental in GnuPG 2.5.0, final since 2.5.1) are selectable only that way; gpg.constants.pk.KYBER, present when built against GPGME 1.24.1 or later, only labels listed keys. The package is a thin binding over GPGME and GnuPG; nothing in its NEWS or source mentions ML-KEM or Kyber."
+  signature:
+    status: none
+    sources: ["https://github.com/gpg/gpgmepy/blob/master/NEWS", "https://github.com/gpg/gpgme/blob/master/NEWS"]
+    note: "No ML-DSA or Dilithium in gpg 2.0.0 (latest, 2026-05-07) or the gpgmepy master branch. The C library GPGME lists a GPGME_PK_MLDSA key-listing value for its unreleased 2.3.0, which is not a release of this package."
+  checked_at: 2026-11-11
+- library: python/hashlib
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/hmac
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/hvac
+  purls: [pkg:pypi/hvac]
+  kem:
+    status: none
+    sources:
+      - "https://github.com/hvac/hvac/blob/v2.4.0/hvac/constants/transit.py"
+      - "https://developer.hashicorp.com/vault/api-docs/secret/transit"
+    note: "No ML-KEM in hvac 2.4.0 (2025-10-30) or main, and Vault's Transit engine, which hvac wraps, lists no ML-KEM key type; no hvac issue or PR mentions it."
+  signature:
+    status: none
+    sources:
+      - "https://github.com/hvac/hvac/blob/v2.4.0/hvac/constants/transit.py"
+      - "https://developer.hashicorp.com/vault/api-docs/secret/transit"
+      - "https://github.com/hvac/hvac/pull/1235"
+    note: "hvac 2.4.0 and main reject key_type \"ml-dsa\" in Transit.create_key (the allow list stops at RSA, ECDSA and Ed25519) and take no parameter_set, although Vault Enterprise Transit offers ML-DSA keys. A community PR adding \"ml-dsa\" to the allow list (#1235, December 2025) is open with no review from the maintainers."
+  checked_at: 2026-11-11
+- library: python/joserfc
+  purls: ["pkg:pypi/joserfc"]
+  kem:
+    status: none
+    sources: ["https://raw.githubusercontent.com/authlib/joserfc/1.8.0/src/joserfc/_rfc7518/jwe_algs.py", "https://github.com/authlib/joserfc/blob/1.8.0/docs/changelog.rst"]
+    note: "No ML-KEM or Kyber in 1.8.0 (latest, 2026-11-03) or main; JWE key management is RSA (RSA1_5, RSA-OAEP) and ECDH-ES over the cryptography package. No issue or PR mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/authlib/joserfc/pull/103", "https://github.com/authlib/joserfc/issues/104", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA or Dilithium in 1.8.0 (latest, 2026-11-03) or main; since 1.7.5 a JWK Set only skips ML-DSA (kty AKP) keys instead of failing (issue #104, PR #103), which is not support. RFC 9964 defines ML-DSA for JOSE; context only, not a plan from joserfc."
+  checked_at: 2026-11-11
+- library: python/jwcrypto
+  purls: [pkg:pypi/jwcrypto]
+  kem:
+    status: none
+    sources: ["https://github.com/latchset/jwcrypto/pull/390", "https://datatracker.ietf.org/doc/draft-ietf-jose-hpke-pq-pqt/02/"]
+    note: "No ML-KEM in 1.6.1 (latest, 2026-09-15) or main; the maintainers' open HPKE draft PR #390 adds only classical DHKEM (P-256, P-384, P-521, X25519) for JWE. draft-ietf-jose-hpke-pq-pqt-02 registers ML-KEM for JWE, cited as context."
+  signature:
+    status: available
+    since: "1.5.9"
+    apis: [jwcrypto.jwk.JWK.generate, jwcrypto.jwk.JWK.from_pyca, jwcrypto.jws.JWS.add_signature, jwcrypto.jws.JWS.verify]
+    sources: ["https://github.com/latchset/jwcrypto/releases/tag/v1.5.9", "https://github.com/latchset/jwcrypto/pull/384", "https://github.com/latchset/jwcrypto/blob/v1.5.9/jwcrypto/jwa.py", "https://github.com/latchset/jwcrypto/blob/v1.5.9/setup.py"]
+    note: "ML-DSA-44/65/87 JWS and AKP JWKs (RFC 9964), picked by strings: JWK.generate(kty='AKP', alg='ML-DSA-65') and the alg 'ML-DSA-65' in JWS; 1.5.8 has none. 1.5.9 requires cryptography 49.0.0 or later, so a default install pulls the ML-DSA backend."
+  checked_at: 2026-11-11
+- library: python/liboqs-python
+  purls: [pkg:pypi/liboqs-python]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/m2crypto
+  purls: [pkg:pypi/m2crypto]
+  kem:
+    status: none
+    sources: ["https://codefloe.com/mcepl/m2crypto/src/tag/0.51.0/CHANGES", "https://codefloe.com/mcepl/m2crypto/issues?state=all&q=ML-KEM"]
+    note: "No ML-KEM API in 0.51.0 or master, and no issue or PR about it. M2Crypto wraps OpenSSL but exposes no KEM or TLS group selection of its own."
+  signature:
+    status: none
+    sources: ["https://codefloe.com/mcepl/m2crypto/src/tag/0.51.0/CHANGES", "https://codefloe.com/mcepl/m2crypto/issues?state=all&q=ML-DSA"]
+    note: "No ML-DSA API in 0.51.0 or master, and no issue or PR about it. M2Crypto wraps OpenSSL but exposes no ML-DSA key type of its own."
+  checked_at: 2026-11-11
+- library: python/os
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/paramiko
+  purls: [pkg:pypi/paramiko]
+  kem:
+    status: available
+    since: "5.1.0"
+    apis: [paramiko.kex_mlkem.KexMLKEM768X25519]
+    sources: ["https://www.paramiko.org/changelog.html", "https://github.com/paramiko/paramiko/blob/5.1.0/paramiko/kex_mlkem.py", "https://github.com/paramiko/paramiko/blob/5.1.0/paramiko/transport.py", "https://github.com/paramiko/paramiko/blob/5.1.0/pyproject.toml", "https://github.com/pyca/cryptography/blob/48.0.0/CHANGELOG.rst"]
+    note: "The hybrid mlkem768x25519-sha256 key exchange is offered first by default (5.0.1, released the same day, lacks it) only when the installed cryptography exposes ML-KEM, which its PyPI wheels do from 48.0.0. Paramiko itself requires only cryptography>=3.3, so an older cryptography silently keeps classical key exchange."
+  signature:
+    status: none
+    sources: ["https://github.com/paramiko/paramiko/issues/2594"]
+    note: "No ML-DSA host or user keys in 5.1.0 (latest, 2026-10-17) or main. In issue #2594, which asks for ML-DSA and ML-KEM, a maintainer answered that key exchange is the only priority and signatures are lower priority; no issue, PR or roadmap item plans ML-DSA."
+  checked_at: 2026-11-11
+- library: python/passlib
+  purls: [pkg:pypi/passlib]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/pgpy
+  purls: ["pkg:pypi/pgpy"]
+  kem:
+    status: none
+    sources: ["https://github.com/SecurityInnovation/PGPy/releases/tag/v0.6.0", "https://github.com/SecurityInnovation/PGPy/blob/v0.6.0/pgpy/constants.py#L248-L265", "https://www.rfc-editor.org/rfc/rfc9980.html", "https://github.com/SecurityInnovation/PGPy/issues/464"]
+    note: "No ML-KEM or Kyber in 0.6.0 (latest release, 2022-11-24) or master; encryption is RSA, ElGamal and ECDH only, and the only post-quantum mention is user issue #464 (no reply), which cites the OpenPGP PQC draft. RFC 9980 (June 2026) defines ML-KEM for OpenPGP; context only, not a plan from PGPy."
+  signature:
+    status: none
+    sources: ["https://github.com/SecurityInnovation/PGPy/releases/tag/v0.6.0", "https://github.com/SecurityInnovation/PGPy/blob/v0.6.0/pgpy/constants.py#L248-L265", "https://www.rfc-editor.org/rfc/rfc9980.html", "https://github.com/SecurityInnovation/PGPy/issues/464"]
+    note: "No ML-DSA or Dilithium in 0.6.0 (latest release, 2022-11-24) or master; signatures are RSA, DSA, ECDSA and EdDSA only, and the only post-quantum mention is user issue #464 (no reply), which cites the OpenPGP PQC draft. RFC 9980 (June 2026) defines ML-DSA for OpenPGP; context only, not a plan from PGPy."
+  checked_at: 2026-11-11
+- library: python/py-ecc
+  purls: [pkg:pypi/py-ecc]
+  kem:
+    status: none
+    sources: ["https://github.com/ethereum/py_ecc/blob/main/docs/release_notes.rst"]
+    note: "Offers BLS12-381 and BN254 pairings, BLS signatures and secp256k1 ECDSA, with no ML-KEM or Kyber in the source or release notes up to 8.0.0, 9.0.0b1 or main. No issue or PR mentions it."
+  signature:
+    status: none
+    sources: ["https://github.com/ethereum/py_ecc/blob/main/docs/release_notes.rst"]
+    note: "No ML-DSA or Dilithium in the source or release notes up to 8.0.0 (2025-04-14), the 9.0.0b1 pre-release or main. No issue or PR mentions it."
+  checked_at: 2026-11-11
+- library: python/pycryptodome
+  purls: ["pkg:pypi/pycryptodome"]
+  kem:
+    status: available
+    since: "4.2.0"
+    apis: [Crypto.PublicKey.MLKEM.generate, Crypto.PublicKey.MLKEM.import_key, Crypto.PublicKey.MLKEM.ML_KEM_512, Crypto.PublicKey.MLKEM.ML_KEM_768, Crypto.PublicKey.MLKEM.ML_KEM_1024, Crypto.PublicKey.Hybrid.generate, Crypto.PublicKey.Hybrid.MLKEM768_X25519, Crypto.Protocol.HPKE.new]
+    sources: ["https://github.com/Legrandin/pycryptodome/blob/v4.2.0/Changelog.rst", "https://github.com/Legrandin/pycryptodome/blob/v4.2.0/lib/Crypto/PublicKey/MLKEM.py", "https://github.com/Legrandin/pycryptodome/blob/v4.2.0/lib/Crypto/PublicKey/Hybrid.py", "https://github.com/Legrandin/pycryptodome/blob/v4.2.0/lib/Crypto/Protocol/HPKE.py", "https://www.pycryptodome.org/src/public_key/mlkem"]
+    note: "ML-KEM keys have no standalone encapsulate/decapsulate: they are used through HPKE, alone or as the X-Wing hybrid (MLKEM768-X25519). The 4.x line requires Python 3.9 or later."
+  signature:
+    status: available
+    since: "4.1.0"
+    apis: [Crypto.PublicKey.MLDSA.generate, Crypto.PublicKey.MLDSA.import_key, Crypto.PublicKey.MLDSA.ML_DSA_44, Crypto.PublicKey.MLDSA.ML_DSA_65, Crypto.PublicKey.MLDSA.ML_DSA_87, Crypto.Signature.mldsa.new]
+    sources: ["https://github.com/Legrandin/pycryptodome/blob/v4.1.0/Changelog.rst", "https://github.com/Legrandin/pycryptodome/blob/v4.1.0/lib/Crypto/PublicKey/MLDSA.py", "https://github.com/Legrandin/pycryptodome/blob/v4.1.0/lib/Crypto/Signature/mldsa.py", "https://www.pycryptodome.org/src/signature/mldsa"]
+    note: "The 4.x line requires Python 3.9 or later; no 3.x release has ML-DSA."
+  checked_at: 2026-11-11
+- library: python/pycryptodomex
+  purls: ["pkg:pypi/pycryptodomex"]
+  kem:
+    status: none
+    sources: ["https://github.com/Legrandin/pycryptodome/blob/v4.2.0/Changelog.rst", "https://pypi.org/project/pycryptodomex/"]
+    note: "No ML-KEM up to pycryptodomex 3.24.2 (2026-11-05); since 4.0.0 the pycryptodomex package is no longer released except for security patches on the 3.x branch. ML-KEM exists only in the successor pkg:pypi/pycryptodome 4.2.0 (Crypto.PublicKey.MLKEM), so upgrading means moving to that package and the Crypto namespace."
+  signature:
+    status: none
+    sources: ["https://github.com/Legrandin/pycryptodome/blob/v4.2.0/Changelog.rst", "https://pypi.org/project/pycryptodomex/"]
+    note: "No ML-DSA up to pycryptodomex 3.24.2 (2026-11-05); since 4.0.0 the pycryptodomex package is no longer released except for security patches on the 3.x branch. ML-DSA exists only in the successor pkg:pypi/pycryptodome 4.1.0 (Crypto.PublicKey.MLDSA, Crypto.Signature.mldsa), so upgrading means moving to that package and the Crypto namespace."
+  checked_at: 2026-11-11
+- library: python/pyfhel
+  purls: [pkg:pypi/pyfhel]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
 - library: python/pyjwt
   purls: [pkg:pypi/pyjwt]
   kem:
@@ -1644,6 +2050,146 @@
     status: none
     sources: ["https://www.rfc-editor.org/rfc/rfc9964.html"]
     note: "No ML-DSA in 2.15.1 or main, and no issue, PR or discussion about it. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from PyJWT."
+  checked_at: 2026-11-11
+- library: python/pykmip
+  purls: ["pkg:pypi/pykmip"]
+  kem:
+    status: none
+    sources: ["https://github.com/OpenKMIP/PyKMIP/blob/v0.11.0/kmip/core/enums.py", "https://github.com/OpenKMIP/PyKMIP/blob/v0.11.0/CHANGELOG.rst", "https://docs.oasis-open.org/kmip/kmip-spec/v3.0/kmip-spec-v3.0.html"]
+    note: "No ML-KEM or Kyber in 0.11.0 (latest, 2026-09-09) or master: PyKMIP speaks KMIP 1.0-2.0, its CryptographicAlgorithm enum has no ML-KEM value, and no issue or PR mentions ML-KEM or post-quantum. KMIP 3.0 (OASIS Committee Specification Draft 02, May 2026) defines ML-KEM; context only, not a plan from PyKMIP."
+  signature:
+    status: none
+    sources: ["https://github.com/OpenKMIP/PyKMIP/blob/v0.11.0/kmip/core/enums.py", "https://github.com/OpenKMIP/PyKMIP/blob/v0.11.0/CHANGELOG.rst", "https://docs.oasis-open.org/kmip/kmip-spec/v3.0/kmip-spec-v3.0.html"]
+    note: "No ML-DSA in 0.11.0 (latest, 2026-09-09) or master: the CryptographicAlgorithm enum stops at KMIP 2.0 (its XMSS and SPHINCS_256 values are not ML-DSA), and no issue or PR mentions ML-DSA or post-quantum. KMIP 3.0 (OASIS Committee Specification Draft 02, May 2026) defines ML-DSA; context only, not a plan from PyKMIP."
+  checked_at: 2026-11-11
+- library: python/pynacl
+  purls: [pkg:pypi/pynacl]
+  kem:
+    status: none
+    sources: ["https://github.com/pyca/pynacl/blob/1.6.2/CHANGELOG.rst", "https://github.com/pyca/pynacl/tree/ca15a18eeb4d1e954b1f08066ffa3b7ebe3b71a9/src/nacl/bindings", "https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE"]
+    note: "No ML-KEM or Kyber in 1.6.2 (latest, 2026-01-01) or main, which bundle libsodium 1.0.20 and bind no crypto_kem function; key agreement is X25519 only, and no issue or PR mentions ML-KEM or post-quantum. libsodium 1.0.22 (2026-04-09) added ML-KEM768 and X-Wing; context only, not a plan from PyNaCl."
+  signature:
+    status: none
+    sources: ["https://github.com/pyca/pynacl/blob/1.6.2/CHANGELOG.rst", "https://github.com/pyca/pynacl/tree/ca15a18eeb4d1e954b1f08066ffa3b7ebe3b71a9/src/nacl/bindings"]
+    note: "No ML-DSA or Dilithium in 1.6.2 (latest, 2026-01-01) or main; signatures are Ed25519 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: python/pyopenssl
+  purls: [pkg:pypi/pyopenssl]
+  kem:
+    status: planned
+    sources: ["https://github.com/pyca/pyopenssl/pull/1477", "https://github.com/pyca/pyopenssl/blob/26.4.0/src/OpenSSL/SSL.py", "https://github.com/pyca/pyopenssl/blob/26.4.0/CHANGELOG.rst"]
+    note: "No ML-KEM or TLS group selector in 26.4.0 (latest, 2026-08-01) or main. Open PR #1477 adds Context.set_groups and Connection.set_groups to restrict TLS to hybrid groups such as X25519MLKEM768; a maintainer confirmed its dependency on a newer cryptography release, and it is unmerged."
+  signature:
+    status: none
+    sources: ["https://github.com/pyca/pyopenssl/blob/26.4.0/src/OpenSSL/crypto.py", "https://github.com/pyca/pyopenssl/issues/1424"]
+    note: "No ML-DSA in 26.4.0 or main: PKey wraps only RSA, DSA, EC, Ed25519 and Ed448 keys. Open issue #1424 asks for post-quantum support (ML-KEM and ML-DSA) with no answer from the project."
+  checked_at: 2026-11-11
+- library: python/pyotp
+  purls: [pkg:pypi/pyotp]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/python-gnupg
+  purls: ["pkg:pypi/python-gnupg"]
+  kem:
+    status: none
+    sources: ["https://github.com/vsajip/python-gnupg/blob/0.5.7/gnupg.py", "https://github.com/vsajip/python-gnupg/blob/0.5.7/docs/index.rst"]
+    note: "No ML-KEM or Kyber in 0.5.7 (latest, 2026-09-29) or master: python-gnupg drives the gpg binary and passes key algorithms as strings to it verbatim (gen_key_input key_type, add_subkey algorithm; RSA, ELG-E, cv25519...). No issue or PR mentions ML-KEM, Kyber or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/vsajip/python-gnupg/blob/0.5.7/gnupg.py", "https://github.com/vsajip/python-gnupg/blob/0.5.7/docs/index.rst"]
+    note: "No ML-DSA or Dilithium in 0.5.7 (latest, 2026-09-29) or master: python-gnupg drives the gpg binary and passes key algorithms as strings to it verbatim (gen_key_input key_type, add_subkey algorithm; RSA, DSA, ECDSA, EDDSA...). No issue or PR mentions ML-DSA, Dilithium or post-quantum."
+  checked_at: 2026-11-11
+- library: python/python-jose
+  purls: [pkg:pypi/python-jose]
+  kem:
+    status: none
+    sources: ["https://github.com/mpdavis/python-jose/blob/3.5.0/jose/constants.py", "https://github.com/mpdavis/python-jose/blob/3.5.0/CHANGELOG.md"]
+    note: "No ML-KEM or Kyber in 3.5.0 (2025-05-28, latest release) or master; asymmetric JWE key management is RSA1_5, RSA-OAEP and RSA-OAEP-256 only (ECDH-ES is declared but not supported), and no issue or PR mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/mpdavis/python-jose/blob/3.5.0/jose/constants.py", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA or Dilithium in 3.5.0 or master, and no issue or PR about it. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from python-jose."
+  checked_at: 2026-11-11
+- library: python/random
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/rsa
+  purls: [pkg:pypi/rsa]
+  kem:
+    status: none
+    sources: ["https://github.com/sybrenstuvel/python-rsa/blob/main/README.md", "https://pypi.org/project/rsa/4.9.1/"]
+    note: "No ML-KEM or Kyber in 4.9.1 (latest, 2025-04-16) nor on main, and no issue or PR about it. The project is archived: its maintainer stopped development with 4.9.1 and asks anyone who wants to continue it to fork it."
+  signature:
+    status: none
+    sources: ["https://github.com/sybrenstuvel/python-rsa/blob/main/README.md", "https://pypi.org/project/rsa/4.9.1/"]
+    note: "No ML-DSA or Dilithium in 4.9.1 (latest, 2025-04-16) nor on main, and no issue or PR about it. The project is archived: its maintainer stopped development with 4.9.1 and asks anyone who wants to continue it to fork it."
+  checked_at: 2026-11-11
+- library: python/secrets
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/snowland-smx
+  purls: [pkg:pypi/snowland-smx]
+  kem:
+    status: none
+    sources: ["https://github.com/snowland-gm/snowland-smx-python/blob/v1.1.0/CHANGELOG.md", "https://github.com/snowland-gm/snowland-smx-python/issues?q=is%3Aissue"]
+    note: "No ML-KEM or Kyber in 1.1.0 (latest, 2026-09-29) or on master/dev, and no issue or PR about it; key exchange and encryption are SM2 and SM9 only."
+  signature:
+    status: none
+    sources: ["https://github.com/snowland-gm/snowland-smx-python/blob/v1.1.0/CHANGELOG.md", "https://github.com/snowland-gm/snowland-smx-python/issues?q=is%3Aissue"]
+    note: "No ML-DSA or Dilithium in 1.1.0 (latest, 2026-09-29) or on master/dev, and no issue or PR about it; signatures are SM2 and SM9 only."
+  checked_at: 2026-11-11
+- library: python/ssl
+  purls: []
+  kem:
+    status: none
+    sources: ["https://docs.python.org/3.15/library/ssl.html", "https://docs.python.org/3.15/whatsnew/3.15.html", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md"]
+    note: "The ssl module has no ML-KEM API of its own: SSLContext.set_groups (since 3.15.0) passes an OpenSSL group-list string, and X25519MLKEM768 comes from the linked OpenSSL 3.5 or later, which also offers it by default with no Python call. Migrating means linking OpenSSL 3.5 or later."
+  signature:
+    status: none
+    sources: ["https://docs.python.org/3.15/library/ssl.html", "https://docs.python.org/3.15/whatsnew/3.15.html", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md"]
+    note: "The ssl module has no ML-DSA API of its own: set_client_sigalgs and set_server_sigalgs (since 3.15.0) pass an OpenSSL sigalgs string, and the mldsa44/65/87 TLS schemes come from the linked OpenSSL 3.5 or later, which lists them by default."
+  checked_at: 2026-11-11
+- library: python/tenseal
+  purls: [pkg:pypi/tenseal]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/truststore
+  purls: [pkg:pypi/truststore]
+  kem:
+    status: none
+    sources: ["https://github.com/sethmlarson/truststore/blob/v0.10.5/src/truststore/_api.py", "https://github.com/sethmlarson/truststore/blob/v0.10.5/CHANGELOG.md", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md"]
+    note: "No ML-KEM in 0.10.5 (2026-10-12, latest) or main, and no issue or PR mentions it: truststore.SSLContext wraps no TLS group setting and leaves key exchange to Python's ssl module and its linked OpenSSL. With OpenSSL 3.5 or later, OpenSSL's default keyshares (X25519MLKEM768 and X25519) apply with no truststore change."
+  signature:
+    status: none
+    sources: ["https://github.com/sethmlarson/truststore/blob/v0.10.5/README.md", "https://github.com/sethmlarson/truststore/blob/v0.10.5/CHANGELOG.md"]
+    note: "No ML-DSA in 0.10.5 (latest) or main, and no issue or PR mentions it. Truststore signs nothing; it verifies the peer's certificate chain with the platform (Security framework on macOS, CryptoAPI on Windows, OpenSSL on Linux), which decides the accepted signature algorithms."
+  checked_at: 2026-11-11
+- library: python/twofish
+  purls: [pkg:pypi/twofish]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: python/werkzeug
+  purls: ["pkg:pypi/werkzeug"]
+  kem:
+    status: none
+    sources: ["https://github.com/pallets/werkzeug/blob/3.1.9/src/werkzeug/serving.py", "https://werkzeug.palletsprojects.com/en/stable/serving/", "https://pypi.org/project/werkzeug/3.1.9/"]
+    note: "No ML-KEM or Kyber in the source up to 3.1.9 (2026-09-27) or main, and no issue or PR mentions post-quantum; Werkzeug's only public-key use is the RSA-2048 development certificate (make_ssl_devcert, ssl_context=\"adhoc\"), and its development server's TLS key exchange is left to the ssl.SSLContext it wraps."
+  signature:
+    status: none
+    sources: ["https://github.com/pallets/werkzeug/blob/3.1.9/src/werkzeug/serving.py", "https://werkzeug.palletsprojects.com/en/stable/serving/", "https://pypi.org/project/werkzeug/3.1.9/"]
+    note: "No ML-DSA or Dilithium in the source up to 3.1.9 (2026-09-27) or main, and no issue or PR mentions post-quantum; generate_adhoc_ssl_pair and make_ssl_devcert always create an RSA-2048 key and a SHA256-with-RSA self-signed certificate through the cryptography package."
   checked_at: 2026-11-11
 - library: ruby/digest
   purls: []
