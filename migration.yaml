@@ -1,0 +1,69 @@
+# Copyright (c) 2026 SCANOSS
+# SPDX-License-Identifier: MIT
+#
+# Reference data for the migration path: what moving a quantum-vulnerable use
+# to ML-KEM / ML-DSA takes. Every row cites its source.
+
+# The path of a finding whose primitive and operation are known.
+paths:
+  - primitive: key-agree
+    path: redesign
+    reason: "key agreement → KEM (Encapsulate/Decapsulate)"
+    citation: "FIPS 203, Section 3.1 — a KEM establishes a shared key: one party encapsulates it, the other decapsulates it"
+  - primitive: pke
+    operations: [encrypt, decrypt]
+    path: redesign
+    reason: "key transport → KEM + AEAD"
+    citation: "NIST SP 800-227, Section 5.2.1 — KEM-DEM public-key encryption: a KEM establishes the key and a symmetric scheme protects the data"
+  - primitive: signature
+    path: swap
+    reason: "same sign/verify shape, different algorithm"
+    citation: "FIPS 204, Section 5 — ML-DSA keeps the key generation, signing and verification interface"
+
+# Key, ciphertext and signature sizes in bytes, classical and post-quantum.
+sizes:
+  - { algorithm: ML-KEM-768, item: encapsulation key, bytes: 1184, citation: "FIPS 203, Table 3" }
+  - { algorithm: ML-KEM-768, item: ciphertext, bytes: 1088, citation: "FIPS 203, Table 3" }
+  - { algorithm: ML-DSA-65, item: public key, bytes: 1952, citation: "FIPS 204, Table 2" }
+  - { algorithm: ML-DSA-65, item: signature, bytes: 3309, citation: "FIPS 204, Table 2" }
+  - { algorithm: X25519, item: public key, bytes: 32, citation: "RFC 7748, Section 6.1" }
+  - { algorithm: Ed25519, item: signature, bytes: 64, citation: "RFC 8032, Section 5.1.6" }
+  - { algorithm: RSA-2048, item: signature, bytes: 256, citation: "RFC 8017, Section 8.2.1 — the signature is k octets, the length of the modulus" }
+
+# crypto_rules libraries that implement JOSE/JWT, for size_risk "jwt". The
+# citation is the library's documentation.
+jwt_libraries:
+  - { library: c/libjwt, purls: ["pkg:github/benmcollins/libjwt"], citation: "https://github.com/benmcollins/libjwt/blob/HEAD/README.md" }
+  - { library: cpp/cpp-jwt, purls: ["pkg:github/arun11299/cpp-jwt"], citation: "https://github.com/arun11299/cpp-jwt/blob/HEAD/README.md" }
+  - { library: cpp/jwt-cpp, purls: ["pkg:github/Thalhammer/jwt-cpp"], citation: "https://thalhammer.github.io/jwt-cpp/" }
+  - { library: go/go-jose-v2, purls: ["pkg:golang/gopkg.in/square/go-jose.v2"], citation: "https://pkg.go.dev/gopkg.in/square/go-jose.v2" }
+  - { library: go/go-jose-v3, purls: ["pkg:golang/github.com/go-jose/go-jose/v3"], citation: "https://pkg.go.dev/github.com/go-jose/go-jose/v3" }
+  - { library: go/go-jose-v4, purls: ["pkg:golang/github.com/go-jose/go-jose/v4"], citation: "https://pkg.go.dev/github.com/go-jose/go-jose/v4" }
+  - { library: go/golang-jwt, purls: ["pkg:golang/github.com/golang-jwt/jwt/v5"], citation: "https://pkg.go.dev/github.com/golang-jwt/jwt/v5" }
+  - { library: go/jwt-go, purls: ["pkg:golang/github.com/dgrijalva/jwt-go"], citation: "https://pkg.go.dev/github.com/dgrijalva/jwt-go" }
+  - { library: go/jwx, purls: ["pkg:golang/github.com/lestrrat-go/jwx"], citation: "https://pkg.go.dev/github.com/lestrrat-go/jwx" }
+  - { library: go/jwx-v2, purls: ["pkg:golang/github.com/lestrrat-go/jwx/v2"], citation: "https://pkg.go.dev/github.com/lestrrat-go/jwx/v2" }
+  - { library: go/square-go-jose, purls: ["pkg:golang/github.com/square/go-jose"], citation: "https://pkg.go.dev/github.com/square/go-jose" }
+  - { library: java/fusionauth-jwt, purls: ["pkg:maven/io.fusionauth/fusionauth-jwt"], citation: "https://javadoc.io/doc/io.fusionauth/fusionauth-jwt" }
+  - { library: java/java-jwt, purls: ["pkg:maven/com.auth0/java-jwt"], citation: "https://javadoc.io/doc/com.auth0/java-jwt" }
+  - { library: java/jjwt, purls: ["pkg:maven/io.jsonwebtoken/jjwt-api"], citation: "https://javadoc.io/doc/io.jsonwebtoken/jjwt-api" }
+  - { library: java/jose4j, purls: ["pkg:maven/org.bitbucket.b_c/jose4j"], citation: "https://javadoc.io/doc/org.bitbucket.b_c/jose4j" }
+  - { library: java/jwks-rsa, purls: ["pkg:maven/com.auth0/jwks-rsa"], citation: "https://javadoc.io/doc/com.auth0/jwks-rsa" }
+  - { library: java/nimbus-jose-jwt, purls: ["pkg:maven/com.nimbusds/nimbus-jose-jwt"], citation: "https://javadoc.io/doc/com.nimbusds/nimbus-jose-jwt" }
+  - { library: javascript/fast-jwt, purls: ["pkg:npm/fast-jwt"], citation: "https://github.com/nearform/fast-jwt#readme" }
+  - { library: javascript/jose, purls: ["pkg:npm/jose"], citation: "https://github.com/panva/jose#readme" }
+  - { library: javascript/jsonwebtoken, purls: ["pkg:npm/jsonwebtoken"], citation: "https://github.com/auth0/node-jsonwebtoken#readme" }
+  - { library: javascript/jsrsasign, purls: ["pkg:npm/jsrsasign"], citation: "https://github.com/kjur/jsrsasign/wiki" }
+  - { library: javascript/jwa, purls: ["pkg:npm/jwa"], citation: "https://github.com/auth0/node-jwa#readme" }
+  - { library: javascript/jwk-to-pem, purls: ["pkg:npm/jwk-to-pem"], citation: "https://github.com/Brightspace/node-jwk-to-pem#readme" }
+  - { library: javascript/jws, purls: ["pkg:npm/jws"], citation: "https://github.com/brianloveswords/node-jws#readme" }
+  - { library: python/authlib, purls: ["pkg:pypi/authlib"], citation: "https://docs.authlib.org/en/latest/" }
+  - { library: python/flask_jwt_extended, purls: [null], citation: "https://flask-jwt-extended.readthedocs.io/" }
+  - { library: python/joserfc, purls: ["pkg:pypi/joserfc"], citation: "https://jose.authlib.org/en/" }
+  - { library: python/jwcrypto, purls: ["pkg:pypi/jwcrypto"], citation: "https://jwcrypto.readthedocs.io/en/latest/" }
+  - { library: python/pyjwt, purls: ["pkg:pypi/pyjwt"], citation: "https://pyjwt.readthedocs.io/en/stable/" }
+  - { library: python/python-jose, purls: ["pkg:pypi/python-jose"], citation: "https://python-jose.readthedocs.io/en/latest/" }
+  - { library: rust/biscuit, purls: ["pkg:cargo/biscuit"], citation: "https://docs.rs/biscuit" }
+  - { library: rust/josekit, purls: ["pkg:cargo/josekit"], citation: "https://docs.rs/josekit" }
+  - { library: rust/jsonwebtoken, purls: ["pkg:cargo/jsonwebtoken"], citation: "https://docs.rs/jsonwebtoken" }
+  - { library: rust/jwt, purls: ["pkg:cargo/jwt"], citation: "https://docs.rs/jwt" }

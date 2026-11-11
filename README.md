@@ -136,7 +136,7 @@ A spelling may belong to one family only; loading fails otherwise. Tests require
 classified. That vocabulary, in `testdata/cyclonedx-1.7-algorithm-families.txt`, is the
 `algorithmFamily` enumeration of the CycloneDX 1.7 specification.
 
-The migration path reads the rest of [`dataset.yaml`](dataset.yaml): the path for a known primitive and
+The migration path reads [`migration.yaml`](migration.yaml): the path for a known primitive and
 operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT,
 with their purls. Every row cites its source.
 

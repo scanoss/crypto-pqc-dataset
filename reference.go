@@ -4,6 +4,7 @@
 package pqcdataset
 
 import (
+	_ "embed"
 	"fmt"
 	"sync"
 
@@ -52,26 +53,29 @@ type reference struct {
 	JWTLibraries []jwtLibrary `yaml:"jwt_libraries"`
 }
 
-var loadReference = sync.OnceValues(func() (*reference, error) { return parseReference(raw) })
+//go:embed migration.yaml
+var migrationYAML []byte
+
+var loadReference = sync.OnceValues(func() (*reference, error) { return parseReference(migrationYAML) })
 
 func parseReference(data []byte) (*reference, error) {
 	var r reference
 	if err := yaml.Unmarshal(data, &r); err != nil {
-		return nil, fmt.Errorf("pqcdataset: dataset.yaml: %w", err)
+		return nil, fmt.Errorf("pqcdataset: migration.yaml: %w", err)
 	}
 	for _, p := range r.Paths {
 		if p.Primitive == "" || p.Reason == "" || p.Citation == "" || effort[p.Path] == 0 {
-			return nil, fmt.Errorf("pqcdataset: dataset.yaml: incomplete path rule %+v", p)
+			return nil, fmt.Errorf("pqcdataset: migration.yaml: incomplete path rule %+v", p)
 		}
 	}
 	for _, s := range r.Sizes {
 		if s.Algorithm == "" || s.Item == "" || s.Bytes <= 0 || s.Citation == "" {
-			return nil, fmt.Errorf("pqcdataset: dataset.yaml: incomplete size %+v", s)
+			return nil, fmt.Errorf("pqcdataset: migration.yaml: incomplete size %+v", s)
 		}
 	}
 	for _, l := range r.JWTLibraries {
 		if l.Library == "" || l.Citation == "" {
-			return nil, fmt.Errorf("pqcdataset: dataset.yaml: incomplete JWT library %+v", l)
+			return nil, fmt.Errorf("pqcdataset: migration.yaml: incomplete JWT library %+v", l)
 		}
 	}
 	return &r, nil
