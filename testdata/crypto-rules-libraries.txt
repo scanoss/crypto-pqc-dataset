@@ -379,6 +379,7 @@ rust/sequoia-openpgp	pkg:cargo/sequoia-openpgp
 rust/sha1	pkg:cargo/sha1
 rust/sha2	pkg:cargo/sha2
 rust/sha3	pkg:cargo/sha3
+rust/siphasher	pkg:cargo/siphasher
 rust/sm2	pkg:cargo/sm2
 rust/sm3	pkg:cargo/sm3
 rust/sm4	pkg:cargo/sm4
