@@ -117,6 +117,24 @@
     sources: ["https://github.com/jwtk/jjwt/issues/1042", "https://github.com/jwtk/jjwt/pull/1072", "https://www.rfc-editor.org/rfc/rfc9964"]
     note: "No ML-DSA in 0.13.0 (latest) or main. Issue #1042 (RFC 9964 ML-DSA for JOSE) is open; the maintainer welcomed a contribution, and community PR #1072 (AKP JWK for ML-DSA) is open awaiting his review. Until then, callers can plug in a custom SignatureAlgorithm (0.12.0+)."
   checked_at: 2026-11-11
+- library: javascript/blake3-wasm
+  purls: [pkg:npm/blake3-wasm]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/crypto-random-string
+  purls: [pkg:npm/crypto-random-string]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: javascript/fast-sha256
+  purls: [pkg:npm/fast-sha256]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
 - library: javascript/node-forge
   purls: [pkg:npm/node-forge]
   kem:
