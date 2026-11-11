@@ -140,6 +140,23 @@ The migration path reads [`migration.yaml`](migration.yaml): the path for a know
 operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT,
 with their purls. Every row cites its source.
 
+### Migration path
+
+`MigrationPath` says what moving one quantum-vulnerable finding to ML-KEM / ML-DSA takes:
+
+| Path | Meaning |
+|---|---|
+| `upgrade` | The crypto is in a dependency whose newer version ships ML-KEM / ML-DSA. |
+| `swap` | Replace the algorithm; the sign/verify shape stays. |
+| `redesign` | The API shape changes (key agreement or key transport → KEM). |
+| `blocked` | No PQC alternative yet in the dependency or library. |
+
+A finding inside a dependency is `upgrade` or `blocked`, from `libraries.yaml`. A finding in the
+project's code takes its path from its primitive and operation; when the operation is unknown, from
+the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a JOSE/JWT library.
+`ComponentPath` returns a component's worst path and the count per path. Findings that are not
+`vulnerable` get no path.
+
 ### PQC support per library
 
 [`libraries.yaml`](libraries.yaml) says, for each `crypto_rules` library, whether it offers ML-KEM
