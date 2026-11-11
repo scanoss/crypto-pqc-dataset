@@ -19,6 +19,265 @@
     sources: ["https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md", "https://docs.openssl.org/3.5/man7/EVP_SIGNATURE-ML-DSA/"]
     note: "Algorithm names ML-DSA-44, ML-DSA-65, ML-DSA-87. 3.5.0-alpha1 and 3.5.0-beta1 set aside. Enabled in a default build (no-ml-dsa is opt-out)."
   checked_at: 2026-11-11
+- library: cpp/blst
+  purls: ["pkg:github/supranational/blst"]
+  kem:
+    status: none
+    note: "BLS12-381 signature library: keygen, sign, verify, aggregation, hash-to-curve and pairing; no KEM, key agreement or encryption API."
+  signature:
+    status: none
+    sources: ["https://github.com/supranational/blst/blob/v0.3.17/README.md", "https://github.com/supranational/blst/releases/tag/v0.3.17"]
+    note: "No ML-DSA or Dilithium in the source up to v0.3.17 (2026-07-24) or master; signatures are BLS12-381 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: cpp/botan
+  purls: ["pkg:github/randombit/botan"]
+  kem:
+    status: available
+    since: "3.6.0"
+    apis:
+      - Botan::ML_KEM_PrivateKey::ML_KEM_PrivateKey
+      - Botan::ML_KEM_PublicKey::ML_KEM_PublicKey
+      - Botan::ML_KEM_Mode::ML_KEM_512
+      - Botan::ML_KEM_Mode::ML_KEM_768
+      - Botan::ML_KEM_Mode::ML_KEM_1024
+      - Botan::PK_KEM_Encryptor::PK_KEM_Encryptor
+      - Botan::PK_KEM_Decryptor::PK_KEM_Decryptor
+      - Botan::TLS::Group_Params_Code::HYBRID_X25519_ML_KEM_768
+      - Botan::TLS::Group_Params_Code::HYBRID_SECP256R1_ML_KEM_768
+      - Botan::TLS::Group_Params_Code::ML_KEM_512
+      - Botan::TLS::Group_Params_Code::ML_KEM_768
+      - Botan::TLS::Group_Params_Code::ML_KEM_1024
+      - Botan::TLS::Group_Params_Code::HYBRID_SECP384R1_ML_KEM_1024
+    sources:
+      - https://github.com/randombit/botan/blob/3.6.0/news.rst
+      - https://github.com/randombit/botan/blob/3.6.0/src/lib/pubkey/kyber/ml_kem/ml_kem.h
+      - https://github.com/randombit/botan/blob/3.6.0/src/lib/pubkey/kyber/kyber_common/kyber.h
+      - https://github.com/randombit/botan/blob/3.6.0/src/lib/tls/tls_algos.h
+      - https://github.com/randombit/botan/blob/3.7.0/src/lib/tls/tls_algos.h
+      - https://github.com/randombit/botan/blob/3.8.0/src/lib/tls/tls_algos.h
+      - https://github.com/randombit/botan/blob/3.14.1/news.rst
+    note: "ML_KEM_PrivateKey/ML_KEM_PublicKey/ML_KEM_Mode are aliases of Kyber_PrivateKey/Kyber_PublicKey/KyberMode; the ML_KEM_* mode selects FIPS 203. String selectors: create_private_key(\"ML-KEM\", rng, \"ML-KEM-768\"), FFI botan_privkey_load_ml_kem, TLS policy groups \"x25519/ML-KEM-768\", \"secp256r1/ML-KEM-768\" (3.6.0), \"ML-KEM-512/768/1024\" (3.7.0, which also made x25519/ML-KEM-768 a default TLS group) and \"secp384r1/ML-KEM-1024\" (3.8.0). Pre-standard Kyber r3 (since 3.0.0) set aside; its TLS groups were removed in 3.7.0. The ml_kem module is in a default build."
+  signature:
+    status: available
+    since: "3.6.0"
+    apis:
+      - Botan::ML_DSA_PrivateKey::ML_DSA_PrivateKey
+      - Botan::ML_DSA_PublicKey::ML_DSA_PublicKey
+      - Botan::ML_DSA_Mode::ML_DSA_4x4
+      - Botan::ML_DSA_Mode::ML_DSA_6x5
+      - Botan::ML_DSA_Mode::ML_DSA_8x7
+      - Botan::PK_Signer::PK_Signer
+      - Botan::PK_Verifier::PK_Verifier
+    sources:
+      - https://github.com/randombit/botan/blob/3.6.0/news.rst
+      - https://github.com/randombit/botan/blob/3.6.0/src/lib/pubkey/dilithium/ml_dsa/ml_dsa.h
+      - https://github.com/randombit/botan/blob/3.6.0/src/lib/pubkey/dilithium/dilithium_common/dilithium.h
+      - https://github.com/randombit/botan/blob/3.14.1/news.rst
+    note: "ML_DSA_PrivateKey/ML_DSA_PublicKey/ML_DSA_Mode are aliases of Dilithium_PrivateKey/Dilithium_PublicKey/DilithiumMode; ML_DSA_4x4, 6x5 and 8x7 are ML-DSA-44, -65 and -87. String selectors: create_private_key(\"ML-DSA\", rng, \"ML-DSA-6x5\"), FFI botan_privkey_load_ml_dsa. 3.14.0 added the FIPS 204 context string (PK_Signature_Options::with_context). Pre-standard Dilithium r3 (since 3.0.0) set aside. The ml_dsa module is in a default build."
+  checked_at: 2026-11-11
+- library: cpp/cotp
+  purls: [pkg:github/tilkinsc/COTP]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/cpp-jwt
+  purls: [pkg:github/arun11299/cpp-jwt]
+  kem:
+    status: none
+    note: "JWS-only library: HMAC, RSA and ECDSA signing algorithms, no JWE, key agreement or encryption."
+  signature:
+    status: none
+    sources: ["https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in v1.5.1 (latest, 2025-08-30) or master; the algorithm enum stops at HS/RS/ES 256-512 over OpenSSL, and no issue, PR or comment mentions ML-DSA or post-quantum. RFC 9964 defines ML-DSA for JOSE; context only, not a plan from cpp-jwt."
+  checked_at: 2026-11-11
+- library: cpp/cryptopp
+  purls: ["pkg:github/weidai11/cryptopp"]
+  kem:
+    status: none
+    sources: ["https://github.com/weidai11/cryptopp/issues/1307", "https://github.com/cryptopp-modern/cryptopp-modern/releases/tag/2026.3.0"]
+    note: "No ML-KEM or Kyber in 8.9.0 (latest release, 2023-10-01) nor on master (2026-10-02). Issue #1307, the only post-quantum issue or PR (it asked about Kyber and FrodoKEM), was closed as completed by its requester on 2026-05-17 with no maintainer reply; the requester had turned to a fork. The community fork cryptopp-modern (a separate project, pkg:github/cryptopp-modern/cryptopp-modern) ships ML-KEM-512/768/1024 since 2026.3.0; moving there is a change of library, not an upgrade."
+  signature:
+    status: none
+    sources: ["https://github.com/weidai11/cryptopp/issues/1307", "https://github.com/cryptopp-modern/cryptopp-modern/releases/tag/2026.3.0"]
+    note: "No ML-DSA or Dilithium in 8.9.0 (latest release, 2023-10-01) nor on master (2026-10-02); signatures are classical (RSA, DSA, ECDSA, Ed25519...). The only post-quantum issue, #1307, asked about Kyber and FrodoKEM and was closed by its requester on 2026-05-17 with no maintainer reply; no issue or PR mentions ML-DSA. The community fork cryptopp-modern (a separate project, pkg:github/cryptopp-modern/cryptopp-modern) ships ML-DSA-44/65/87 since 2026.3.0; moving there is a change of library, not an upgrade."
+  checked_at: 2026-11-11
+- library: cpp/hash-library
+  purls: [pkg:github/stbrumme/hash-library]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/helib
+  purls: [pkg:github/homenc/HElib]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/jwt-cpp
+  purls: [pkg:github/Thalhammer/jwt-cpp]
+  kem:
+    status: none
+    note: "JWS-only library: HMAC and signature algorithms, no JWE, key agreement or encryption. JWE is an unchecked item of the maintainers' roadmap issue #94, with no release."
+  signature:
+    status: none
+    sources: ["https://github.com/Thalhammer/jwt-cpp/issues/94", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in v0.7.2 (latest) or master: signatures are RSA, ECDSA (incl. ES256K), RSASSA-PSS and EdDSA over OpenSSL, LibreSSL or wolfSSL, and no issue, PR or roadmap item (#94) mentions ML-DSA. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from jwt-cpp. Callers can plug in a custom signature algorithm."
+  checked_at: 2026-11-11
+- library: cpp/liboqs-cpp
+  purls: [pkg:github/open-quantum-safe/liboqs-cpp]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/libsnark
+  purls: [pkg:github/scipr-lab/libsnark]
+  kem:
+    status: none
+    sources: ["https://github.com/scipr-lab/libsnark/blob/27993768f4d2938c05bc428c92110bbd8dda492a/README.md"]
+    note: "No ML-KEM or Kyber in the source up to master 2799376 (2025-06-12); the only tag is v20140603. Its quantum-vulnerable crypto is pairing-based zkSNARKs (BCTV14, Groth16, GM17 over BN128, alt_bn128, MNT4/6, Edwards), which ML-KEM does not replace. No issue or PR mentions post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/scipr-lab/libsnark/blob/27993768f4d2938c05bc428c92110bbd8dda492a/libsnark/zk_proof_systems/ppzkadsnark/r1cs_ppzkadsnark/examples/signature/ed25519_signature.tcc"]
+    note: "No ML-DSA or Dilithium in the source up to master 2799376 (2025-06-12); the ADSNARK example signature is Ed25519 from SUPERCOP. No issue or PR mentions post-quantum."
+  checked_at: 2026-11-11
+- library: cpp/mcl
+  purls: [pkg:github/herumi/mcl]
+  kem:
+    status: none
+    note: "No ML-KEM or Kyber in the source or readme up to v4.43 (2026-11-11); its encryption is lifted ElGamal, Paillier and pairing-based SHE, and no issue or PR mentions post-quantum algorithms."
+  signature:
+    status: none
+    note: "No ML-DSA or Dilithium in the source or readme up to v4.43 (2026-11-11); signatures are ECDSA secp256k1 and pairing-based (aggregate signatures, BBS), and no issue or PR mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: cpp/openfhe
+  purls: [pkg:github/openfheorg/openfhe-development]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/picosha2
+  purls: [pkg:github/okdshin/PicoSHA2]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/poco
+  purls: [pkg:github/pocoproject/poco]
+  kem:
+    status: none
+    sources: ["https://github.com/pocoproject/poco/blob/poco-1.15.4-release/NetSSL_OpenSSL/src/Context.cpp", "https://github.com/pocoproject/poco/blob/e246df928b93490ae223330c4074708ef295f5ec/SSH/testsuite/src/SSHTest.cpp"]
+    note: "No ML-KEM in 1.15.4 (2026-09-22, latest) or main (2026-11-10), and no issue or PR proposes it; PR #5315 pins the SSH tests to classical key exchange because libssh 0.12 or later negotiates mlkem768x25519-sha256 by default. Poco's TLS context defaults to classical groups (X448, X25519, NIST curves) and passes any group list the caller sets to OpenSSL; the SSH module on main (not in a release) delegates key exchange to libssh."
+  signature:
+    status: none
+    sources: ["https://github.com/pocoproject/poco/blob/poco-1.15.4-release/Crypto/include/Poco/Crypto/EVPPKey.h", "https://github.com/pocoproject/poco/blob/poco-1.15.4-release/JWT/include/Poco/JWT/Signer.h"]
+    note: "No ML-DSA in 1.15.4 (latest) or main, and no issue or PR proposes it; PR #5315 pins the SSH tests to classical key exchange because libssh 0.12 or later negotiates mlkem768x25519-sha256 by default. Poco::Crypto keys are RSA and EC only, and Poco::JWT signs with HMAC, RSA and ECDSA only."
+  checked_at: 2026-11-11
+- library: cpp/qtbase
+  purls: ["pkg:github/qt/qtbase"]
+  kem:
+    status: none
+    sources: ["https://github.com/qt/qtbase/blob/v6.12.0/src/network/ssl/qsslconfiguration.h", "https://github.com/qt/qtbase/blob/v6.12.0/src/plugins/tls/openssl/qsslcontext_openssl.cpp", "https://qt-project.atlassian.net/browse/QTBUG-151037", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md"]
+    note: "Qt Network has no ML-KEM API of its own: QSslConfiguration::setEllipticCurves (QSslEllipticCurve) has no ML-KEM or hybrid group, and setBackendConfigurationOption(\"Groups\", ...) only passes a group string through to OpenSSL (SSL_CONF_cmd), which handles X25519MLKEM768 from OpenSSL 3.5. With the OpenSSL backend and OpenSSL 3.5 or newer, OpenSSL's own default keyshares (X25519MLKEM768 and X25519) apply. QTBUG-151037 (open, no maintainer response) asks to change the OpenSSL backend's default groups; it is not a plan to add an ML-KEM API."
+  signature:
+    status: available
+    since: "6.11.0"
+    apis: [QSsl::MlDsa, QSslKey::QSslKey]
+    sources: ["https://code.qt.io/cgit/qt/qtreleasenotes.git/tree/qt/6.11.0/release-note.md", "https://github.com/qt/qtbase/commit/1493a6e8841", "https://github.com/qt/qtbase/blob/v6.11.0/src/network/ssl/qssl.h", "https://doc.qt.io/qt-6/qssl.html#KeyAlgorithm-enum"]
+    note: "QSsl::MlDsa is a QSsl::KeyAlgorithm for loading ML-DSA-44, ML-DSA-65 and ML-DSA-87 keys into QSslKey; the parameter set comes from the key, Qt does not generate keys. Handled only by the OpenSSL TLS backend (Qt's preferred default), with OpenSSL 3.5 or newer or a provider with ML-DSA such as oqsprovider; the Schannel and Secure Transport backends do not handle it. 6.11.0 betas and RC set aside."
+  checked_at: 2026-11-11
+- library: cpp/seal
+  purls: [pkg:github/microsoft/SEAL]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: cpp/tink
+  purls: [pkg:github/google/tink]
+  kem:
+    status: none
+    sources: ["https://github.com/google/tink/blob/master/README.md", "https://github.com/tink-crypto/tink-cc/releases/tag/v2.5.0"]
+    note: "No ML-KEM in google/tink, last release 1.7.0 (2022), archived 2024; its CECPQ2 is pre-standard. Tink C++ moved to tink-crypto/tink-cc, which ships ML-KEM-768, ML-KEM-1024 and X-Wing as HPKE KEMs since 2.5.0; moving there is a change of artifact, not an upgrade."
+  signature:
+    status: none
+    sources: ["https://github.com/google/tink/blob/master/README.md", "https://github.com/tink-crypto/tink-cc/releases/tag/v2.4.0"]
+    note: "No ML-DSA in google/tink, last release 1.7.0 (2022), archived 2024; its experimental Dilithium is pre-standard. Tink C++ moved to tink-crypto/tink-cc, which ships ML-DSA-65 since 2.4.0 (ML-DSA-87 in 2.5.0, ML-DSA-44 in 2.7.0); moving there is a change of artifact, not an upgrade."
+  checked_at: 2026-11-11
+- library: csharp/bouncycastle
+  purls: [pkg:nuget/BouncyCastle.Cryptography]
+  kem:
+    status: available
+    since: "2.5.0"
+    apis:
+      - Org.BouncyCastle.Crypto.Generators.MLKemKeyPairGenerator.GenerateKeyPair
+      - Org.BouncyCastle.Crypto.Parameters.MLKemKeyGenerationParameters.<init>
+      - Org.BouncyCastle.Crypto.Kems.MLKemEncapsulator.<init>
+      - Org.BouncyCastle.Crypto.Kems.MLKemDecapsulator.<init>
+      - Org.BouncyCastle.Crypto.Parameters.MLKemParameters.ml_kem_512
+      - Org.BouncyCastle.Crypto.Parameters.MLKemParameters.ml_kem_768
+      - Org.BouncyCastle.Crypto.Parameters.MLKemParameters.ml_kem_1024
+      - Org.BouncyCastle.Tls.NamedGroup.MLKEM512
+      - Org.BouncyCastle.Tls.NamedGroup.MLKEM768
+      - Org.BouncyCastle.Tls.NamedGroup.MLKEM1024
+      - Org.BouncyCastle.Tls.NamedGroup.X25519MLKEM768
+      - Org.BouncyCastle.Tls.NamedGroup.SecP256r1MLKEM768
+      - Org.BouncyCastle.Tls.NamedGroup.SecP384r1MLKEM1024
+      - Org.BouncyCastle.Tls.NamedGroup.curveSM2MLKEM768
+    sources:
+      - https://www.bouncycastle.org/resources/nist-pqc-support-and-more-bouncy-castle-c-net-2-5-0/
+      - https://github.com/bcgit/bc-csharp/tree/release-2.5.0/crypto/src/crypto/kems
+      - https://github.com/bcgit/bc-csharp/blob/release-2.5.0/crypto/src/crypto/parameters/MLKemParameters.cs
+      - https://www.bouncycastle.org/resources/new-release-bouncy-castle-c-2-7-0/
+      - https://github.com/bcgit/bc-csharp/blob/release-2.7.0/crypto/src/tls/NamedGroup.cs
+    note: >-
+      Pre-standard Kyber (Org.BouncyCastle.Pqc namespace, 2.4.0 and earlier) and
+      the 2.5.0 betas set aside. The TLS API negotiates pure ML-KEM groups from
+      2.5.0 (draft-connolly-tls-mlkem-key-agreement-03 codepoints, moved to -05
+      in 2.6.0) and the hybrids X25519MLKEM768, SecP256r1MLKEM768,
+      SecP384r1MLKEM1024 and curveSM2MLKEM768 from 2.7.0. A string selector
+      also works: GeneratorUtilities.GetKeyPairGenerator("ML-KEM").
+  signature:
+    status: available
+    since: "2.5.0"
+    apis:
+      - Org.BouncyCastle.Crypto.Generators.MLDsaKeyPairGenerator.GenerateKeyPair
+      - Org.BouncyCastle.Crypto.Parameters.MLDsaKeyGenerationParameters.<init>
+      - Org.BouncyCastle.Crypto.Signers.MLDsaSigner.<init>
+      - Org.BouncyCastle.Crypto.Signers.HashMLDsaSigner.<init>
+      - Org.BouncyCastle.Crypto.Parameters.MLDsaParameters.ml_dsa_44
+      - Org.BouncyCastle.Crypto.Parameters.MLDsaParameters.ml_dsa_65
+      - Org.BouncyCastle.Crypto.Parameters.MLDsaParameters.ml_dsa_87
+      - Org.BouncyCastle.Tls.SignatureScheme.mldsa44
+      - Org.BouncyCastle.Tls.SignatureScheme.mldsa65
+      - Org.BouncyCastle.Tls.SignatureScheme.mldsa87
+    sources:
+      - https://www.bouncycastle.org/resources/nist-pqc-support-and-more-bouncy-castle-c-net-2-5-0/
+      - https://github.com/bcgit/bc-csharp/blob/release-2.5.0/crypto/src/crypto/signers/MLDsaSigner.cs
+      - https://github.com/bcgit/bc-csharp/blob/release-2.5.0/crypto/src/crypto/parameters/MLDsaParameters.cs
+      - https://www.bouncycastle.org/resources/new-release-bouncy-castle-c-2-7-0/
+      - https://github.com/bcgit/bc-csharp/blob/release-2.7.0/crypto/src/tls/SignatureScheme.cs
+    note: >-
+      Pre-standard Dilithium (Org.BouncyCastle.Pqc namespace) and the 2.5.0
+      betas set aside. MLDsaSigner and HashMLDsaSigner (pre-hash, parameter
+      sets ml_dsa_*_with_sha512) sign and verify through Init(forSigning, ...).
+      ML-DSA authentication in TLS 1.3 from 2.7.0. A string selector also
+      works: SignerUtilities.GetSigner("ML-DSA-65").
+  checked_at: 2026-11-11
+- library: csharp/dotnet
+  purls: []
+  kem:
+    status: available
+    since: "10.0.0"
+    apis: [MLKem.GenerateKey, MLKem.ImportEncapsulationKey, MLKem.ImportDecapsulationKey, MLKem.ImportPrivateSeed, MLKem.Encapsulate, MLKem.Decapsulate, MLKemAlgorithm.MLKem512, MLKemAlgorithm.MLKem768, MLKemAlgorithm.MLKem1024]
+    sources: ["https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/libraries", "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.mlkem", "https://github.com/dotnet/runtime/blob/v10.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs", "https://github.com/dotnet/runtime/blob/v11.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs"]
+    note: "System.Security.Cryptography.MLKem; needs OpenSSL 3.5 or later, or Windows CNG with PQC support (MLKem.IsSupported). In 10.0.0 its PEM, PKCS#8 and SubjectPublicKeyInfo import/export are [Experimental] (SYSLIB5006); 11.0.0 drops that. The .NET 10 previews and the hybrid CompositeMLKem (11.0.0, still SYSLIB5006) are set aside. TLS key exchange is left to the OS stack: SslStream exposes no ML-KEM group selector."
+  signature:
+    status: available
+    since: "10.0.0"
+    apis: [MLDsa.GenerateKey, MLDsa.ImportMLDsaPublicKey, MLDsa.ImportMLDsaPrivateKey, MLDsa.ImportMLDsaPrivateSeed, MLDsa.SignData, MLDsa.VerifyData, MLDsaAlgorithm.MLDsa44, MLDsaAlgorithm.MLDsa65, MLDsaAlgorithm.MLDsa87]
+    sources: ["https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/libraries", "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.mldsa", "https://github.com/dotnet/runtime/pull/119289", "https://github.com/dotnet/runtime/blob/v10.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs", "https://github.com/dotnet/runtime/blob/v11.0.0/src/libraries/System.Security.Cryptography/ref/System.Security.Cryptography.cs"]
+    note: "System.Security.Cryptography.MLDsa; needs OpenSSL 3.5 or later, or Windows CNG with PQC support (MLDsa.IsSupported). The .NET 10 what's-new page still calls MLDsa [Experimental], but dotnet/runtime#119289 (backported to 10.0) moved SYSLIB5006 to its PEM, PKCS#8, SubjectPublicKeyInfo, SignPreHash and SignMu members, as the 10.0.0 reference assembly shows. 11.0.0 also makes the PEM, PKCS#8 and SubjectPublicKeyInfo members and X509Certificate2 ML-DSA keys stable; CertificateRequest and X509SignatureGenerator.CreateForMLDsa stay experimental. SlhDsa and CompositeMLDsa are SYSLIB5006 in 10.0.0 and 11.0.0; the .NET 10 previews are set aside."
+  checked_at: 2026-11-11
 - library: go/crypto
   purls: []
   kem:
@@ -178,6 +437,37 @@
     status: none
     sources: ["https://www.rfc-editor.org/rfc/rfc9964.html"]
     note: "No ML-DSA in 2.15.1 or main, and no issue, PR or discussion about it. RFC 9964 (May 2026) defines ML-DSA for JOSE; context only, not a plan from PyJWT."
+  checked_at: 2026-11-11
+- library: ruby/digest
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: ruby/openssl
+  purls: []
+  kem:
+    status: available
+    since: "4.0.0"
+    apis: [OpenSSL::SSL::SSLContext.groups=]
+    sources: ["https://github.com/ruby/openssl/blob/v4.0.0/History.md", "https://github.com/ruby/openssl/pull/900", "https://github.com/ruby/openssl/pull/913", "https://github.com/ruby/openssl/blob/v4.0.0/test/openssl/test_ssl.rb", "https://github.com/ruby/openssl/pull/1062"]
+    note: "TLS hybrid groups selected by string through groups=: X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024 (tested in 4.0.0). Delegates to the linked OpenSSL, which must be 3.5 or later; SSLContext defaults do not set groups, so the linked OpenSSL's default list applies. groups= was added in 4.0.0 as the rename of ecdh_curves= (kept as an alias). OpenSSL::PKey::PKey#encapsulate and #decapsulate (PR 1062) and an HPKE API (PR 1061) are merged but not in a release as of 4.0.2."
+  signature:
+    status: available
+    since: "4.0.0"
+    apis: [OpenSSL::PKey.generate_key, OpenSSL::PKey.new_raw_private_key, OpenSSL::PKey.new_raw_public_key, OpenSSL::PKey::PKey.sign, OpenSSL::PKey::PKey.verify, OpenSSL::SSL::SSLContext.sigalgs=]
+    sources: ["https://github.com/ruby/openssl/blob/v4.0.0/History.md", "https://github.com/ruby/openssl/pull/898", "https://github.com/ruby/openssl/pull/913", "https://github.com/ruby/openssl/blob/v4.0.0/test/openssl/test_pkey.rb", "https://github.com/ruby/openssl/blob/v4.0.0/test/openssl/test_ssl.rb"]
+    note: "Algorithm selected by string: OpenSSL::PKey.generate_key(\"ML-DSA-44\"), sign and verify with a nil digest; TLS signature algorithm \"mldsa65\" through sigalgs= (added in 4.0.0). Requires the linked OpenSSL 3.5 or later; the ML-DSA tests skip AWS-LC builds. Provider-only keys (PR 898) landed in 4.0.0 and were backported to 3.2.4 and 3.3.3 (2026-05-13), which are later releases."
+  checked_at: 2026-11-11
+- library: ruby/rubygems
+  purls: ["pkg:github/rubygems/rubygems"]
+  kem:
+    status: none
+    note: "Gem::Security signs and verifies gems only: no key agreement or encryption API. HTTPS downloads go through Ruby's net-http and openssl, which negotiate X25519MLKEM768 with OpenSSL 3.5 or later (tested since 4.0.15); RubyGems does not choose the group."
+  signature:
+    status: planned
+    sources: ["https://github.com/ruby/rubygems/pull/9697", "https://github.com/ruby/rubygems/blob/v4.1.0.beta1/CHANGELOG.md", "https://github.com/ruby/rubygems/blob/v4.1.0.beta1/lib/rubygems/security.rb"]
+    note: "ML-DSA-44/65/87 gem signing (PR #9697, merged 2026-09-02) ships in 4.1.0.beta1 to beta3 only; the latest stable, 4.0.24, supports RSA, DSA and EC keys only for gem signing. Since 4.0.15 (PR #9615) the :ssl_client_cert: and :ssl_ca_cert: settings accept ML-DSA certificates for TLS, read through Ruby's openssl; that is not gem signing. In the betas, keys come from Gem::Security.create_key(\"ML-DSA-65\") or gem cert --build -A ML-DSA-65 and need OpenSSL 3.5 or later; certificate signing with ML-DSA needs Ruby OpenSSL 3.3 or later. The repository moved to github.com/ruby/rubygems."
   checked_at: 2026-11-11
 - library: rust/aws-lc-rs
   purls: [pkg:cargo/aws-lc-rs]
