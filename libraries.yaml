@@ -4,6 +4,388 @@
 # PQC support per crypto_rules library: one entry per library, keyed by its
 # id (<lang>/<library>) and by its purls. The format is described in README.md. Libraries not researched yet are listed in
 # testdata/libraries-pending.txt.
+- library: c/aws-lc
+  purls: ["pkg:github/aws/aws-lc"]
+  kem:
+    status: available
+    since: "1.35.0"
+    apis:
+      - EVP_PKEY_CTX_kem_set_params
+      - EVP_PKEY_kem_new_raw_public_key
+      - EVP_PKEY_kem_new_raw_secret_key
+      - EVP_PKEY_encapsulate
+      - EVP_PKEY_decapsulate
+      - NID_MLKEM512
+      - NID_MLKEM768
+      - NID_MLKEM1024
+      - SSL_CTX_set1_groups
+      - SSL_set1_groups
+      - NID_X25519MLKEM768
+      - NID_SecP256r1MLKEM768
+      - NID_SecP384r1MLKEM1024
+      - SSL_CTX_set1_group_ids
+      - SSL_set1_group_ids
+      - SSL_GROUP_X25519_MLKEM768
+      - SSL_GROUP_SECP256R1_MLKEM768
+      - SSL_GROUP_SECP384R1_MLKEM1024
+      - SSL_GROUP_MLKEM512
+      - SSL_GROUP_MLKEM768
+      - SSL_GROUP_MLKEM1024
+    sources:
+      - https://github.com/aws/aws-lc/releases/tag/v1.35.0
+      - https://github.com/aws/aws-lc/blob/v1.35.0/include/openssl/evp.h
+      - https://github.com/aws/aws-lc/releases/tag/v1.35.1
+      - https://github.com/aws/aws-lc/blob/v1.35.1/include/openssl/nid.h
+      - https://github.com/aws/aws-lc/blob/v1.35.1/include/openssl/ssl.h
+      - https://github.com/aws/aws-lc/releases/tag/v1.50.0
+      - https://github.com/aws/aws-lc/blob/v1.50.0/include/openssl/nid.h
+      - https://github.com/aws/aws-lc/blob/v5.6.0/include/openssl/ssl.h
+    note: "Earlier releases had only pre-standard Kyber and ML-KEM IPD (NID_MLKEM*IPD), set aside; 1.35.0 moved to FIPS 203 in the default build, 1.35.1 added the X25519MLKEM768 and SecP256r1MLKEM768 TLS groups (also by name via SSL_CTX_set1_groups_list), 1.50.0 SecP384r1MLKEM1024. SSL_CTX_set1_group_ids / SSL_set1_group_ids with the SSL_GROUP_* ids since 5.6.0."
+  signature:
+    status: available
+    since: "1.43.0"
+    apis:
+      - EVP_PKEY_CTX_pqdsa_set_params
+      - EVP_PKEY_pqdsa_new_raw_public_key
+      - EVP_PKEY_pqdsa_new_raw_private_key
+      - EVP_PKEY_PQDSA
+      - NID_MLDSA44
+      - NID_MLDSA65
+      - NID_MLDSA87
+      - SSL_SIGN_MLDSA44
+      - SSL_SIGN_MLDSA65
+      - SSL_SIGN_MLDSA87
+    sources:
+      - https://github.com/aws/aws-lc/releases/tag/v1.40.0
+      - https://github.com/aws/aws-lc/blob/v1.42.0/CMakeLists.txt
+      - https://github.com/aws/aws-lc/releases/tag/v1.43.0
+      - https://github.com/aws/aws-lc/blob/v1.43.0/include/openssl/evp.h
+      - https://github.com/aws/aws-lc/blob/v1.43.0/include/openssl/nid.h
+      - https://github.com/aws/aws-lc/releases/tag/v5.0.0
+      - https://github.com/aws/aws-lc/blob/v5.0.0/include/openssl/ssl.h
+    note: "ML-DSA shipped in 1.40.0-1.42.0 only behind the ENABLE_DILITHIUM build option (OFF by default), set aside; 1.43.0 removed the flag. ML-DSA as a TLS 1.3 signature scheme (SSL_SIGN_MLDSA44/65/87) since 5.0.0."
+  checked_at: 2026-11-11
+- library: c/blst
+  purls: ["pkg:github/supranational/blst"]
+  kem:
+    status: none
+    sources: ["https://github.com/supranational/blst/blob/v0.3.17/bindings/blst.h"]
+    note: "BLS12-381 signature library (keygen, sign, verify, aggregation, hash-to-curve, pairing) with no KEM, key agreement or encryption API, and no ML-KEM or Kyber up to v0.3.17 (latest, 2026-07-24) or master."
+  signature:
+    status: none
+    sources: ["https://github.com/supranational/blst/blob/v0.3.17/bindings/blst.h", "https://github.com/supranational/blst/releases/tag/v0.3.17"]
+    note: "No ML-DSA or Dilithium in the source up to v0.3.17 (latest, 2026-07-24) or master; signatures are BLS12-381 only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: c/cotp
+  purls: [pkg:github/tilkinsc/COTP]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/ferguson-twofish
+  purls: []
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/gmssl
+  purls: ["pkg:github/guanzhi/GmSSL"]
+  kem:
+    status: planned
+    sources: ["https://github.com/guanzhi/GmSSL/commit/d8ce43ffef7d00738467f2a4287025339842c11c", "https://github.com/guanzhi/GmSSL/blob/master/src/kyber.c", "https://github.com/guanzhi/GmSSL/releases/tag/v3.2.0", "https://github.com/guanzhi/GmSSL/blob/v3.2.0/src/kyber.c"]
+    note: "The maintainer's commit \"Update Kyber-512 to ML-KEM-768\" (2026-06-24) moved kyber_key_generate_ex, kyber_encap and kyber_decap to FIPS 203 SHA3/SHAKE on master, with no release yet. The CRYSTALS-Kyber of v3.2.0 (latest release, 2026-06-21) is set aside: pre-standard Kyber-512 with SM3 in place of SHA3/SHAKE."
+  signature:
+    status: none
+    sources: ["https://github.com/guanzhi/GmSSL/releases/tag/v3.2.0", "https://github.com/guanzhi/GmSSL/issues/1762"]
+    note: "No ML-DSA or Dilithium in v3.2.0 (latest release, 2026-06-21) or on master; its post-quantum signatures are the SM3-based hash signatures LMS/HSS, XMSS/XMSS^MT and SPHINCS+. A user's 2024 question on post-quantum plans (#1762) got no answer from the project."
+  checked_at: 2026-11-11
+- library: c/gnutls
+  purls: ["pkg:github/gnutls/gnutls"]
+  kem:
+    status: planned
+    sources: ["https://gitlab.com/gnutls/gnutls/-/merge_requests/1925", "https://github.com/gnutls/gnutls/blob/3.8.9/NEWS", "https://github.com/gnutls/gnutls/blob/3.8.13/configure.ac", "https://git.lysator.liu.se/nettle/nettle/-/blob/master/NEWS"]
+    note: "ML-KEM (GNUTLS_PK_MLKEM768/1024, TLS 1.3 groups X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024) works only in builds configured --with-leancrypto (or --with-liboqs before 3.8.10), off by default up to 3.8.13 (2026-04-29), so it is set aside. The maintainer made leancrypto the PQC backend only until Nettle, GnuTLS's default backend, gains PQC (MR 1925), and Nettle's unreleased 4.1 adds ML-KEM."
+  signature:
+    status: planned
+    sources: ["https://gitlab.com/gnutls/gnutls/-/merge_requests/1925", "https://github.com/gnutls/gnutls/blob/3.8.9/NEWS", "https://github.com/gnutls/gnutls/blob/3.8.13/configure.ac", "https://git.lysator.liu.se/nettle/nettle/-/merge_requests/68"]
+    note: "ML-DSA (GNUTLS_PK_MLDSA44/65/87, GNUTLS_SIGN_MLDSA44/65/87) since 3.8.9 works only in builds configured --with-leancrypto (or --with-liboqs before 3.8.10), off by default up to 3.8.13, so it is set aside. The maintainer made leancrypto the PQC backend only until Nettle gains PQC (MR 1925), and has a draft ML-DSA merge request open in Nettle."
+  checked_at: 2026-11-11
+- library: c/google-authenticator-libpam
+  purls: [pkg:github/google/google-authenticator-libpam]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/gpgme
+  purls: ["pkg:github/gpg/gpgme"]
+  kem:
+    status: none
+    sources: ["https://github.com/gpg/gpgme/blob/gpgme-2.2.0/NEWS", "https://github.com/gpg/gpgme/blob/master/NEWS", "https://www.gnupg.org/documentation/manuals/gpgme/Generating-Keys.html"]
+    note: "No ML-KEM API in GPGME 2.2.0 (latest, 2026-08-31): gpgme_op_createkey forwards an algorithm string to the GnuPG engine (\"see the GnuPG manual\"), so composite Kyber keys are selected only through GnuPG, and GPGME_PK_KYBER (since 1.24.1) only labels listed keys. The master branch adds a GPGME_PK_MLKEM key-listing value for the unreleased 2.3.0, which is a label, not an API to use ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/gpg/gpgme/blob/gpgme-2.2.0/NEWS", "https://github.com/gpg/gpgme/blob/master/NEWS"]
+    note: "No ML-DSA or Dilithium in GPGME 2.2.0 (latest, 2026-08-31). The master branch adds a GPGME_PK_MLDSA key-listing value for the unreleased 2.3.0, which is a label, not an API to sign with ML-DSA."
+  checked_at: 2026-11-11
+- library: c/hacl-star
+  purls: ["pkg:github/project-everest/hacl-star"]
+  kem:
+    status: none
+    sources: ["https://github.com/hacl-star/hacl-star/releases", "https://github.com/hacl-star/hacl-star/tree/main/code/frodo", "https://github.com/hacl-star/hacl-star/issues/228"]
+    note: "No ML-KEM in v0.3.0 (latest C release, 2020) or main; the only post-quantum KEM is FrodoKEM. Issue #228 (2020) asked about post-quantum support in general, and was closed in 2022 without an ML-KEM plan."
+  signature:
+    status: none
+    sources: ["https://github.com/hacl-star/hacl-star/releases", "https://github.com/hacl-star/hacl-star/issues/228"]
+    note: "No ML-DSA or Dilithium in v0.3.0 (latest C release, 2020) or main, and no issue or pull request mentions ML-DSA. Issue #228 (2020) asked about post-quantum support in general, and was closed in 2022 without an ML-DSA plan."
+  checked_at: 2026-11-11
+- library: c/intel-ipsec-mb
+  purls: [pkg:github/intel/intel-ipsec-mb]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/libgcrypt
+  purls: ["pkg:github/gpg/libgcrypt"]
+  kem:
+    status: available
+    since: "1.11.1"
+    apis: [gcry_kem_keypair, gcry_kem_encap, gcry_kem_decap, GCRY_KEM_MLKEM512, GCRY_KEM_MLKEM768, GCRY_KEM_MLKEM1024]
+    sources: ["https://github.com/gpg/libgcrypt/blob/libgcrypt-1.11.1/NEWS", "https://dev.gnupg.org/T7166", "https://github.com/gpg/libgcrypt/blob/libgcrypt-1.11.1/src/gcrypt.h.in", "https://github.com/gpg/libgcrypt/blob/libgcrypt-1.11.1/configure.ac"]
+    note: "1.11.0 implemented Kyber after the FIPS 203 draft (ipd 2023-08-24) and is set aside; 1.11.1 applied the final FIPS 203 changes. Kyber is in the default public-key cipher list, so a default build ships it."
+  signature:
+    status: available
+    since: "1.12.0"
+    apis: [gcry_pk_genkey, gcry_pk_sign, gcry_pk_verify, GCRY_PK_MLDSA]
+    sources: ["https://github.com/gpg/libgcrypt/blob/libgcrypt-1.12.0/NEWS", "https://dev.gnupg.org/T7640", "https://github.com/gpg/libgcrypt/blob/libgcrypt-1.12.0/cipher/pubkey-dilithium.c", "https://github.com/gpg/libgcrypt/blob/libgcrypt-1.12.0/configure.ac"]
+    note: "ML-DSA-44/65/87 are selected by the S-expression key names dilithium2, dilithium3 and dilithium5. Dilithium is in the default public-key cipher list, so a default build ships it."
+  checked_at: 2026-11-11
+- library: c/libjwt
+  purls: ["pkg:github/benmcollins/libjwt"]
+  kem:
+    status: none
+    sources: ["https://github.com/benmcollins/libjwt/blob/v3.6.1/include/jwt.h", "https://github.com/benmcollins/libjwt/blob/v3.6.1/README.md"]
+    note: "No ML-KEM or Kyber in 3.6.1 (latest, 2026-06-19) or master: JWE key management is dir, AES key wrap, AES-GCM key wrap, PBES2, RSA-OAEP and ECDH-ES. No issue or PR mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/benmcollins/libjwt/releases/tag/v3.5.0", "https://github.com/benmcollins/libjwt/blob/v3.6.1/README.md", "https://github.com/benmcollins/libjwt/blob/v3.6.1/CMakeLists.txt", "https://github.com/benmcollins/libjwt/issues/227"]
+    note: "ML-DSA-44/65/87 (JWT_ALG_ML_DSA_44/65/87, AKP keys) exist since 3.5.0 only in a build with -DWITH_ML_DSA=ON, experimental and off by default, against OpenSSL 3.5+ or a PQC-enabled GnuTLS 3.8.10+, so a default build has no ML-DSA. The maintainer said in #227 it would stay experimental and enabled only by a manual cmake option; no plan to enable it by default was found."
+  checked_at: 2026-11-11
+- library: c/liboqs
+  purls: [pkg:github/open-quantum-safe/liboqs]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/libp11
+  purls: ["pkg:github/OpenSC/libp11"]
+  kem:
+    status: available
+    since: "0.4.20"
+    apis: [PKCS11_keygen, PKCS11_generate_key, PKCS11_evp_pkey_decapsulate]
+    sources: ["https://github.com/OpenSC/libp11/releases/tag/libp11-0.4.20", "https://github.com/OpenSC/libp11/blob/libp11-0.4.20/NEWS", "https://github.com/OpenSC/libp11/blob/libp11-0.4.20/src/libp11.h", "https://github.com/OpenSC/libp11/blob/libp11-0.4.20/src/p11_front.c"]
+    note: "ML-KEM-512/768/1024 keys on a PKCS#11 3.2 token, selected by the OpenSSL key type (EVP_PKEY_ML_KEM_*), and through the PKCS#11 provider by name; requires building against OpenSSL 3.5 or later with ML-KEM enabled."
+  signature:
+    status: available
+    since: "0.4.19"
+    apis: [PKCS11_keygen, PKCS11_generate_key, PKCS11_evp_pkey_sign]
+    sources: ["https://github.com/OpenSC/libp11/releases/tag/libp11-0.4.19", "https://github.com/OpenSC/libp11/blob/libp11-0.4.19/NEWS", "https://github.com/OpenSC/libp11/blob/libp11-0.4.19/src/libp11.h", "https://github.com/OpenSC/libp11/blob/libp11-0.4.19/src/p11_front.c"]
+    note: "ML-DSA-44/65/87 keys on a PKCS#11 3.2 token, selected by the OpenSSL key type (EVP_PKEY_ML_DSA_44/65/87), and through the PKCS#11 provider by name; requires building against OpenSSL 3.5 or later with ML-DSA enabled."
+  checked_at: 2026-11-11
+- library: c/libscrypt
+  purls: [pkg:github/technion/libscrypt]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/libsodium
+  purls: ["pkg:github/jedisct1/libsodium"]
+  kem:
+    status: available
+    since: "1.0.22"
+    apis: [crypto_kem_keypair, crypto_kem_seed_keypair, crypto_kem_enc, crypto_kem_dec, crypto_kem_xwing_keypair, crypto_kem_xwing_enc, crypto_kem_xwing_dec, crypto_kem_mlkem768_keypair, crypto_kem_mlkem768_seed_keypair, crypto_kem_mlkem768_enc, crypto_kem_mlkem768_dec]
+    sources: ["https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE", "https://github.com/jedisct1/libsodium/blob/1.0.22-RELEASE/src/libsodium/include/sodium/crypto_kem_mlkem768.h", "https://github.com/jedisct1/libsodium/blob/1.0.22-RELEASE/src/libsodium/include/sodium/crypto_kem.h", "https://doc.libsodium.org/public-key_cryptography/key_encapsulation", "https://doc.libsodium.org/advanced/ml-kem768"]
+    note: "ML-KEM-768 only (no 512 or 1024); the default crypto_kem_*() API is X-Wing, the hybrid of ML-KEM-768 and X25519. Not in 1.0.21 or earlier."
+  signature:
+    status: planned
+    sources: ["https://github.com/jedisct1/libsodium/commit/11216e4186b17093cbbe109664bf66e80cb6ee60", "https://github.com/jedisct1/libsodium/blob/master/src/libsodium/include/sodium/crypto_sign_mldsa44.h"]
+    note: "The maintainer added ML-DSA-44 (crypto_sign_mldsa44_*) on master on 2026-10-15; it is not in 1.0.22 (latest release, 2026-04-09) or any earlier release."
+  checked_at: 2026-11-11
+- library: c/libssh
+  purls: ["pkg:github/libssh/libssh-mirror"]
+  kem:
+    status: available
+    since: "0.12.0"
+    apis: [ssh_connect, ssh_handle_key_exchange, ssh_options_set, ssh_bind_options_set, SSH_OPTIONS_KEY_EXCHANGE, SSH_BIND_OPTIONS_KEY_EXCHANGE]
+    sources: ["https://github.com/libssh/libssh-mirror/blob/libssh-0.12.0/CHANGELOG", "https://github.com/libssh/libssh-mirror/blob/libssh-0.12.0/src/kex.c", "https://github.com/libssh/libssh-mirror/blob/libssh-0.11.5/CHANGELOG"]
+    note: "Hybrid SSH key exchanges mlkem768x25519-sha256 and mlkem768nistp256-sha256 (every crypto backend) and mlkem1024nistp384-sha384 (OpenSSL 3.5+ or libgcrypt backend) lead the default kex list, or are picked by name with the KEY_EXCHANGE options. The 0.11 branch, maintained in parallel up to 0.11.5, has no ML-KEM; sntrup761x25519-sha512 is not ML-KEM."
+  signature:
+    status: planned
+    sources: ["https://gitlab.com/libssh/libssh-mirror/-/merge_requests/902", "https://github.com/libssh/libssh-mirror/blob/libssh-0.12.2/CHANGELOG", "https://github.com/libssh/libssh-mirror/blob/libssh-0.12.2/src/kex.c"]
+    note: "No ML-DSA in 0.12.2 (latest) or master: host and user keys are RSA, ECDSA and Ed25519. Open merge request !902 (pure ML-DSA keys, 2026-10-21) is by a libssh developer, with Jakub Jelen as reviewer."
+  checked_at: 2026-11-11
+- library: c/libssh2
+  purls: ["pkg:github/libssh2/libssh2"]
+  kem:
+    status: planned
+    sources: ["https://github.com/libssh2/libssh2/pull/1644", "https://github.com/libssh2/libssh2/blob/master/RELEASE-NOTES", "https://github.com/libssh2/libssh2/blob/master/src/openssl.h", "https://github.com/libssh2/libssh2/blob/master/src/kex.c", "https://github.com/libssh2/libssh2/releases/tag/libssh2-1.11.1"]
+    note: "No ML-KEM in 1.11.1 (latest, 2024-10-16). Hybrid mlkem768x25519-sha256, mlkem768nistp256-sha256 and mlkem1024nistp384-sha384 key exchanges were merged to master in PR #1644 (2026-04-03) for the next release, listed first and built only with the OpenSSL 3.5+ backend."
+  signature:
+    status: none
+    sources: ["https://github.com/libssh2/libssh2/pull/2615", "https://github.com/libssh2/libssh2/releases/tag/libssh2-1.11.1"]
+    note: "No ML-DSA in 1.11.1 (latest) or master, and no issue or PR asks for it; PR #2615 added ML-DSA host keys to the test server only, described as not used or supported by libssh2."
+  checked_at: 2026-11-11
+- library: c/libtomcrypt
+  purls: ["pkg:github/libtom/libtomcrypt"]
+  kem:
+    status: planned
+    sources: ["https://github.com/libtom/libtomcrypt/pull/720", "https://github.com/libtom/libtomcrypt/releases/tag/v1.18.2"]
+    note: "No ML-KEM in v1.18.2 (latest release, July 2018) or develop. Open PR #720 by maintainer Karel Miko adds ML-KEM-512/768/1024 (LTC_MLKEM_*), with a review from maintainer Steffen Jaeckel, on the 'next' milestone."
+  signature:
+    status: planned
+    sources: ["https://github.com/libtom/libtomcrypt/pull/720", "https://github.com/libtom/libtomcrypt/releases/tag/v1.18.2"]
+    note: "No ML-DSA in v1.18.2 (latest release, July 2018) or develop. Open PR #720 by maintainer Karel Miko adds ML-DSA-44/65/87 (LTC_MLDSA_*) and SLH-DSA, with a review from maintainer Steffen Jaeckel, on the 'next' milestone."
+  checked_at: 2026-11-11
+- library: c/libvirt
+  purls: ["pkg:github/libvirt/libvirt"]
+  kem:
+    status: none
+    sources: ["https://github.com/libvirt/libvirt/blob/v12.9.0/docs/kbase/tlscerts.rst", "https://github.com/libvirt/libvirt/blob/v12.9.0/src/util/vircrypto.h"]
+    note: "No ML-KEM API up to 12.9.0 (2026-11-02, latest) or master: the TLS transport leaves key exchange to GnuTLS and the system crypto policy, which can negotiate hybrid groups such as X25519-MLKEM768, and libvirt only passes a tls_priority string through. Its own crypto API is AES-256-CBC and MD5/SHA-256 hashing."
+  signature:
+    status: none
+    sources: ["https://github.com/libvirt/libvirt/blob/v12.9.0/docs/kbase/tlscerts.rst", "https://github.com/libvirt/libvirt/blob/v11.10.0/NEWS.rst"]
+    note: "No ML-DSA API up to 12.9.0 (latest) or master: ML-DSA certificates for the TLS transport are created with GnuTLS certtool and handled by GnuTLS. Since 11.10.0 the daemon and client load several certificate identities to ease a move to such certificates, which is configuration, not an API."
+  checked_at: 2026-11-11
+- library: c/mbedtls
+  purls: ["pkg:github/mbed-tls/mbedtls"]
+  kem:
+    status: planned
+    sources: ["https://github.com/Mbed-TLS/mbedtls/issues/9803", "https://mbed-tls.readthedocs.io/en/latest/project/roadmap/", "https://github.com/Mbed-TLS/mbedtls/releases/tag/mbedtls-4.2.0"]
+    note: "No ML-KEM up to 4.2.0 (2026-07-07) and its bundled TF-PSA-Crypto 1.2.0; a maintainer said in issue 9803 that mlkem-native will be integrated after ML-DSA, and the roadmap lists ML-KEM support under Future."
+  signature:
+    status: planned
+    sources: ["https://github.com/Mbed-TLS/mbedtls/issues/9803", "https://mbed-tls.readthedocs.io/en/latest/project/roadmap/", "https://github.com/Mbed-TLS/TF-PSA-Crypto/issues/637", "https://github.com/Mbed-TLS/TF-PSA-Crypto/issues/657", "https://github.com/Mbed-TLS/mbedtls/releases/tag/mbedtls-4.2.0", "https://github.com/Mbed-TLS/TF-PSA-Crypto/blob/tf-psa-crypto-1.2.0/include/psa/crypto_config.h"]
+    note: "TF-PSA-Crypto 1.2.0, bundled in Mbed TLS 4.2.0, has an experimental mldsa-native driver that is off by default (TF_PSA_CRYPTO_PQCP_MLDSA_ENABLED), so it is set aside. Maintainers track ML-DSA in the PSA API and in the default config (TF-PSA-Crypto issues 637 and 657), and the roadmap lists ML-DSA initial support."
+  checked_at: 2026-11-11
+- library: c/mcl
+  purls: ["pkg:github/herumi/mcl"]
+  kem:
+    status: none
+    sources: ["https://github.com/herumi/mcl/tree/v4.43/include/mcl"]
+    note: "No ML-KEM or Kyber in the source or readme up to v4.43 (latest tag, 2026-11-11); its encryption is lifted ElGamal, Paillier and pairing-based SHE, and no issue or PR mentions post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://github.com/herumi/mcl/tree/v4.43/include/mcl", "https://github.com/herumi/mcl/blob/v4.43/api.md"]
+    note: "No ML-DSA or Dilithium in the source or readme up to v4.43 (latest tag, 2026-11-11); signatures are secp256k1 ECDSA and pairing-based (BLS-style aggregate signatures, BBS), and no issue or PR mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: c/micro-ecc
+  purls: ["pkg:github/kmackay/micro-ecc"]
+  kem:
+    status: none
+    sources: ["https://github.com/kmackay/micro-ecc/blob/v1.2/README.md", "https://github.com/kmackay/micro-ecc/releases/tag/v1.2"]
+    note: "ECDH and ECDSA library (secp160r1, secp192r1, secp224r1, secp256r1, secp256k1): no ML-KEM or Kyber in v1.2 (latest release) or master, and no issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/kmackay/micro-ecc/blob/v1.2/README.md", "https://github.com/kmackay/micro-ecc/releases/tag/v1.2"]
+    note: "No ML-DSA or Dilithium in v1.2 (latest release) or master; signatures are ECDSA only, and no issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: c/monocypher
+  purls: ["pkg:github/LoupVaillant/Monocypher"]
+  kem:
+    status: none
+    sources: ["https://github.com/LoupVaillant/Monocypher/issues/226", "https://github.com/LoupVaillant/Monocypher/releases/tag/4.0.3", "https://github.com/LoupVaillant/Monocypher/blob/4.0.3/src/monocypher.h", "https://github.com/LoupVaillant/Monocypher/pull/300#issuecomment-6296553849"]
+    note: "No ML-KEM or Kyber in 4.0.3 (latest, 2026-06-15) or master; key exchange is X25519 only. The owner closed the post-quantum request #226 as out of scope (won't fix, 2022) and on 2026-10-20 said he will work on a post-quantum KEM, starting outside Monocypher, undecided whether it joins the library."
+  signature:
+    status: none
+    sources: ["https://github.com/LoupVaillant/Monocypher/issues/226", "https://github.com/LoupVaillant/Monocypher/releases/tag/4.0.3", "https://github.com/LoupVaillant/Monocypher/blob/4.0.3/src/monocypher.h"]
+    note: "No ML-DSA or Dilithium in 4.0.3 (latest, 2026-06-15) or master; signatures are EdDSA only. The owner closed the post-quantum request #226 as out of scope (won't fix, 2022) and in 2024 said he would rather be a late adopter, with no plan announced since."
+  checked_at: 2026-11-11
+- library: c/nettle
+  purls: ["pkg:github/gnutls/nettle"]
+  kem:
+    status: planned
+    sources: ["https://github.com/gnutls/nettle/blob/master/NEWS", "https://git.lysator.liu.se/nettle/nettle/-/merge_requests/67", "https://github.com/gnutls/nettle/blob/nettle_4.0_release_20260205/NEWS"]
+    note: "No ML-KEM in 4.0 (latest release, 2026-02-05). Merge request !67 is merged on master and ML-KEM is listed in the NEWS for the unreleased 4.1."
+  signature:
+    status: planned
+    sources: ["https://git.lysator.liu.se/nettle/nettle/-/merge_requests/68", "https://lists.lysator.liu.se/mailman/hyperkitty/list/nettle-bugs@lists.lysator.liu.se/thread/J6FHJWVVJZODRKWTLHCHTX4S44YSI3OL/", "https://github.com/gnutls/nettle/blob/nettle_4.0_release_20260205/NEWS"]
+    note: "No ML-DSA in 4.0 or master; 4.0 added SLH-DSA, not ML-DSA. Draft merge request !68 (Daiki Ueno, October 2025) adds ML-DSA and maintainer Niels Möller answered it on nettle-bugs."
+  checked_at: 2026-11-11
+- library: c/nss
+  purls: ["pkg:github/nss-dev/nss"]
+  kem:
+    status: available
+    since: "3.105"
+    apis:
+      - SSL_NamedGroupConfig
+      - SSL_SendAdditionalKeyShares
+      - ssl_grp_kem_mlkem768x25519
+      - ssl_grp_kem_secp256r1mlkem768
+      - ssl_grp_kem_secp384r1mlkem1024
+      - ssl_grp_kem_mlkem1024
+      - PK11_GenerateKeyPair
+      - PK11_Encapsulate
+      - PK11_Decapsulate
+      - CKM_NSS_ML_KEM_KEY_PAIR_GEN
+      - CKP_NSS_ML_KEM_768
+      - CKM_ML_KEM_KEY_PAIR_GEN
+      - CKP_ML_KEM_768
+    sources:
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_105.html
+      - https://github.com/nss-dev/nss/blob/NSS_3_105_RTM/lib/ssl/sslt.h
+      - https://github.com/nss-dev/nss/blob/NSS_3_105_RTM/lib/util/pkcs11n.h
+      - https://github.com/nss-dev/nss/blob/NSS_3_105_RTM/lib/pk11wrap/pk11pub.h
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_116.html
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_118.html
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_126.html
+      - https://github.com/nss-dev/nss/blob/NSS_3_126_RTM/lib/ssl/sslt.h
+      - https://github.com/nss-dev/nss/blob/NSS_3_126_RTM/lib/util/pkcs11t.h
+    note: "3.105 added ML-KEM-768 (vendor mechanism CKM_NSS_ML_KEM) and the mlkem768x25519 TLS group; pre-standard Kyber (xyber768d00, CKM_NSS_KYBER) set aside. 3.116 moved to the PKCS #11 v3.2 KEM mechanisms, 3.118 added secp256r1mlkem768 and secp384r1mlkem1024 and made mlkem768x25519 the default, 3.126 added the ML-KEM-1024 group."
+  signature:
+    status: available
+    since: "3.128"
+    apis:
+      - PK11_GenerateKeyPair
+      - CKM_ML_DSA_KEY_PAIR_GEN
+      - CKM_ML_DSA
+      - CKP_ML_DSA_44
+      - CKP_ML_DSA_65
+      - CKP_ML_DSA_87
+      - SSL_SignatureSchemePrefSet
+      - ssl_sig_mldsa44
+      - ssl_sig_mldsa65
+      - ssl_sig_mldsa87
+    sources:
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_116.html
+      - https://github.com/nss-dev/nss/blob/NSS_3_127_RTM/lib/freebl/ml_dsa.c
+      - https://firefox-source-docs.mozilla.org/security/nss/releases/nss_3_128.html
+      - https://github.com/nss-dev/nss/blob/NSS_3_128_RTM/lib/freebl/ml_dsa.c
+      - https://github.com/nss-dev/nss/blob/NSS_3_128_RTM/lib/util/pkcs11t.h
+      - https://github.com/nss-dev/nss/blob/NSS_3_128_RTM/lib/ssl/sslt.h
+    note: "ML-DSA key types, mechanisms and OIDs appeared in 3.116, but the freebl ML-DSA functions were stubs returning an error until 3.128 vendored libcrux ML-DSA, so 3.116-3.127 are set aside. 3.128 also added the TLS 1.3 ML-DSA signature schemes."
+  checked_at: 2026-11-11
+- library: c/openiked
+  purls: []
+  kem:
+    status: none
+    sources: ["https://github.com/openiked/openiked-portable/pull/138", "https://github.com/openiked/openiked-portable/pull/137", "https://github.com/openiked/openiked-portable/blob/v7.4/iked/iked.conf.5", "https://github.com/openiked/openiked-portable/releases/tag/v7.4"]
+    note: "No ML-KEM in v7.4 (latest, 2025-04-10) or master; sntrup761x25519 (opt-in, not ML-KEM) is the only post-quantum group. PRs #138 and #137, which add a hybrid ML-KEM group, are open but have had no maintainer action since April 2025."
+  signature:
+    status: none
+    sources: ["https://github.com/openiked/openiked-portable/blob/v7.4/iked/iked.conf.5", "https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-pqc-auth/"]
+    note: "No ML-DSA in v7.4 (latest) or master: authentication is PSK, RSA or ECDSA, and no issue or PR asks for ML-DSA. draft-ietf-ipsecme-ikev2-pqc-auth (ML-DSA authentication in IKEv2, in the RFC Editor queue) is cited as context."
+  checked_at: 2026-11-11
+- library: c/opensc
+  purls: ["pkg:github/OpenSC/opensc"]
+  kem:
+    status: planned
+    sources: ["https://github.com/OpenSC/OpenSC/pull/3754", "https://github.com/OpenSC/OpenSC/blob/0.27.0/NEWS"]
+    note: "No ML-KEM in the libopensc card and PKCS#15 API or the PKCS#11 module up to 0.27.1 (2026-03-31); the maintainer's open PR #3754 adds post-quantum keys to the OpenSC internals and PIV driver, with ML-KEM operations still to be wired. Since 0.27.0 only the pkcs11-tool command handles ML-KEM keys of other PKCS#11 3.2 tokens, which is not a library API."
+  signature:
+    status: planned
+    sources: ["https://github.com/OpenSC/OpenSC/pull/3754", "https://github.com/OpenSC/OpenSC/blob/0.27.0/NEWS"]
+    note: "No ML-DSA in the libopensc card and PKCS#15 API or the PKCS#11 module up to 0.27.1 (2026-03-31); the maintainer's open PR #3754 adds ML-DSA keys to the OpenSC internals and PIV driver. Since 0.27.0 only the pkcs11-tool command handles ML-DSA keys of other PKCS#11 3.2 tokens, which is not a library API."
+  checked_at: 2026-11-11
 - library: c/openssl
   purls: ["pkg:github/openssl/openssl"]
   kem:
@@ -18,6 +400,122 @@
     apis: [EVP_PKEY_CTX_new_from_name, EVP_PKEY_Q_keygen, EVP_SIGNATURE_fetch, EVP_PKEY_sign_message_init, EVP_PKEY_verify_message_init]
     sources: ["https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md", "https://docs.openssl.org/3.5/man7/EVP_SIGNATURE-ML-DSA/"]
     note: "Algorithm names ML-DSA-44, ML-DSA-65, ML-DSA-87. 3.5.0-alpha1 and 3.5.0-beta1 set aside. Enabled in a default build (no-ml-dsa is opt-out)."
+  checked_at: 2026-11-11
+- library: c/phc-winner-argon2
+  purls: [pkg:github/P-H-C/phc-winner-argon2]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/pqclean
+  purls: [pkg:github/PQClean/PQClean]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: c/relic
+  purls: ["pkg:github/relic-toolkit/relic"]
+  kem:
+    status: none
+    sources: ["https://github.com/relic-toolkit/relic/blob/0.7.0/include/relic_cp.h", "https://github.com/relic-toolkit/relic/releases/tag/0.7.0"]
+    note: "No ML-KEM or Kyber in the source up to 0.7.0 (latest release, 2024-12-27) or main; its key establishment and encryption are RSA, ECDH, ECMQV, ECIES and pairing-based schemes, and no issue or PR mentions post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://github.com/relic-toolkit/relic/blob/0.7.0/include/relic_cp.h", "https://github.com/relic-toolkit/relic/releases/tag/0.7.0"]
+    note: "No ML-DSA or Dilithium in the source up to 0.7.0 (latest release, 2024-12-27) or main; signatures are RSA, ECDSA, Schnorr-style and pairing-based (BLS, BBS, CLS), and no issue or PR mentions post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: c/rnp
+  purls: ["pkg:github/rnpgp/rnp"]
+  kem:
+    status: none
+    sources: ["https://github.com/rnpgp/rnp/blob/v0.18.1/CMakeLists.txt", "https://github.com/rnpgp/rnp/blob/v0.18.1/include/rnp/rnp.h", "https://github.com/rnpgp/rnp/pull/2565", "https://github.com/rnpgp/rnp/issues/2370"]
+    note: "Composite ML-KEM keys (ML-KEM-768+X25519, ML-KEM-1024+X448 and ECDH variants) exist in 0.18.0 and 0.18.1 (latest, 2025-11-21) only in a build with -DENABLE_PQC=ON, off by default and marked RNP_EXPERIMENTAL_PQC, so a default build has no ML-KEM. A maintainer's open PR #2565 (2026-11-08) says ENABLE_PQC remains opt-in, and #2370, a request to accept ML-KEM-768+X25519 keys in the default build, was closed by skipping such keys instead."
+  signature:
+    status: none
+    sources: ["https://github.com/rnpgp/rnp/blob/v0.18.1/CMakeLists.txt", "https://github.com/rnpgp/rnp/blob/v0.18.1/include/rnp/rnp.h", "https://github.com/rnpgp/rnp/pull/2565"]
+    note: "Composite ML-DSA keys (ML-DSA-65+ED25519, ML-DSA-87+ED448 and ECDSA variants) exist in 0.18.0 and 0.18.1 (latest, 2025-11-21) only in a build with -DENABLE_PQC=ON, off by default and marked RNP_EXPERIMENTAL_PQC, so a default build has no ML-DSA. A maintainer's open PR #2565 (2026-11-08) says ENABLE_PQC remains opt-in."
+  checked_at: 2026-11-11
+- library: c/s2n-tls
+  purls: ["pkg:github/aws/s2n-tls"]
+  kem:
+    status: available
+    since: "1.5.6"
+    apis: [s2n_config_set_cipher_preferences, s2n_connection_set_cipher_preferences, s2n_connection_get_kem_group_name]
+    sources:
+      - https://github.com/aws/s2n-tls/releases/tag/v1.5.6
+      - https://github.com/aws/s2n-tls/blob/v1.5.6/tls/s2n_kem_preferences.c
+      - https://github.com/aws/s2n-tls/blob/v1.5.6/tls/s2n_security_policies.c
+      - https://github.com/aws/s2n-tls/releases/tag/v1.5.23
+      - https://github.com/aws/s2n-tls/blob/v1.7.13/docs/usage-guide/topics/ch16-post-quantum.md
+    note: "Requires s2n-tls built against AWS-LC as its libcrypto, and a PQ security policy chosen by name (\"default_pq\", \"20241001\" in 1.5.6), which offers the X25519MLKEM768 and SecP256r1MLKEM768 hybrid groups; SecP384r1MLKEM1024 since 1.5.23. Earlier releases offered only pre-standard Kyber round 3 groups, set aside."
+  signature:
+    status: available
+    since: "1.5.19"
+    apis: [s2n_config_set_cipher_preferences, s2n_connection_set_cipher_preferences, s2n_cert_chain_and_key_load_pem, s2n_config_add_cert_chain_and_key_to_store, S2N_TLS_SIGNATURE_MLDSA]
+    sources:
+      - https://github.com/aws/s2n-tls/releases/tag/v1.5.19
+      - https://github.com/aws/s2n-tls/blob/v1.5.19/api/s2n.h
+      - https://github.com/aws/s2n-tls/blob/v1.7.13/docs/usage-guide/topics/ch16-post-quantum.md
+    note: "ML-DSA certificates and TLS 1.3 handshake signatures, enabled by a PQ security policy chosen by name (\"default_pq\", \"20250512\" in 1.5.19). Requires s2n-tls built against AWS-LC v1.50.0 or later."
+  checked_at: 2026-11-11
+- library: c/secp256k1
+  purls: ["pkg:github/bitcoin-core/secp256k1"]
+  kem:
+    status: none
+    sources: ["https://github.com/bitcoin-core/secp256k1/blob/v0.8.0/CHANGELOG.md", "https://github.com/bitcoin-core/secp256k1/tree/v0.8.0/include"]
+    note: "No ML-KEM or Kyber in the source or changelog up to v0.8.0 (latest, 2026-08-03) or master; its key agreement is secp256k1 ECDH (secp256k1_ecdh, secp256k1_ellswift_xdh), and no issue, PR or discussion plans ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/bitcoin-core/secp256k1/blob/v0.8.0/CHANGELOG.md", "https://github.com/bitcoin-core/secp256k1/tree/v0.8.0/include"]
+    note: "No ML-DSA or Dilithium in the source or changelog up to v0.8.0 (latest, 2026-08-03) or master; signatures are secp256k1 ECDSA, BIP-340 Schnorr and MuSig2, and no issue, PR or discussion plans ML-DSA."
+  checked_at: 2026-11-11
+- library: c/tinycrypt
+  purls: ["pkg:github/intel/tinycrypt"]
+  kem:
+    status: none
+    sources: ["https://github.com/intel/tinycrypt", "https://github.com/intel/tinycrypt/blob/master/README", "https://github.com/intel/tinycrypt/releases/tag/v0.2.8", "https://github.com/intel/tinycrypt/blob/v0.2.8/documentation/tinycrypt.rst"]
+    note: "No ML-KEM or Kyber in v0.2.8 (last release, 2017-08-29) or master; key agreement is ECDH on NIST P-256 only. Intel no longer maintains the project (README) and archived the repository on 2024-03-05, so no release will add it."
+  signature:
+    status: none
+    sources: ["https://github.com/intel/tinycrypt", "https://github.com/intel/tinycrypt/blob/master/README", "https://github.com/intel/tinycrypt/releases/tag/v0.2.8", "https://github.com/intel/tinycrypt/blob/v0.2.8/documentation/tinycrypt.rst"]
+    note: "No ML-DSA or Dilithium in v0.2.8 (last release, 2017-08-29) or master; signatures are ECDSA on NIST P-256 only. Intel no longer maintains the project (README) and archived the repository on 2024-03-05, so no release will add it."
+  checked_at: 2026-11-11
+- library: c/tongsuo
+  purls: ["pkg:github/Tongsuo-Project/Tongsuo"]
+  kem:
+    status: available
+    since: "8.5.0"
+    apis: [EVP_PKEY_CTX_new_from_name, EVP_PKEY_Q_keygen, EVP_KEM_fetch, EVP_PKEY_encapsulate_init, EVP_PKEY_decapsulate_init, SSL_CTX_set1_groups_list, SSL_set1_groups_list]
+    sources: ["https://github.com/Tongsuo-Project/Tongsuo/releases/tag/8.5.0", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/CHANGES.md", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/providers/defltprov.c", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/ssl/t1_lib.c", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/Configure"]
+    note: "Algorithm names ML-KEM-512, ML-KEM-768, ML-KEM-1024 in the default provider, enabled in a default build; X25519MLKEM768 and curveSM2MLKEM768 lead the default TLS group list. The pre-releases 8.5.0-pre1 and 8.5.0-pre2 are set aside."
+  signature:
+    status: available
+    since: "8.5.0"
+    apis: [EVP_PKEY_CTX_new_from_name, EVP_PKEY_Q_keygen, EVP_SIGNATURE_fetch, EVP_PKEY_sign_message_init, EVP_PKEY_verify_message_init]
+    sources: ["https://github.com/Tongsuo-Project/Tongsuo/releases/tag/8.5.0", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/CHANGES.md", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/providers/defltprov.c", "https://github.com/Tongsuo-Project/Tongsuo/blob/8.5.0/Configure"]
+    note: "Algorithm names ML-DSA-44, ML-DSA-65, ML-DSA-87 in the default provider, enabled in a default build. The pre-releases 8.5.0-pre1 and 8.5.0-pre2 are set aside."
+  checked_at: 2026-11-11
+- library: c/wireguard-tools
+  purls: ["pkg:github/WireGuard/wireguard-tools"]
+  kem:
+    status: none
+    sources: ["https://git.zx2c4.com/wireguard-tools/tree/src/curve25519.h?h=v1.0.20260223", "https://git.zx2c4.com/wireguard-tools/tree/src/man/wg.8?h=v1.0.20260223", "https://www.wireguard.com/protocol/", "https://lists.zx2c4.com/pipermail/wireguard/2026-January/009457.html", "https://lists.zx2c4.com/pipermail/wireguard/2026-March/009555.html"]
+    note: "No ML-KEM in v1.0.20260223 (latest) or master: keys are Curve25519 for WireGuard's X25519 handshake, and the optional preshared key adds symmetric post-quantum resistance but is not ML-KEM. User requests on the WireGuard list (2026-01, 2026-03) have no answer from the project, and a 2026-03 reply leaves a post-quantum handshake to WireGuard's author."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: c/wolfssl
+  purls: ["pkg:github/wolfssl/wolfssl"]
+  kem:
+    status: available
+    since: "5.9.1"
+    apis: [wc_MlKemKey_New, wc_MlKemKey_Init, wc_MlKemKey_MakeKey, wc_MlKemKey_Encapsulate, wc_MlKemKey_Decapsulate, WC_ML_KEM_512, WC_ML_KEM_768, WC_ML_KEM_1024, wolfSSL_UseKeyShare, wolfSSL_CTX_set_groups, wolfSSL_set_groups, WOLFSSL_X25519MLKEM768, WOLFSSL_SECP256R1MLKEM768, WOLFSSL_SECP384R1MLKEM1024]
+    sources: ["https://github.com/wolfSSL/wolfssl/blob/v5.9.1-stable/ChangeLog.md", "https://github.com/wolfSSL/wolfssl/pull/9732", "https://github.com/wolfSSL/wolfssl/blob/v5.9.1-stable/wolfssl/wolfcrypt/mlkem.h", "https://github.com/wolfSSL/wolfssl/blob/v5.9.1-stable/wolfssl/ssl.h", "https://github.com/wolfSSL/wolfssl/blob/v5.9.0-stable/configure.ac"]
+    note: "ML-KEM is on in a default build since 5.9.1, with the X25519MLKEM768, SECP256R1MLKEM768 and SECP384R1MLKEM1024 TLS hybrids enabled by default; up to 5.9.0 it needed --enable-mlkem (default disabled), and the 5.7.x Kyber needed --enable-experimental, so both are set aside."
+  signature:
+    status: none
+    sources: ["https://github.com/wolfSSL/wolfssl/blob/v5.9.4-stable/configure.ac", "https://github.com/wolfSSL/wolfssl/blob/v5.9.4-stable/ChangeLog.md"]
+    note: "wolfCrypt has an ML-DSA API (wc_MlDsaKey_*, formerly wc_dilithium_*), but up to 5.9.4 (2026-09-25) and master it is built only with --enable-mldsa / WOLFSSL_MLDSA, default disabled, so a default build has none. No issue or pull request plans to enable it by default."
   checked_at: 2026-11-11
 - library: cpp/blst
   purls: ["pkg:github/supranational/blst"]
