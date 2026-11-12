@@ -3,7 +3,7 @@
 #
 # Post-quantum classification of algorithm families. The format is described in
 # README.md and every change is listed in CHANGELOG.md.
-version: 1.2.0
+version: 1.2.1
 source_vintage: nist-2026-10
 deadlines:
   cnsa2:

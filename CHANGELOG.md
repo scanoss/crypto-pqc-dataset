@@ -8,6 +8,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-12
+
 ### Fixed
 
 - A dependency already at or past the version that ships ML-KEM / ML-DSA is no longer told to upgrade
@@ -50,7 +52,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/scanoss/crypto-pqc-dataset/releases/tag/v1.0.0
