@@ -82,6 +82,30 @@ func TestMigrationPathExamples(t *testing.T) {
 			Migration{Path: Upgrade, Reason: "upgrade org.example:pqc to >= 2.0.0"},
 		},
 		{
+			"dependency already at the PQC release",
+			Finding{
+				Status: Vulnerable, Family: "RSA", Primitive: "signature", Operation: "sign", Source: "dependency",
+				DependencyModule: "org.example:pqc", DependencyPurl: "pkg:maven/org.example/pqc@2.0.0", DependencyVersion: "2.0.0",
+			},
+			Migration{Path: Upgrade, Reason: "org.example:pqc 2.0.0 already supports ML-DSA: switch to it"},
+		},
+		{
+			"dependency past the PQC release",
+			Finding{
+				Status: Vulnerable, Family: "ECDH", Primitive: "key-agree", Source: "indirect",
+				DependencyModule: "org.example:pqc", DependencyPurl: "pkg:maven/org.example/pqc@v2.1.3", DependencyVersion: "v2.1.3",
+			},
+			Migration{Path: Upgrade, Reason: "org.example:pqc v2.1.3 already supports ML-KEM: switch to it"},
+		},
+		{
+			"dependency on a pre-release of the PQC version",
+			Finding{
+				Status: Vulnerable, Family: "RSA", Primitive: "signature", Operation: "sign", Source: "dependency",
+				DependencyModule: "org.example:pqc", DependencyPurl: "pkg:maven/org.example/pqc@2.0.0-rc1", DependencyVersion: "2.0.0-rc1",
+			},
+			Migration{Path: Upgrade, Reason: "upgrade org.example:pqc to >= 2.0.0"},
+		},
+		{
 			"dependency without a version",
 			Finding{
 				Status: Vulnerable, Family: "ECDH", Primitive: "key-agree", Source: "dependency",
@@ -165,6 +189,55 @@ func TestJWTLibraries(t *testing.T) {
 	for _, purl := range []string{"pkg:npm/jsonwebtoken", "pkg:cargo/jsonwebtoken", "pkg:golang/github.com/go-jose/go-jose/v4"} {
 		if sizeRisk(r, Finding{LibraryPurl: purl}) != SizeRiskJWT {
 			t.Errorf("%s is not a JWT library", purl)
+		}
+	}
+}
+
+func TestVersionAtLeast(t *testing.T) {
+	for _, tt := range []struct {
+		version, since string
+		want           bool
+	}{
+		{"4.1.8", "4.1.8", true},
+		{"v4.1.9", "4.1.8", true},
+		{"4.2", "4.1.8", true},
+		{"4.1.7", "4.1.8", false},
+		{"v0.31.0", "0.38.0", false},
+		{"1.79", "1.79", true},
+		{"1.80", "1.79", true},
+		{"0.10.79", "0.10.8", true},
+		{"10", "9.9.9", true},
+		{"4.1", "4.1.0", true},
+		{"4.1.8-rc1", "4.1.8", false},
+		{"v0.0.0-20240101-abcdef", "0.1.0", false},
+		{"latest", "1.0.0", false},
+		{"", "1.0.0", false},
+		{"1.0.0", "", false},
+		{"1..2", "1.0", false},
+		{"+1.0", "1.0", false},
+		{"v2.0.0+incompatible", "2.0.0", true},
+		{"1.2.3+meta", "1.2.3", true},
+		{"4.1.9-rc1", "4.1.8", true},
+		{"4.1.8-rc1", "4.1.8", false},
+		{" v4.1.9 ", "4.1.8", true},
+		{"1.-0", "1.0", false},
+		{"4.1.9.Final", "4.1.8", false},
+		{"1.2.3.4", "1.2.3", false},
+	} {
+		if got := versionAtLeast(tt.version, tt.since); got != tt.want {
+			t.Errorf("versionAtLeast(%q, %q) = %v, want %v", tt.version, tt.since, got, tt.want)
+		}
+	}
+}
+
+// Every available since in libraries.yaml is a dotted number, so the comparison
+// can tell a dependency already at it.
+func TestAvailableSinceIsComparable(t *testing.T) {
+	for _, e := range DefaultLibraries().Entries() {
+		for _, s := range []Support{e.KEM, e.Signature} {
+			if s.Status == SupportAvailable && !versionAtLeast(s.Since, s.Since) {
+				t.Errorf("%s: since %q is not a dotted number", e.Library, s.Since)
+			}
 		}
 	}
 }
