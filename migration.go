@@ -150,7 +150,7 @@ func sizeRisk(ref *reference, f Finding) string {
 			continue
 		}
 		for _, l := range ref.JWTLibraries {
-			if slices.Contains(l.Purls, base) {
+			if slices.ContainsFunc(l.Purls, func(p string) bool { return strings.EqualFold(p, base) }) {
 				return SizeRiskJWT
 			}
 		}

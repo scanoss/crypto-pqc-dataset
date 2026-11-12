@@ -241,3 +241,23 @@ func TestAvailableSinceIsComparable(t *testing.T) {
 		}
 	}
 }
+
+// A dependency purl with a lowercased Go namespace gets the library's path and
+// its JWT size risk.
+func TestMigrationPathProducerSpelledPurl(t *testing.T) {
+	libs := DefaultLibraries()
+	m, _ := MigrationPath(Finding{
+		Status: Vulnerable, Family: "ECDH", Primitive: "key-agree", Source: "indirect",
+		DependencyModule: "github.com/ProtonMail/go-crypto", DependencyPurl: "pkg:golang/github.com/protonmail/go-crypto@v1.8.0", DependencyVersion: "v1.8.0",
+	}, libs)
+	if m.Path != Upgrade || m.Reason != "github.com/ProtonMail/go-crypto v1.8.0 already supports ML-KEM: switch to it" {
+		t.Errorf("protonmail/go-crypto: %+v", m)
+	}
+	m, _ = MigrationPath(Finding{
+		Status: Vulnerable, Family: "ECDSA", Primitive: "signature", Operation: "sign", Source: "indirect",
+		DependencyPurl: "pkg:golang/github.com/Go-Jose/go-jose/v4@v4.1.4", DependencyVersion: "v4.1.4",
+	}, libs)
+	if m.SizeRisk != SizeRiskJWT {
+		t.Errorf("go-jose in another case lost its size risk: %+v", m)
+	}
+}

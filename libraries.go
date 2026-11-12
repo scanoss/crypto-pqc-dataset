@@ -97,10 +97,11 @@ func ParseLibraries(data []byte) (*Libraries, error) {
 		for _, purl := range e.Purls {
 			// The same package can back two libraries (a C and a C++ binding):
 			// they must agree, or the lookup by purl would be ambiguous.
-			if prev, dup := l.byPurl[purl]; dup && !sameSupport(prev, e) {
+			key := strings.ToLower(purl)
+			if prev, dup := l.byPurl[key]; dup && !sameSupport(prev, e) {
 				return nil, fmt.Errorf("pqcdataset: libraries.yaml: %s and %s share %s with different support", prev.Library, e.Library, purl)
 			}
-			l.byPurl[purl] = e
+			l.byPurl[key] = e
 		}
 	}
 	return l, nil
@@ -133,9 +134,11 @@ func (l *Libraries) Entries() []Library {
 }
 
 // Support returns a library's support for one kind, looked up by any of its
-// purls, with or without a version. The second result is false when the library has no entry.
+// purls, with or without a version and in any case: a Go module's namespace
+// often arrives lowercased (github.com/protonmail/go-crypto). The second result
+// is false when the library has no entry.
 func (l *Libraries) Support(purl string, kind SupportKind) (Support, bool) {
-	e, ok := l.byPurl[purlBase(purl)]
+	e, ok := l.byPurl[strings.ToLower(purlBase(purl))]
 	if !ok {
 		return Support{}, false
 	}
