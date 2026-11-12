@@ -6,6 +6,8 @@ package pqcdataset
 import (
 	"slices"
 	"strings"
+
+	modsemver "golang.org/x/mod/semver"
 )
 
 // Finding is what the migration path reads from an existing crypto finding.
@@ -64,10 +66,14 @@ func dependencyPath(f Finding, libs *Libraries) Migration {
 	if module == "" {
 		module = "the dependency"
 	}
-	s, ok := libs.Support(f.DependencyPurl, supportKind(f))
+	kind := supportKind(f)
+	s, ok := libs.Support(f.DependencyPurl, kind)
 	switch {
 	case ok && s.Status == SupportAvailable && f.DependencyVersion == "":
 		return Migration{Path: Upgrade, Reason: "ensure " + module + " >= " + s.Since}
+	case ok && s.Status == SupportAvailable && versionAtLeast(f.DependencyVersion, s.Since):
+		// Nothing to bump: the code must move to the algorithm it already ships.
+		return Migration{Path: Upgrade, Reason: module + " " + f.DependencyVersion + " already supports " + algorithmOf(kind) + ": switch to it"}
 	case ok && s.Status == SupportAvailable:
 		return Migration{Path: Upgrade, Reason: "upgrade " + module + " to >= " + s.Since}
 	case ok:
@@ -159,4 +165,28 @@ func purlName(purl string) string {
 		return rest
 	}
 	return base
+}
+
+// algorithmOf names the post-quantum algorithm a support kind stands for.
+func algorithmOf(kind SupportKind) string {
+	if kind == SupportSignature {
+		return "ML-DSA"
+	}
+	return "ML-KEM"
+}
+
+// versionAtLeast reports whether version is since or later, by semver. A
+// leading v is optional; a version semver cannot read (a Maven .Final, four
+// parts, a commit) reads as false, so the caller keeps the upgrade advice.
+func versionAtLeast(version, since string) bool {
+	v, s := canonicalVersion(version), canonicalVersion(since)
+	return modsemver.IsValid(v) && modsemver.IsValid(s) && modsemver.Compare(v, s) >= 0
+}
+
+func canonicalVersion(v string) string {
+	v = strings.TrimSpace(v)
+	if v != "" && v[0] != 'v' {
+		v = "v" + v
+	}
+	return v
 }

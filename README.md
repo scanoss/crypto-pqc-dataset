@@ -146,7 +146,7 @@ with their purls. Every row cites its source.
 
 | Path | Meaning |
 |---|---|
-| `upgrade` | The crypto is in a dependency whose newer version ships ML-KEM / ML-DSA. |
+| `upgrade` | The crypto is in a dependency that ships ML-KEM / ML-DSA: bump it to that version, or, when it is already there, switch to the algorithm. |
 | `swap` | Replace the algorithm; the sign/verify shape stays. |
 | `redesign` | The API shape changes (key agreement or key transport → KEM). |
 | `blocked` | No PQC alternative yet in the dependency or library. |

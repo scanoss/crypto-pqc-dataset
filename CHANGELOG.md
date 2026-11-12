@@ -10,7 +10,10 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ### Fixed
 
-- A scoped npm purl spelled with a literal `@` (`pkg:npm/@scope/name`) now finds its `libraries.yaml` entry.
+- A dependency already at or past the version that ships ML-KEM / ML-DSA is no longer told to upgrade
+  to it: the `upgrade` reason now says the version already supports the algorithm and to switch to it.
+- A scoped npm purl spelled with a literal `@` (`pkg:npm/@scope/name`), or a purl with qualifiers or a
+  subpath but no version, now finds its `libraries.yaml` entry.
 
 ## [1.2.0] - 2026-11-12
 
