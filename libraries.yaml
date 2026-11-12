@@ -1399,9 +1399,9 @@
     sources: ["https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/keyvault/azure-security-keyvault-keys/CHANGELOG.md", "https://github.com/Azure/azure-rest-api-specs/blob/main/specification/keyvault/data-plane/Keys/main.tsp"]
     note: "No ML-KEM or Kyber up to 4.12.1 (2026-11-02) or main; key types are RSA, EC and oct, and the Key Vault REST API through 2026-07-01-preview defines no ML-KEM key type or algorithm. No azure-sdk-for-java issue or PR mentions ML-KEM."
   signature:
-    status: planned
-    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-net/pull/61580", "https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/keyvault/azure-security-keyvault-keys/CHANGELOG.md"]
-    note: "No ML-DSA in 4.12.1 (2026-11-02), 4.12.0-beta.2 or main. The Key Vault REST API added ML-DSA keys in preview version 2026-05-01-preview: key types AKP and AKP-HSM with ML-DSA-44, ML-DSA-65 and ML-DSA-87, sign/verify in pure or external-mu mode. No Java SDK release or PR targets it yet; the .NET Key Vault Keys SDK has an open PR (#61580) adding AKP keys."
+    status: none
+    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-sdk-for-net/pull/61580", "https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/keyvault/azure-security-keyvault-keys/CHANGELOG.md", "https://github.com/Azure/azure-sdk-for-java/issues?q=ML-DSA"]
+    note: "No ML-DSA in 4.12.1 (2026-11-02), 4.12.0-beta.2 or main, and no issue or PR in azure-sdk-for-java plans it. ML-DSA keys exist only in the Key Vault REST API previews from 2026-05-01-preview and in an open .NET SDK PR (#61580), which are not this library."
   checked_at: 2026-11-11
 - library: java/azure-keyvault-certificates
   purls: [pkg:maven/com.azure/azure-security-keyvault-certificates]
@@ -2935,8 +2935,9 @@
 - library: python/eth-keys
   purls: [pkg:pypi/eth-keys]
   kem:
-    status: not_applicable
-    note: "Signature-only library: secp256k1 ECDSA sign, verify and public-key recovery, with no key agreement or encryption API."
+    status: none
+    sources: ["https://github.com/ApeWorX/eth-keys/blob/v0.8.0/eth_keys/main.py", "https://github.com/ApeWorX/eth-keys/issues?q=ML-KEM"]
+    note: "No ML-KEM in 0.8.0 (latest, 2026-08-21) or main: its only public-key algorithm is secp256k1 ECDSA (sign, verify and public-key recovery), with no key agreement or encryption API."
   signature:
     status: none
     sources: ["https://github.com/ApeWorX/eth-keys/releases/tag/v0.8.0", "https://github.com/ApeWorX/eth-keys/blob/v0.8.0/eth_keys/main.py", "https://github.com/ApeWorX/eth-keys/issues?q=quantum%20OR%20PQC%20OR%20ML-DSA%20OR%20Dilithium"]
@@ -3183,8 +3184,9 @@
 - library: python/pyjwt
   purls: [pkg:pypi/pyjwt]
   kem:
-    status: not_applicable
-    note: "JWS-only library: HMAC and signature algorithms, no JWE, key agreement or encryption."
+    status: none
+    sources: ["https://pyjwt.readthedocs.io/en/stable/algorithms.html", "https://github.com/jpadilla/pyjwt/issues?q=ML-KEM"]
+    note: "No ML-KEM in 2.15.1 or main: a JWS-only library with HMAC, RSA, ECDSA and EdDSA signatures and no JWE, key agreement or encryption."
   signature:
     status: none
     sources: ["https://www.rfc-editor.org/rfc/rfc9964.html"]
