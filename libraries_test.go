@@ -251,3 +251,58 @@ func TestPurlBaseKeepsEveryEarlierMatch(t *testing.T) {
 		t.Fatal("no purl matched before; the test checks nothing")
 	}
 }
+
+// Purls as producers spell them: a Go module's namespace arrives lowercased,
+// so github.com/ProtonMail/go-crypto arrives as protonmail.
+func TestSupportProducerSpelledPurls(t *testing.T) {
+	l := DefaultLibraries()
+	for _, tt := range []struct {
+		purl string
+		kind SupportKind
+		want SupportStatus
+	}{
+		{"pkg:golang/github.com/protonmail/go-crypto@v1.8.0", SupportKEM, SupportAvailable},
+		{"pkg:golang/github.com/protonmail/gopenpgp/v2@v2.7.5", SupportSignature, SupportNone},
+		{"pkg:golang/github.com/azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.3.0", SupportSignature, SupportPlanned},
+		{"pkg:golang/github.com/thalesignite/crypto11@v1.2.5", SupportKEM, SupportNone},
+	} {
+		s, ok := l.Support(tt.purl, tt.kind)
+		if !ok || s.Status != tt.want {
+			t.Errorf("Support(%q) = %q, %v; want %q", tt.purl, s.Status, ok, tt.want)
+		}
+	}
+}
+
+// Every stored purl is found whatever its case, with or without a version.
+func TestSupportIgnoresCase(t *testing.T) {
+	l := DefaultLibraries()
+	for _, e := range l.Entries() {
+		for _, purl := range e.Purls {
+			for _, spelled := range []string{strings.ToLower(purl), strings.ToUpper(purl[:4]) + purl[4:], strings.ToLower(purl) + "@1.0.0"} {
+				// A purl shared by two libraries (C and C++ bindings) finds either; they agree.
+				if got, ok := l.byPurl[strings.ToLower(purlBase(spelled))]; !ok || !sameSupport(got, &e) {
+					t.Errorf("%s spelled %s does not find %s's support", purl, spelled, e.Library)
+				}
+			}
+		}
+	}
+}
+
+// Two entries whose purls differ only in case must agree, or the lookup is ambiguous.
+func TestParseLibrariesRejectsCaseClashes(t *testing.T) {
+	_, err := ParseLibraries([]byte(`
+- library: go/a
+  purls: ["pkg:golang/github.com/Acme/lib"]
+  kem: { status: none, sources: ["https://example.org"] }
+  signature: { status: none, sources: ["https://example.org"] }
+  checked_at: 2026-11-12
+- library: go/b
+  purls: ["pkg:golang/github.com/acme/lib"]
+  kem: { status: available, since: "1.0.0", apis: ["x"], sources: ["https://example.org"] }
+  signature: { status: none, sources: ["https://example.org"] }
+  checked_at: 2026-11-12
+`))
+	if err == nil {
+		t.Error("two libraries sharing a purl in different case parsed without error")
+	}
+}
