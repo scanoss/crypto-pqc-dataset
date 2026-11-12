@@ -8,12 +8,15 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-12
+
 ### Added
 
 - Vulnerable families carry a `kind` (`signature`, `key-agreement` or `dual`), and `migration.yaml`
   holds the cited path rules, key and signature sizes, and JOSE/JWT libraries the migration path reads.
-- `libraries.yaml` records ML-KEM and ML-DSA support per `crypto_rules` library, starting
-  with 10; tests require every other `crypto_rules` library to get an entry or stay pending.
+- `libraries.yaml` records ML-KEM and ML-DSA support for every library in the inventory
+  (`testdata/crypto-rules-libraries.txt`); a test fails when a library has no entry, so a new one
+  needs its entry before a release.
 - `MigrationPath` and `ComponentPath` give a vulnerable finding and a component their migration path
   (`upgrade`, `swap`, `redesign` or `blocked`), with `inferred` and `size_risk`.
 
@@ -40,6 +43,7 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/scanoss/crypto-pqc-dataset/releases/tag/v1.0.0
