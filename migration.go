@@ -66,6 +66,10 @@ func dependencyPath(f Finding, libs *Libraries) Migration {
 	if module == "" {
 		module = "the dependency"
 	}
+	if strings.TrimSpace(f.DependencyPurl) == "" {
+		// Support is looked up by purl: without one it is unknown, not absent.
+		return Migration{Path: Blocked, Reason: "PQC support of " + module + " is unknown (no purl)"}
+	}
 	kind := supportKind(f)
 	s, ok := libs.Support(f.DependencyPurl, kind)
 	switch {

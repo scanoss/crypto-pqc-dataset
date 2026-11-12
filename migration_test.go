@@ -116,7 +116,7 @@ func TestMigrationPathExamples(t *testing.T) {
 		{
 			"dependency without a purl",
 			Finding{Status: Vulnerable, Family: "EdDSA", Primitive: "signature", Source: "dependency", DependencyModule: "example.org/lib"},
-			Migration{Path: Blocked, Reason: "no PQC in example.org/lib (no entry)"},
+			Migration{Path: Blocked, Reason: "PQC support of example.org/lib is unknown (no purl)"},
 		},
 		{
 			"dependency with no entry",
