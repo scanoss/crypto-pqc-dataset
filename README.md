@@ -151,7 +151,8 @@ with their purls. Every row cites its source.
 | `redesign` | The API shape changes (key agreement or key transport → KEM). |
 | `blocked` | No PQC alternative yet in the dependency or library. |
 
-A finding inside a dependency is `upgrade` or `blocked`, from `libraries.yaml`. A finding in the
+A finding inside a dependency is `upgrade` or `blocked`, from `libraries.yaml`, looked up by the
+dependency's purl in any case; without a purl its support is unknown and the path is `blocked`. A finding in the
 project's code takes its path from its primitive and operation; when the operation is unknown, from
 the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a JOSE/JWT library.
 `ComponentPath` returns a component's worst path and the count per path. Findings that are not
