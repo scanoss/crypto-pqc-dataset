@@ -168,3 +168,86 @@ func TestLibrariesSchema(t *testing.T) {
 		}
 	}
 }
+
+func TestPurlBase(t *testing.T) {
+	for purl, want := range map[string]string{
+		"pkg:golang/github.com/go-jose/go-jose/v4@v4.1.4":                          "pkg:golang/github.com/go-jose/go-jose/v4",
+		"pkg:golang/github.com/go-jose/go-jose/v4":                                 "pkg:golang/github.com/go-jose/go-jose/v4",
+		"pkg:npm/@types/node@20.1.0":                                               "pkg:npm/%40types/node",
+		"pkg:npm/@types/node":                                                      "pkg:npm/%40types/node",
+		"pkg:npm/%40types/node@20.1.0":                                             "pkg:npm/%40types/node",
+		"pkg:maven/org.example/pqc@1.0?repository_url=https://repo.example.com/m2": "pkg:maven/org.example/pqc",
+		"pkg:maven/org.example/pqc@1.0?type=jar":                                   "pkg:maven/org.example/pqc",
+		"pkg:golang/golang.org/x/crypto@v0.38.0#ssh/agent":                         "pkg:golang/golang.org/x/crypto",
+		"pkg:golang/golang.org/x/crypto#ssh/agent":                                 "pkg:golang/golang.org/x/crypto",
+		"pkg:npm/@types/node@20.1.0?vcs_url=git+https://github.com/a/b#lib":        "pkg:npm/%40types/node",
+		"pkg:github/openssl/openssl@refs/tags/openssl-3.5.0":                       "pkg:github/openssl/openssl",
+		"pkg:golang/golang.org/x/crypto@v1@v2":                                     "pkg:golang/golang.org/x/crypto",
+		"":                                                                         "",
+	} {
+		if got := purlBase(purl); got != want {
+			t.Errorf("purlBase(%q) = %q, want %q", purl, got, want)
+		}
+	}
+}
+
+// A scoped npm purl spelled with a literal @ finds its %40 entry.
+func TestSupportScopedNpmPurl(t *testing.T) {
+	l, err := ParseLibraries([]byte(`
+- library: javascript/scoped
+  purls: ["pkg:npm/%40acme/crypto"]
+  kem: { status: none, sources: ["https://example.org"] }
+  signature: { status: available, since: "1.2.0", apis: ["sign"], sources: ["https://example.org"] }
+  checked_at: 2026-11-12
+`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s, ok := l.Support("pkg:npm/@acme/crypto@1.0.0", SupportSignature); !ok || s.Since != "1.2.0" {
+		t.Errorf("Support = %+v, %v; want the scoped entry", s, ok)
+	}
+}
+
+// Qualifiers and a subpath, even with a slash inside, do not hide the entry.
+func TestSupportPurlWithQualifiersAndSubpath(t *testing.T) {
+	l := DefaultLibraries()
+	for _, purl := range []string{
+		"pkg:maven/org.bouncycastle/bcprov-jdk18on@1.79?repository_url=https://repo1.maven.org/maven2",
+		"pkg:maven/org.bouncycastle/bcprov-jdk18on@1.79?type=jar",
+		"pkg:golang/golang.org/x/crypto@v0.38.0#ssh/agent",
+	} {
+		if _, ok := l.Support(purl, SupportKEM); !ok {
+			t.Errorf("Support(%q) found no entry", purl)
+		}
+	}
+}
+
+// Every purl that found its entry by cutting at the first @ still finds the same
+// one: versions may hold / or @, and qualifiers or a subpath may follow.
+func TestPurlBaseKeepsEveryEarlierMatch(t *testing.T) {
+	l := DefaultLibraries()
+	firstAt := func(purl string) string { base, _, _ := strings.Cut(purl, "@"); return base }
+	versions := []string{"", "@1.0.0", "@v4.1.8", "@refs/tags/v1.0", "@release/v1", "@v1@v2", "@1.0/x", "@npm:%40c/d@1.0", "@2.0.0+build.1"}
+	tails := []string{"", "?type=jar", "?repository_url=https://repo.example.com/m2", "#sub/dir", "?vcs_url=git@github.com:a/b#x"}
+	checked := 0
+	for _, e := range l.Entries() {
+		for _, stored := range e.Purls {
+			for _, v := range versions {
+				for _, tail := range tails {
+					purl := stored + v + tail
+					before, foundBefore := l.byPurl[firstAt(purl)]
+					if !foundBefore {
+						continue
+					}
+					checked++
+					if now := l.byPurl[purlBase(purl)]; now != before {
+						t.Errorf("%s: found %v before, %v now", purl, before.Library, now)
+					}
+				}
+			}
+		}
+	}
+	if checked == 0 {
+		t.Fatal("no purl matched before; the test checks nothing")
+	}
+}

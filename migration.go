@@ -139,7 +139,7 @@ func supportKind(f Finding) SupportKind {
 
 func sizeRisk(ref *reference, f Finding) string {
 	for _, purl := range []string{f.DependencyPurl, f.LibraryPurl} {
-		base, _, _ := strings.Cut(purl, "@")
+		base := purlBase(purl)
 		if base == "" {
 			continue
 		}
@@ -154,7 +154,7 @@ func sizeRisk(ref *reference, f Finding) string {
 
 // purlName is the purl without its type and version, e.g. github.com/go-jose/go-jose/v4.
 func purlName(purl string) string {
-	base, _, _ := strings.Cut(purl, "@")
+	base := purlBase(purl)
 	if _, rest, ok := strings.Cut(base, "/"); ok {
 		return rest
 	}

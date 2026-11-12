@@ -106,6 +106,22 @@ func ParseLibraries(data []byte) (*Libraries, error) {
 	return l, nil
 }
 
+// purlBase is the purl without its subpath, qualifiers and version, with a
+// scope's @ spelled %40 as the data spells it. The version starts at the first
+// @ that does not follow a slash: the @ of a scoped npm name
+// (pkg:npm/@types/node) does, and a version may itself hold / or @.
+func purlBase(purl string) string {
+	base, _, _ := strings.Cut(purl, "#")
+	base, _, _ = strings.Cut(base, "?")
+	for i := 1; i < len(base); i++ {
+		if base[i] == '@' && base[i-1] != '/' {
+			base = base[:i]
+			break
+		}
+	}
+	return strings.ReplaceAll(base, "/@", "/%40")
+}
+
 func sameSupport(a, b *Library) bool {
 	return a.KEM.Status == b.KEM.Status && a.KEM.Since == b.KEM.Since &&
 		a.Signature.Status == b.Signature.Status && a.Signature.Since == b.Signature.Since
@@ -119,8 +135,7 @@ func (l *Libraries) Entries() []Library {
 // Support returns a library's support for one kind, looked up by any of its
 // purls, with or without a version. The second result is false when the library has no entry.
 func (l *Libraries) Support(purl string, kind SupportKind) (Support, bool) {
-	base, _, _ := strings.Cut(purl, "@")
-	e, ok := l.byPurl[base]
+	e, ok := l.byPurl[purlBase(purl)]
 	if !ok {
 		return Support{}, false
 	}
