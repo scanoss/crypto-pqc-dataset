@@ -3361,6 +3361,81 @@
     sources: ["https://github.com/ruby/rubygems/pull/9697", "https://github.com/ruby/rubygems/blob/v4.1.0.beta1/CHANGELOG.md", "https://github.com/ruby/rubygems/blob/v4.1.0.beta1/lib/rubygems/security.rb"]
     note: "ML-DSA-44/65/87 gem signing (PR #9697, merged 2026-09-02) ships in 4.1.0.beta1 to beta3 only; the latest stable, 4.0.24, supports RSA, DSA and EC keys only for gem signing. Since 4.0.15 (PR #9615) the :ssl_client_cert: and :ssl_ca_cert: settings accept ML-DSA certificates for TLS, read through Ruby's openssl; that is not gem signing. In the betas, keys come from Gem::Security.create_key(\"ML-DSA-65\") or gem cert --build -A ML-DSA-65 and need OpenSSL 3.5 or later; certificate signing with ML-DSA needs Ruby OpenSSL 3.3 or later. The repository moved to github.com/ruby/rubygems."
   checked_at: 2026-11-11
+- library: rust/aes
+  purls: ["pkg:cargo/aes"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/aes-gcm
+  purls: ["pkg:cargo/aes-gcm"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/aes-gcm-siv
+  purls: ["pkg:cargo/aes-gcm-siv"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/aes-kw
+  purls: ["pkg:cargo/aes-kw"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/alloy-primitives
+  purls: [pkg:cargo/alloy-primitives]
+  kem:
+    status: none
+    sources: ["https://github.com/alloy-rs/core/blob/v1.7.3/crates/primitives/src/signature/sig.rs", "https://github.com/alloy-rs/core/issues?q=quantum"]
+    note: "Its only public-key cryptography is the Ethereum ECDSA signature on secp256k1, with no ML-KEM or Kyber up to 1.7.3 (latest, 2026-09-10) or main. No issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/alloy-rs/core/blob/v1.7.3/crates/primitives/src/signature/sig.rs", "https://github.com/alloy-rs/core/issues?q=quantum"]
+    note: "Signature handles ECDSA on secp256k1 only, with recovery through the optional k256 or secp256k1 features, and no ML-DSA or Dilithium up to 1.7.3 (latest, 2026-09-10) or main. No issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: rust/argon2
+  purls: ["pkg:cargo/argon2"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/aria
+  purls: ["pkg:cargo/aria"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/ark-bls12-381
+  purls: [pkg:cargo/ark-bls12-381]
+  kem:
+    status: none
+    sources: ["https://github.com/arkworks-rs/algebra/tree/v0.6.0/curves/bls12_381", "https://github.com/arkworks-rs/algebra/issues?q=quantum"]
+    note: "BLS12-381 pairing-friendly curve (fields, G1/G2 groups, pairing) with no ML-KEM or Kyber up to 0.6.0 (latest, 2026-04-26) or on master. No issue or pull request in arkworks-rs/algebra asks for post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://github.com/arkworks-rs/algebra/tree/v0.6.0/curves/bls12_381", "https://github.com/arkworks-rs/algebra/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium up to 0.6.0 (latest, 2026-04-26) or on master. No issue or pull request in arkworks-rs/algebra asks for post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: rust/ark-ec
+  purls: [pkg:cargo/ark-ec]
+  kem:
+    status: none
+    sources: ["https://github.com/arkworks-rs/algebra/tree/v0.6.0/ec", "https://github.com/arkworks-rs/algebra/issues?q=quantum"]
+    note: "Generic elliptic-curve and pairing library (short Weierstrass and twisted Edwards groups, BLS12/BN/BW6/MNT pairings, hash-to-curve) with no ML-KEM or Kyber up to 0.6.0 (latest, 2026-04-26) or on master. No issue or pull request in arkworks-rs/algebra asks for post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://github.com/arkworks-rs/algebra/tree/v0.6.0/ec", "https://github.com/arkworks-rs/algebra/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium up to 0.6.0 (latest, 2026-04-26) or on master. No issue or pull request in arkworks-rs/algebra asks for post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: rust/ark-ff
+  purls: [pkg:cargo/ark-ff]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
 - library: rust/aws-lc-rs
   purls: [pkg:cargo/aws-lc-rs]
   kem:
@@ -3376,6 +3451,689 @@
     sources: ["https://github.com/aws/aws-lc-rs/releases/tag/v1.18.0", "https://github.com/aws/aws-lc-rs/releases/tag/v1.13.0", "https://docs.rs/aws-lc-rs/1.18.0/aws_lc_rs/signature/index.html"]
     note: "1.13.0 to 1.17.x shipped ML-DSA only in unstable::signature behind the opt-in unstable feature; 1.18.0 moved it to aws_lc_rs::signature with no feature flag and left unstable::signature as deprecated aliases."
   checked_at: 2026-11-11
+- library: rust/aws-lc-sys
+  purls: [pkg:cargo/aws-lc-sys]
+  kem:
+    status: available
+    since: "0.22.0"
+    apis: [aws_lc_sys.EVP_PKEY_CTX_kem_set_params, aws_lc_sys.EVP_PKEY_kem_new_raw_public_key, aws_lc_sys.EVP_PKEY_kem_new_raw_secret_key, aws_lc_sys.EVP_PKEY_encapsulate, aws_lc_sys.EVP_PKEY_decapsulate, aws_lc_sys.NID_MLKEM512, aws_lc_sys.NID_MLKEM768, aws_lc_sys.NID_MLKEM1024]
+    sources: ["https://github.com/aws/aws-lc-rs/releases/tag/v1.10.0", "https://github.com/aws/aws-lc/releases/tag/v1.35.0", "https://github.com/aws/aws-lc-rs/blob/aws-lc-sys/v0.22.0/aws-lc-sys/src/x86_64_unknown_linux_gnu_crypto.rs", "https://docs.rs/aws-lc-sys/0.22.0/aws_lc_sys/constant.NID_MLKEM768.html"]
+    note: "Raw bindings to the bundled AWS-LC, which is FIPS 203 ML-KEM from AWS-LC 1.36.1 in 0.22.0; 0.21.x bundled AWS-LC 1.34.2 with only Kyber and ML-KEM IPD (NID_MLKEM*IPD), set aside."
+  signature:
+    status: available
+    since: "0.26.0"
+    apis: [aws_lc_sys.EVP_PKEY_CTX_pqdsa_set_params, aws_lc_sys.EVP_PKEY_pqdsa_new_raw_public_key, aws_lc_sys.EVP_PKEY_pqdsa_new_raw_private_key, aws_lc_sys.EVP_PKEY_PQDSA, aws_lc_sys.NID_MLDSA44, aws_lc_sys.NID_MLDSA65, aws_lc_sys.NID_MLDSA87]
+    sources: ["https://github.com/aws/aws-lc-rs/releases/tag/v1.12.3", "https://github.com/aws/aws-lc/releases/tag/v1.43.0", "https://github.com/aws/aws-lc/blob/v1.42.0/CMakeLists.txt", "https://github.com/aws/aws-lc-rs/blob/aws-lc-sys/v0.26.0/aws-lc-sys/src/x86_64_unknown_linux_gnu_crypto.rs", "https://docs.rs/aws-lc-sys/0.26.0/aws_lc_sys/fn.EVP_PKEY_pqdsa_new_raw_public_key.html"]
+    note: "0.26.0 bundles AWS-LC 1.46.0, where ML-DSA is in the default build. 0.24.0 to 0.25.1 bundled AWS-LC 1.41.1 and 1.42.0, which compile ML-DSA only with the ENABLE_DILITHIUM option (off), and exposed only the NID_MLDSA* constants, set aside."
+  checked_at: 2026-11-11
+- library: rust/aws-sdk-kms
+  purls: [pkg:cargo/aws-sdk-kms]
+  kem:
+    status: available
+    since: "1.127.0"
+    apis:
+      - aws_sdk_kms.KeySpec.MlKem512
+      - aws_sdk_kms.KeySpec.MlKem768
+      - aws_sdk_kms.KeySpec.MlKem1024
+      - aws_sdk_kms.KeyUsageType.EncapsulateDecapsulate
+      - aws_sdk_kms.EncapsulationAlgorithmSpec.MlKem
+      - aws_sdk_kms.Client.encapsulate
+      - aws_sdk_kms.Client.decapsulate
+    sources:
+      - "https://github.com/awslabs/aws-sdk-rust/releases/tag/release-2026-10-26"
+      - "https://docs.rs/aws-sdk-kms/1.127.0/aws_sdk_kms/types/enum.KeySpec.html"
+      - "https://docs.rs/aws-sdk-kms/1.126.0/aws_sdk_kms/types/enum.KeySpec.html"
+      - "https://docs.rs/aws-sdk-kms/1.127.0/aws_sdk_kms/types/enum.EncapsulationAlgorithmSpec.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-KEM keys (FIPS 203) in AWS KMS, used through Client::encapsulate and Client::decapsulate; released 2026-10-26, absent from 1.126.0. The key operations run in the KMS service, not in the SDK."
+  signature:
+    status: available
+    since: "1.76.0"
+    apis:
+      - aws_sdk_kms.KeySpec.MlDsa44
+      - aws_sdk_kms.KeySpec.MlDsa65
+      - aws_sdk_kms.KeySpec.MlDsa87
+      - aws_sdk_kms.SigningAlgorithmSpec.MlDsaShake256
+      - aws_sdk_kms.Client.sign
+      - aws_sdk_kms.Client.verify
+    sources:
+      - "https://github.com/awslabs/aws-sdk-rust/releases/tag/release-2025-06-12"
+      - "https://docs.rs/aws-sdk-kms/1.76.0/aws_sdk_kms/types/enum.KeySpec.html"
+      - "https://docs.rs/aws-sdk-kms/1.75.0/aws_sdk_kms/types/enum.KeySpec.html"
+      - "https://docs.rs/aws-sdk-kms/1.76.0/aws_sdk_kms/types/enum.SigningAlgorithmSpec.html"
+      - "https://docs.aws.amazon.com/kms/latest/developerguide/pqkeys.html"
+    note: "ML-DSA keys (FIPS 204) in AWS KMS, used through Client::sign and Client::verify with ML_DSA_SHAKE_256; released 2025-06-12, absent from 1.75.0. The key operations run in the KMS service, not in the SDK."
+  checked_at: 2026-11-11
+- library: rust/azure_security_keyvault
+  purls: [pkg:cargo/azure_security_keyvault]
+  kem:
+    status: none
+    sources:
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/legacy/sdk/security_keyvault/README.md"
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/legacy/sdk/security_keyvault/src/keys/models.rs"
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/main/sdk/keyvault/azure_security_keyvault_keys/CHANGELOG.md"
+    note: "Discontinued: Microsoft has no plans to update this unofficial crate, whose last release 0.21.0 (2024-10-15) names only RSA, EC and oct key types and RSA or AES encryption algorithms, no ML-KEM. Its successor azure_security_keyvault_keys has no ML-KEM either, up to 1.0.1, 1.1.0-beta.1 or main."
+  signature:
+    status: none
+    sources:
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/legacy/sdk/security_keyvault/README.md"
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/legacy/sdk/security_keyvault/src/keys/models.rs"
+      - "https://github.com/Azure/azure-sdk-for-rust/blob/main/sdk/keyvault/azure_security_keyvault_keys/CHANGELOG.md"
+    note: "Discontinued: Microsoft has no plans to update this unofficial crate, whose last release 0.21.0 (2024-10-15) names only RS*, PS* and ES* signature algorithms (other names pass through as a Custom string), no ML-DSA. Its successor azure_security_keyvault_keys has no ML-DSA either, up to 1.0.1, 1.1.0-beta.1 or main."
+  checked_at: 2026-11-11
+- library: rust/azure_security_keyvault_certificates
+  purls: [pkg:cargo/azure_security_keyvault_certificates]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-rust/blob/azure_security_keyvault_certificates@1.0.1/sdk/keyvault/azure_security_keyvault_certificates/src/generated/models/enums.rs", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Certificates/models.tsp", "https://github.com/Azure/azure-sdk-for-rust/issues?q=ML-KEM"]
+    note: "No ML-KEM in 1.0.1 (latest stable, 2026-08-26), 1.1.0-beta.2 or main: certificate policies take only RSA, EC or oct keys, as the Key Vault certificates REST API defines in every version, preview included, and no issue or PR asks for it."
+  signature:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-rust/blob/azure_security_keyvault_certificates@1.0.1/sdk/keyvault/azure_security_keyvault_certificates/src/generated/models/enums.rs", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Certificates/models.tsp", "https://github.com/Azure/azure-sdk-for-rust/issues?q=ML-DSA"]
+    note: "No ML-DSA in 1.0.1 (latest stable), 1.1.0-beta.2 or main: certificate policies take only RSA or EC keys (P-256, P-256K, P-384, P-521), and the Key Vault certificates REST API has no ML-DSA key type in any version. No issue or PR in azure-sdk-for-rust asks for it."
+  checked_at: 2026-11-11
+- library: rust/azure_security_keyvault_keys
+  purls: [pkg:cargo/azure_security_keyvault_keys]
+  kem:
+    status: none
+    sources: ["https://github.com/Azure/azure-sdk-for-rust/blob/azure_security_keyvault_keys@1.0.1/sdk/keyvault/azure_security_keyvault_keys/src/generated/models/enums.rs", "https://github.com/Azure/azure-rest-api-specs/blob/0bb04c123ebc49110e228a473759403e2fb68a21/specification/keyvault/data-plane/Keys/models.tsp", "https://github.com/Azure/azure-sdk-for-rust/issues?q=ML-KEM"]
+    note: "No ML-KEM in 1.0.1 (latest stable, 2026-08-26), 1.1.0-beta.1 or main, whose key types are RSA, EC and oct; the Key Vault keys REST API defines no ML-KEM key type in any version, preview included."
+  signature:
+    status: none
+    sources: ["https://github.com/Azure/azure-rest-api-specs/pull/41010", "https://github.com/Azure/azure-sdk-for-rust/blob/azure_security_keyvault_keys@1.1.0-beta.1/sdk/keyvault/azure_security_keyvault_keys/CHANGELOG.md", "https://github.com/Azure/azure-sdk-for-rust/issues?q=ML-DSA"]
+    note: "No ML-DSA in 1.0.1 (latest stable), 1.1.0-beta.1 (service version 2026-03-01-preview) or main, whose key types are RSA, EC and oct. Microsoft added AKP keys with ML-DSA-44, ML-DSA-65 and ML-DSA-87 to the Key Vault keys REST API in 2026-05-01-preview (PR #41010, merged 2026-06-04), which this crate has not adopted; no issue or PR in azure-sdk-for-rust plans it."
+  checked_at: 2026-11-11
+- library: rust/azure_security_keyvault_secrets
+  purls: [pkg:cargo/azure_security_keyvault_secrets]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/balloon
+  purls: ["pkg:cargo/balloon"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/bcrypt
+  purls: ["pkg:cargo/bcrypt"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/bellman
+  purls: ["pkg:cargo/bellman"]
+  kem:
+    status: none
+    sources: ["https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/CHANGELOG.md", "https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/README.md", "https://docs.rs/bellman/0.14.0/bellman/groth16/index.html", "https://github.com/zkcrypto/bellman/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to 0.15.0 (latest, 2026-09-26) or main; bellman is a zk-SNARK circuit library (Groth16 over pairing-friendly curves through 0.14.0) with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/CHANGELOG.md", "https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/README.md", "https://docs.rs/bellman/0.14.0/bellman/groth16/index.html", "https://github.com/zkcrypto/bellman/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to 0.15.0 (latest, 2026-09-26) or main, and no issue or PR mentions post-quantum support. Its Groth16 prover, shipped through 0.14.0, moved to the groth16 crate in 0.15.0."
+  checked_at: 2026-11-11
+- library: rust/biscuit
+  purls: ["pkg:cargo/biscuit"]
+  kem:
+    status: none
+    sources: ["https://github.com/lawliet89/biscuit/blob/v0.8.0/doc/supported.md", "https://github.com/lawliet89/biscuit/issues?q=ML-KEM"]
+    note: "No ML-KEM in 0.8.0 (latest, 2026-04-05) or master: JWE key management is AES-GCM key wrap and direct only, RSA and ECDH-ES are listed as unsupported. No issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/lawliet89/biscuit/blob/v0.8.0/doc/supported.md", "https://github.com/lawliet89/biscuit/issues?q=ML-DSA", "https://www.rfc-editor.org/rfc/rfc9964.html"]
+    note: "No ML-DSA in 0.8.0 (latest, 2026-04-05) or master: JWS algorithms stop at HS, RS, PS and ES, and no issue or PR mentions ML-DSA or post-quantum. RFC 9964 defines ML-DSA for JOSE; context only, not a plan from biscuit."
+  checked_at: 2026-11-11
+- library: rust/bitcoin_hashes
+  purls: ["pkg:cargo/bitcoin_hashes"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/blake2
+  purls: ["pkg:cargo/blake2"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/blake3
+  purls: ["pkg:cargo/blake3"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/blowfish
+  purls: ["pkg:cargo/blowfish"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/bls-signatures
+  purls: ["pkg:cargo/bls-signatures"]
+  kem:
+    status: none
+    sources: ["https://github.com/filecoin-project/bls-signatures/blob/v0.15.0/README.md", "https://github.com/filecoin-project/bls-signatures/tree/v0.15.0/src", "https://github.com/filecoin-project/bls-signatures/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to 0.15.0 (latest stable, 2023-09-05) or master; bls-signatures implements BLS signatures over BLS12-381 with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/filecoin-project/bls-signatures/blob/v0.15.0/README.md", "https://github.com/filecoin-project/bls-signatures/tree/v0.15.0/src", "https://github.com/filecoin-project/bls-signatures/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to 0.15.0 (latest stable, 2023-09-05) or master; its only signature scheme is aggregate BLS over BLS12-381, and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: rust/bls12_381
+  purls: [pkg:cargo/bls12_381]
+  kem:
+    status: none
+    sources: ["https://docs.rs/crate/bls12_381/0.9.2/source/", "https://github.com/zkcrypto/bls12_381/issues?q=quantum"]
+    note: "BLS12-381 pairing-friendly curve (G1/G2 groups, pairings, experimental hash-to-curve) with no ML-KEM or Kyber up to 0.9.2 (latest, 2026-11-11) or on main. No issue or pull request in zkcrypto/bls12_381 asks for post-quantum algorithms."
+  signature:
+    status: none
+    sources: ["https://docs.rs/crate/bls12_381/0.9.2/source/", "https://github.com/zkcrypto/bls12_381/issues?q=quantum"]
+    note: "No ML-DSA or Dilithium up to 0.9.2 (latest, 2026-11-11) or on main. No issue or pull request in zkcrypto/bls12_381 asks for post-quantum algorithms."
+  checked_at: 2026-11-11
+- library: rust/blstrs
+  purls: ["pkg:cargo/blstrs"]
+  kem:
+    status: none
+    sources: ["https://github.com/filecoin-project/blstrs/blob/v0.7.1/README.md", "https://github.com/filecoin-project/blstrs/tree/v0.7.1/src", "https://github.com/filecoin-project/blstrs/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to 0.7.1 (latest stable, 2023-08-14) or master; blstrs is a BLS12-381 pairing-friendly curve library (groups, pairings, hash-to-curve) with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/filecoin-project/blstrs/blob/v0.7.1/README.md", "https://github.com/filecoin-project/blstrs/tree/v0.7.1/src", "https://github.com/filecoin-project/blstrs/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to 0.7.1 (latest stable, 2023-08-14) or master; it provides the BLS12-381 curve and pairing that BLS signatures are built on, and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: rust/boring
+  purls: ["pkg:cargo/boring"]
+  kem:
+    status: available
+    since: "5.0.1"
+    apis: [boring.mlkem.MlKemPrivateKey.generate, boring.mlkem.Algorithm.MlKem768, boring.mlkem.Algorithm.MlKem1024, boring.mlkem.MlKemPublicKey.encapsulate]
+    sources: ["https://github.com/cloudflare/boring/blob/v5.0.1/boring/Cargo.toml", "https://github.com/cloudflare/boring/blob/v5.0.1/boring/src/lib.rs", "https://github.com/cloudflare/boring/blob/v5.0.1/boring/src/mlkem.rs", "https://github.com/cloudflare/boring/pull/472", "https://crates.io/api/v1/crates/boring", "https://github.com/cloudflare/boring/blob/v4.22.0/boring/src/ssl/mod.rs"]
+    note: "The boring::mlkem module needs the non-default `mlkem` Cargo feature; 5.0.0, which had it ungated, is yanked. In 4.x, SslCurve::X25519_MLKEM768 existed only under the `pq-experimental` feature, set aside."
+  signature:
+    status: available
+    since: "5.2.0"
+    apis: [boring.ssl.SslSignatureAlgorithm.ML_DSA_44, boring.ssl.SslSignatureAlgorithm.ML_DSA_65, boring.ssl.SslSignatureAlgorithm.ML_DSA_87, boring.ssl.SslContextBuilder.set_verify_algorithm_prefs, boring.ssl.SslRef.set_verify_algorithm_prefs, boring.mldsa.MlDsaPrivateKey.generate, boring.mldsa.Algorithm.MlDsa44, boring.mldsa.Algorithm.MlDsa65, boring.mldsa.Algorithm.MlDsa87]
+    sources: ["https://github.com/cloudflare/boring/pull/513", "https://github.com/cloudflare/boring/blob/v5.2.0/boring/src/ssl/mod.rs", "https://docs.rs/boring/5.2.0/boring/ssl/struct.SslSignatureAlgorithm.html", "https://github.com/cloudflare/boring/pull/544", "https://github.com/cloudflare/boring/blob/v5.2.0/boring/Cargo.toml", "https://github.com/cloudflare/boring/blob/v5.2.0/boring/src/mldsa.rs"]
+    note: "ML-DSA TLS 1.3 authentication is selected with the SslSignatureAlgorithm::ML_DSA_* constants in the default build, on by default for servers and, since 5.4.0, for clients. The standalone boring::mldsa module, also new in 5.2.0, needs the non-default `mldsa` Cargo feature."
+  checked_at: 2026-11-11
+- library: rust/boring-sys
+  purls: ["pkg:cargo/boring-sys"]
+  kem:
+    status: available
+    since: "5.0.0"
+    apis: ["boring_sys.MLKEM768_generate_key", "boring_sys.MLKEM768_encap", "boring_sys.MLKEM768_decap", "boring_sys.MLKEM1024_generate_key", "boring_sys.MLKEM1024_encap", "boring_sys.MLKEM1024_decap", "boring_sys.SSL_GROUP_X25519_MLKEM768", "boring_sys.SSL_CTX_set1_group_ids"]
+    sources: ["https://github.com/cloudflare/boring/blob/v5.0.0/boring-sys/build/main.rs", "https://github.com/cloudflare/boring/pull/455", "https://docs.rs/boring-sys/5.0.0/boring_sys/fn.MLKEM768_encap.html", "https://docs.rs/boring-sys/5.0.0/boring_sys/constant.SSL_GROUP_X25519_MLKEM768.html", "https://github.com/cloudflare/boring/blob/v4.22.0/boring-sys/build/main.rs"]
+    note: "Raw bindings generated from the bundled BoringSSL in the default build; the mlkem Cargo feature of 5.0.1 and later only asserts that the symbols exist. 4.x bundled an older BoringSSL and had the X25519MLKEM768 group only through the experimental pq-experimental feature."
+  signature:
+    status: available
+    since: "5.0.0"
+    apis: ["boring_sys.EVP_pkey_ml_dsa_44", "boring_sys.EVP_pkey_ml_dsa_65", "boring_sys.EVP_pkey_ml_dsa_87", "boring_sys.EVP_PKEY_from_private_seed", "boring_sys.EVP_PKEY_from_raw_public_key", "boring_sys.MLDSA44_generate_key", "boring_sys.MLDSA65_generate_key", "boring_sys.MLDSA87_generate_key", "boring_sys.MLDSA65_sign", "boring_sys.MLDSA65_verify", "boring_sys.SSL_SIGN_ML_DSA_65"]
+    sources: ["https://docs.rs/boring-sys/5.0.0/boring_sys/fn.EVP_pkey_ml_dsa_65.html", "https://github.com/cloudflare/boring/blob/v5.0.0/boring-sys/build/main.rs", "https://github.com/cloudflare/boring/blob/v5.2.0/boring-sys/build/main.rs", "https://docs.rs/boring-sys/5.2.0/boring_sys/fn.MLDSA65_sign.html", "https://github.com/cloudflare/boring/pull/497"]
+    note: "From 5.0.0, ML-DSA keys are built through the EVP_pkey_ml_dsa_* algorithms of the bundled BoringSSL and signed with EVP_DigestSign; 5.2.0 adds the MLDSA*_ functions of mldsa.h and the SSL_SIGN_ML_DSA_* TLS constants. 4.x bundled a BoringSSL without ML-DSA."
+  checked_at: 2026-11-11
+- library: rust/boringtun
+  purls: [pkg:cargo/boringtun]
+  kem:
+    status: none
+    sources: ["https://github.com/cloudflare/boringtun/blob/boringtun-0.7.1/boringtun/src/noise/handshake.rs", "https://github.com/cloudflare/boringtun/blob/master/boringtun/src/noise/handshake.rs", "https://www.wireguard.com/protocol/", "https://github.com/cloudflare/boringtun/issues?q=quantum", "https://github.com/cloudflare/boringtun/pull/459"]
+    note: "The WireGuard handshake (Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s over X25519) has no ML-KEM up to 0.7.1 (latest, 2026-05-01) or on master, and no issue or PR asks for one. A project collaborator closed an unrelated handshake-extension PR (#459, 2026-04) saying boringtun implements the existing WireGuard spec."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: rust/camellia
+  purls: ["pkg:cargo/camellia"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/cbc
+  purls: ["pkg:cargo/cbc"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/ccm
+  purls: ["pkg:cargo/ccm"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/cfb-mode
+  purls: ["pkg:cargo/cfb-mode"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/chacha20
+  purls: ["pkg:cargo/chacha20"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/chacha20poly1305
+  purls: ["pkg:cargo/chacha20poly1305"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/cmac
+  purls: ["pkg:cargo/cmac"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/concrete
+  purls: ["pkg:cargo/concrete"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/crypto_box
+  purls: [pkg:cargo/crypto_box]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/nacl-compat/issues/172", "https://docs.rs/crypto_box/0.9.1/crypto_box/"]
+    note: "No ML-KEM in crypto_box 0.9.1 (latest stable) nor in 0.10.0-pre.0 or master. A request for a Kyber crypto_box (#172) was closed by a maintainer: only NaCl/libsodium algorithms belong in it, and ML-KEM is in RustCrypto's separate ml-kem crate."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: rust/ctr
+  purls: ["pkg:cargo/ctr"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/curve25519-dalek
+  purls: [pkg:cargo/curve25519-dalek]
+  kem:
+    status: none
+    sources: ["https://github.com/dalek-cryptography/curve25519-dalek/issues?q=ML-KEM", "https://github.com/dalek-cryptography/curve25519-dalek/issues?q=Kyber", "https://docs.rs/curve25519-dalek/5.0.0/curve25519_dalek/"]
+    note: "No ML-KEM in curve25519-dalek 5.0.0 (latest on crates.io) nor on main, and no issue or pull request asks for it."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: rust/der
+  purls: [pkg:cargo/der]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/des
+  purls: ["pkg:cargo/des"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/dryoc
+  purls: [pkg:cargo/dryoc]
+  kem:
+    status: available
+    since: "2.0.0"
+    apis: [dryoc.kem.KeyPair.generate, dryoc.kem.encapsulate, dryoc.kem.KeyPair.decapsulate, dryoc.kem.xwing.KeyPair.generate, dryoc.kem.xwing.encapsulate, dryoc.kem.mlkem768.KeyPair.generate, dryoc.kem.mlkem768.KeyPair.from_seed, dryoc.kem.mlkem768.encapsulate, dryoc.kem.mlkem768.KeyPair.decapsulate, dryoc.classic.crypto_kem.crypto_kem_keypair, dryoc.classic.crypto_kem.crypto_kem_enc, dryoc.classic.crypto_kem.crypto_kem_dec, dryoc.classic.crypto_kem_mlkem768.crypto_kem_mlkem768_keypair, dryoc.classic.crypto_kem_mlkem768.crypto_kem_mlkem768_enc, dryoc.classic.crypto_kem_mlkem768.crypto_kem_mlkem768_dec, dryoc.dryocsealedbox.DryocSealedBox.seal]
+    sources: ["https://github.com/brndnmtthws/dryoc/releases/tag/v2.0.0", "https://docs.rs/dryoc/2.0.0/dryoc/kem/index.html", "https://docs.rs/dryoc/2.0.0/dryoc/kem/mlkem768/index.html", "https://github.com/brndnmtthws/dryoc/blob/v2.0.0/src/kem.rs"]
+    note: "ML-KEM-768 only (no 512 or 1024); the default dryoc::kem items and sealed boxes use X-Wing, the hybrid of ML-KEM-768 and X25519. Not in 1.0.0 or earlier."
+  signature:
+    status: none
+    sources: ["https://github.com/brndnmtthws/dryoc/pulls?q=is%3Apr+ML-DSA", "https://github.com/jedisct1/libsodium/commit/11216e4186b17093cbbe109664bf66e80cb6ee60"]
+    note: "No ML-DSA in 2.0.0 (latest, 2026-09-28) or on main, and no pull request or discussion asks for it (issues are disabled); signatures are Ed25519 only. libsodium, whose API dryoc mirrors, has ML-DSA-44 only unreleased on its master branch, a separate project."
+  checked_at: 2026-11-11
+- library: rust/dsa
+  purls: [pkg:cargo/dsa]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://docs.rs/dsa/0.7.0/dsa/", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in dsa 0.7.0 (latest on crates.io) nor on master. ML-DSA is in ml-dsa, a separate crate of the same RustCrypto repository."
+  checked_at: 2026-11-11
+- library: rust/ecdsa
+  purls: [pkg:cargo/ecdsa]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/signatures/tree/ecdsa/v0.17.0/ecdsa", "https://github.com/RustCrypto/signatures/issues?q=ecdsa+ML-DSA", "https://docs.rs/ml-dsa/0.1.2/ml_dsa/"]
+    note: "No ML-DSA in ecdsa 0.17.0 (latest) nor on master, and no issue or PR plans it for this crate. RustCrypto ships ML-DSA as the separate ml-dsa crate (pkg:cargo/ml-dsa), another library."
+  checked_at: 2026-11-11
+- library: rust/ed25519
+  purls: [pkg:cargo/ed25519]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/signatures/tree/ed25519/v3.0.0/ed25519", "https://github.com/RustCrypto/signatures/issues?q=ed25519+ML-DSA", "https://docs.rs/ml-dsa/0.1.2/ml_dsa/"]
+    note: "No ML-DSA in ed25519 3.0.0 (latest) nor on master, and no issue or PR plans it for this crate. RustCrypto ships ML-DSA as the separate ml-dsa crate (pkg:cargo/ml-dsa), another library."
+  checked_at: 2026-11-11
+- library: rust/ed25519-dalek
+  purls: [pkg:cargo/ed25519-dalek]
+  kem:
+    status: none
+    sources: ["https://docs.rs/ed25519-dalek/3.0.0/ed25519_dalek/struct.VerifyingKey.html", "https://github.com/dalek-cryptography/curve25519-dalek/issues?q=ML-KEM"]
+    note: "ed25519-dalek 3.0.0 (latest) converts Ed25519 keys to X25519 keys (VerifyingKey.to_montgomery, SigningKey.to_scalar_bytes) but has no ML-KEM, nor does main. No issue or PR plans it."
+  signature:
+    status: none
+    sources: ["https://github.com/dalek-cryptography/curve25519-dalek/tree/ed25519-3.0.0/ed25519-dalek", "https://github.com/dalek-cryptography/curve25519-dalek/issues?q=ML-DSA", "https://docs.rs/ml-dsa/0.1.2/ml_dsa/"]
+    note: "No ML-DSA in ed25519-dalek 3.0.0 (latest) nor on main, and no issue or PR plans it. ML-DSA in Rust is the separate RustCrypto ml-dsa crate (pkg:cargo/ml-dsa), another library."
+  checked_at: 2026-11-11
+- library: rust/ethers-core
+  purls: [pkg:cargo/ethers-core]
+  kem:
+    status: none
+    sources: ["https://github.com/gakonst/ethers-rs/issues/2667", "https://github.com/gakonst/ethers-rs", "https://docs.rs/crate/ethers-core/2.0.14", "https://github.com/gakonst/ethers-rs/blob/master/ethers-core/src/types/signature.rs", "https://github.com/alloy-rs/core/issues?q=quantum"]
+    note: "ethers-rs is deprecated and archived, with 2.0.14 (2024-03-06) as the last release and no ML-KEM; its only public-key cryptography is ECDSA on secp256k1. Move to its successor alloy (alloy-primitives for ethers-core), which has no ML-KEM either."
+  signature:
+    status: none
+    sources: ["https://github.com/gakonst/ethers-rs/issues/2667", "https://github.com/gakonst/ethers-rs", "https://docs.rs/crate/ethers-core/2.0.14", "https://github.com/gakonst/ethers-rs/blob/master/ethers-core/src/types/signature.rs", "https://github.com/alloy-rs/core/issues?q=quantum"]
+    note: "ethers-rs is deprecated and archived, with 2.0.14 (2024-03-06) as the last release; Signature verifies and recovers ECDSA on secp256k1 only, with no ML-DSA. Move to its successor alloy (alloy-primitives for ethers-core), which has no ML-DSA either."
+  checked_at: 2026-11-11
+- library: rust/getrandom
+  purls: ["pkg:cargo/getrandom"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/ghash
+  purls: ["pkg:cargo/ghash"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/google-cloud-kms
+  purls: [pkg:cargo/google-cloud-kms]
+  kem:
+    status: none
+    sources:
+      - "https://crates.io/api/v1/crates/google-cloud-kms"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/main/README.md"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/3049bf9b85b66ea4bc52478c13f7ad8c62105dba/googleapis/src/google.cloud.kms.v1.rs"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/f6c4aecc21aca214664b711ec0e28c091425d65a/googleapis/src/google.cloud.kms.v1.rs"
+    note: "Discontinued: the last release, 0.6.0 (2024-11-26), whose KMS protos (google-cloud-googleapis 0.16.x) define no ML-KEM algorithm; in February 2025 the maintainer moved the crate to gcloud-kms and gave the google-cloud-* names to Google. The successor gcloud-kms has no ML-KEM either, up to 1.5.0 and on main."
+  signature:
+    status: none
+    sources:
+      - "https://crates.io/api/v1/crates/google-cloud-kms"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/main/README.md"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/3049bf9b85b66ea4bc52478c13f7ad8c62105dba/googleapis/src/google.cloud.kms.v1.rs"
+      - "https://github.com/yoshidan/google-cloud-rust/blob/f6c4aecc21aca214664b711ec0e28c091425d65a/googleapis/src/google.cloud.kms.v1.rs"
+    note: "Discontinued: the last release, 0.6.0 (2024-11-26), whose KMS protos (google-cloud-googleapis 0.16.x) define no ML-DSA algorithm; in February 2025 the maintainer moved the crate to gcloud-kms and gave the google-cloud-* names to Google. The successor gcloud-kms reaches PQ_SIGN_ML_DSA_65 through its gcloud-googleapis dependency (1.1.0 and later)."
+  checked_at: 2026-11-11
+- library: rust/groth16
+  purls: ["pkg:cargo/groth16"]
+  kem:
+    status: none
+    sources: ["https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/groth16/CHANGELOG.md", "https://github.com/zkcrypto/bellman/tree/b726862a4ece8a627e7fea486d77b502a6edbb0b/groth16/src", "https://github.com/zkcrypto/bellman/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to 0.2.0 (latest, 2026-09-26) or bellman's main; groth16 is the Groth16 zkSNARK prover and verifier over pairing-friendly curves with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/zkcrypto/bellman/blob/b726862a4ece8a627e7fea486d77b502a6edbb0b/groth16/CHANGELOG.md", "https://github.com/zkcrypto/bellman/tree/b726862a4ece8a627e7fea486d77b502a6edbb0b/groth16/src", "https://github.com/zkcrypto/bellman/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to 0.2.0 (latest, 2026-09-26) or bellman's main; its only scheme is Groth16 over pairing-friendly curves, and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: rust/hkdf
+  purls: ["pkg:cargo/hkdf"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/hmac
+  purls: ["pkg:cargo/hmac"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/hyper-rustls
+  purls: [pkg:cargo/hyper-rustls]
+  kem:
+    status: none
+    sources: ["https://github.com/rustls/hyper-rustls/blob/v/0.27.10/src/connector/builder.rs", "https://github.com/rustls/hyper-rustls/blob/v/0.27.10/Cargo.toml", "https://github.com/rustls/hyper-rustls/issues?q=ML-KEM%20OR%20mlkem%20OR%20quantum%20OR%20kyber", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.22"]
+    note: "No ML-KEM API in 0.27.10 (latest, 2026-09-20) or main, and no issue or PR asks for it: HttpsConnectorBuilder builds or takes a rustls ClientConfig, and its rustls dependency does the key exchange. rustls offers X25519MLKEM768 in its default aws-lc-rs provider since 0.23.22, which hyper-rustls 0.27 enables with its default aws-lc-rs feature."
+  signature:
+    status: none
+    sources: ["https://github.com/rustls/hyper-rustls/blob/v/0.27.10/src/connector/builder.rs", "https://github.com/rustls/hyper-rustls/issues?q=ML-DSA%20OR%20mldsa%20OR%20dilithium%20OR%20quantum", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.44"]
+    note: "No ML-DSA API in 0.27.10 (latest, 2026-09-20) or main, and no issue or PR asks for it: certificates are verified and signed by its rustls dependency. rustls supports ML-DSA certificates in its default aws-lc-rs provider since 0.23.44."
+  checked_at: 2026-11-11
+- library: rust/josekit
+  purls: ["pkg:cargo/josekit"]
+  kem:
+    status: none
+    sources: ["https://github.com/hidekatsu-izuno/josekit-rs/blob/v0.10.3/README.md", "https://github.com/hidekatsu-izuno/josekit-rs/issues?q=ML-KEM"]
+    note: "No ML-KEM in 0.10.3 (latest, 2025-05-20) or master: JWE key management is RSAES, ECDH-ES, AES key wrap, PBES2 and direct. No issue or PR mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/hidekatsu-izuno/josekit-rs/blob/v0.10.3/README.md", "https://github.com/hidekatsu-izuno/josekit-rs/pull/57"]
+    note: "No ML-DSA in 0.10.3 (latest, 2025-05-20) or master: JWS algorithms stop at HMAC, RSASSA, RSASSA-PSS, ECDSA and EdDSA. A user's open PR #57 adds ML-DSA with a RustCrypto backend, with no response from the maintainer."
+  checked_at: 2026-11-11
+- library: rust/jsonwebtoken
+  purls: ["pkg:cargo/jsonwebtoken"]
+  kem:
+    status: none
+    sources: ["https://github.com/Keats/jsonwebtoken/blob/v11.1.0/README.md", "https://github.com/Keats/jsonwebtoken/issues?q=ML-KEM"]
+    note: "JWS-only library: HMAC, RSA, ECDSA and EdDSA signing, no JWE, key agreement or encryption, so no ML-KEM in 11.1.0 (latest, 2026-09-16) or master. No issue or PR mentions ML-KEM."
+  signature:
+    status: planned
+    sources: ["https://github.com/Keats/jsonwebtoken/blob/v11.1.0/src/jwk.rs", "https://github.com/Keats/jsonwebtoken/issues/534", "https://github.com/Keats/jsonwebtoken/pull/535"]
+    note: "No ML-DSA in 11.1.0 (latest, 2026-09-16) or master, where an ML-DSA AKP JWK is parsed but reported unsupported. Open PR #535 adds ML-DSA-44/65/87 (RFC 9964); a maintainer reviewed it and said on 2026-09-24 it will be merged no earlier than the next major release."
+  checked_at: 2026-11-11
+- library: rust/jwt
+  purls: ["pkg:cargo/jwt"]
+  kem:
+    status: none
+    sources: ["https://github.com/mikkyang/rust-jwt/blob/a09172fcbf667db7a982c787ff709c6d6294ef18/src/algorithm/mod.rs", "https://github.com/mikkyang/rust-jwt/issues?q=ML-KEM"]
+    note: "JWS-only library: HMAC, plus RSA and ECDSA through its openssl feature, no JWE, key agreement or encryption, so no ML-KEM in 0.16.0 (latest, 2022-01-09, also master). No issue or PR mentions ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/mikkyang/rust-jwt/blob/a09172fcbf667db7a982c787ff709c6d6294ef18/src/algorithm/mod.rs", "https://github.com/mikkyang/rust-jwt/issues?q=ML-DSA", "https://rustsec.org/advisories/RUSTSEC-2016-0007.html"]
+    note: "No ML-DSA in 0.16.0 (latest, 2022-01-09, also master): the algorithm list stops at HS, RS, PS and ES 256-512, and no issue or PR mentions ML-DSA or post-quantum. RustSec flags the crate as unmaintained and names jsonwebtoken as an alternative."
+  checked_at: 2026-11-11
+- library: rust/k256
+  purls: [pkg:cargo/k256]
+  kem:
+    status: none
+    sources: ["https://docs.rs/k256/0.14.0/k256/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-KEM%22+OR+Kyber+OR+quantum&type=issues", "https://github.com/RustCrypto/KEMs/tree/master/ml-kem"]
+    note: "No ML-KEM in k256 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-KEM in the separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://docs.rs/k256/0.14.0/k256/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-DSA%22+OR+Dilithium+OR+quantum&type=issues", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in k256 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-DSA in the separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/libsodium-sys
+  purls: [pkg:cargo/libsodium-sys]
+  kem:
+    status: none
+    sources: ["https://github.com/sodiumoxide/sodiumoxide/blob/master/README.md", "https://github.com/sodiumoxide/sodiumoxide/blob/master/libsodium-sys/src/sodium_bindings.rs", "https://docs.rs/libsodium-sys-stable/1.24.0/libsodium_sys/fn.crypto_kem_mlkem768_keypair.html"]
+    note: "Deprecated: the sodiumoxide repository is archived and 0.2.7 (2021-06-24) is the last release, with no crypto_kem or ML-KEM binding. Move to libsodium-sys-stable, which binds libsodium's ML-KEM-768 (crypto_kem_mlkem768_*) since 1.24.0."
+  signature:
+    status: none
+    sources: ["https://github.com/sodiumoxide/sodiumoxide/blob/master/README.md", "https://github.com/sodiumoxide/sodiumoxide/blob/master/libsodium-sys/src/sodium_bindings.rs", "https://docs.rs/libsodium-sys-stable/1.24.5/libsodium_sys/index.html"]
+    note: "Deprecated: the sodiumoxide repository is archived and 0.2.7 (2021-06-24), the last release, binds no ML-DSA. Its successor libsodium-sys-stable has no ML-DSA either up to 1.24.5."
+  checked_at: 2026-11-11
+- library: rust/md-5
+  purls: ["pkg:cargo/md-5"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/md5
+  purls: ["pkg:cargo/md5"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/ml-dsa
+  purls: ["pkg:cargo/ml-dsa"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/ml-kem
+  purls: ["pkg:cargo/ml-kem"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/native-tls
+  purls: [pkg:cargo/native-tls]
+  kem:
+    status: none
+    sources: ["https://github.com/rust-native-tls/rust-native-tls/blob/v0.2.18/src/lib.rs", "https://github.com/rust-native-tls/rust-native-tls/blob/v0.2.18/src/imp/openssl.rs", "https://github.com/rust-native-tls/rust-native-tls/issues?q=ML-KEM%20OR%20mlkem%20OR%20kyber%20OR%20quantum", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md"]
+    note: "No ML-KEM API in 0.2.18 (latest, 2026-02-18) or main: it has no key-exchange group setting, so the handshake uses the platform library's defaults, and no issue or PR mentions ML-KEM. On the OpenSSL backend, OpenSSL 3.5 or later offers X25519MLKEM768 by default."
+  signature:
+    status: none
+    sources: ["https://github.com/rust-native-tls/rust-native-tls/blob/v0.2.18/src/lib.rs", "https://github.com/rust-native-tls/rust-native-tls/blob/v0.2.18/src/imp/openssl.rs", "https://github.com/rust-native-tls/rust-native-tls/issues?q=ML-DSA%20OR%20mldsa%20OR%20dilithium%20OR%20quantum", "https://github.com/openssl/openssl/blob/openssl-3.5.0/NEWS.md"]
+    note: "No ML-DSA API in 0.2.18 (latest, 2026-02-18) or main: identities and certificates are handed to the platform library, which picks the signature algorithms, and no issue or PR mentions ML-DSA. On the OpenSSL backend, ML-DSA support comes from OpenSSL 3.5 or later."
+  checked_at: 2026-11-11
+- library: rust/oath
+  purls: ["pkg:cargo/oath"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/openssl
+  purls: ["pkg:cargo/openssl"]
+  kem:
+    status: planned
+    sources: ["https://github.com/rust-openssl/rust-openssl/pull/2636", "https://github.com/rust-openssl/rust-openssl/pull/2648", "https://github.com/rust-openssl/rust-openssl/pull/2649", "https://github.com/rust-openssl/rust-openssl/pull/2405", "https://github.com/rust-openssl/rust-openssl/blob/openssl-v0.10.79/openssl/CHANGELOG.md", "https://docs.rs/openssl/0.10.82/openssl/ssl/struct.SslContextBuilder.html#method.set_groups_list"]
+    note: "0.10.79 added ML-KEM key import (KeyType::ML_KEM_768, PKey::private_key_from_seed), but no release up to 0.10.82 nor master can encapsulate or decapsulate, and TLS hybrid groups are only a string handed to the linked OpenSSL through set_groups_list. Open PRs #2636, #2648 and #2649 add ML-KEM operations, split as a maintainer asked on 2026-05-13 after stating in #2405 that the project wants ML-KEM."
+  signature:
+    status: available
+    since: "0.10.79"
+    apis: ["openssl.pkey.KeyType.ML_DSA_44", "openssl.pkey.KeyType.ML_DSA_65", "openssl.pkey.KeyType.ML_DSA_87", "openssl.pkey.PKey.private_key_from_seed", "openssl.pkey.PKey.private_key_from_raw_bytes_ex", "openssl.pkey.PKey.public_key_from_raw_bytes_ex", "openssl.pkey_ctx.PkeyCtxRef.set_context_string"]
+    sources: ["https://github.com/rust-openssl/rust-openssl/blob/openssl-v0.10.79/openssl/CHANGELOG.md", "https://github.com/rust-openssl/rust-openssl/blob/openssl-v0.10.79/openssl/src/pkey.rs", "https://github.com/rust-openssl/rust-openssl/blob/openssl-v0.10.79/openssl/src/pkey_ctx.rs", "https://docs.rs/openssl/0.10.79/openssl/pkey/struct.KeyType.html", "https://github.com/rust-openssl/rust-openssl/pull/2611"]
+    note: "ML-DSA keys are built from a seed or raw bytes named by KeyType and signed through MdCtx with no digest; requires linking OpenSSL 3.5 or later. A higher-level ML-DSA API is in open PR #2611."
+  checked_at: 2026-11-11
+- library: rust/openssl-sys
+  purls: ["pkg:cargo/openssl-sys"]
+  kem:
+    status: none
+    sources: ["https://github.com/rust-openssl/rust-openssl/pull/2450", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.110/openssl-sys/src/handwritten/evp.rs", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.118/openssl-sys/build/run_bindgen.rs", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.118/openssl-sys/Cargo.toml", "https://docs.openssl.org/3.5/man7/EVP_KEM-ML-KEM/", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.107/openssl-sys/src/lib.rs"]
+    note: "Raw FFI to the linked C library: with OpenSSL it binds the generic EVP_PKEY_encapsulate/decapsulate (since 0.9.110), and ML-KEM-768 is a name string forwarded to OpenSSL 3.5 or later. The aws-lc and BoringSSL backends only re-export the symbols of aws-lc-sys and BoringSSL, which are their own libraries."
+  signature:
+    status: none
+    sources: ["https://github.com/rust-openssl/rust-openssl/pull/2450", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.110/openssl-sys/src/handwritten/evp.rs", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.117/openssl-sys/CHANGELOG.md", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.118/openssl-sys/build/run_bindgen.rs", "https://docs.openssl.org/3.5/man7/EVP_SIGNATURE-ML-DSA/", "https://github.com/rust-openssl/rust-openssl/blob/openssl-sys-v0.9.107/openssl-sys/src/lib.rs"]
+    note: "Raw FFI to the linked C library: with OpenSSL it binds the generic EVP_PKEY_sign_message_init and verify_message_init (since 0.9.110), and ML-DSA-65 is a name string forwarded to OpenSSL 3.5 or later. The aws-lc and BoringSSL backends only re-export the symbols of aws-lc-sys and BoringSSL, which are their own libraries."
+  checked_at: 2026-11-11
+- library: rust/otpauth
+  purls: ["pkg:cargo/otpauth"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/p256
+  purls: [pkg:cargo/p256]
+  kem:
+    status: none
+    sources: ["https://docs.rs/p256/0.14.0/p256/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-KEM%22+OR+Kyber+OR+quantum&type=issues", "https://github.com/RustCrypto/KEMs/tree/master/ml-kem"]
+    note: "No ML-KEM in p256 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-KEM in the separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://docs.rs/p256/0.14.0/p256/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-DSA%22+OR+Dilithium+OR+quantum&type=issues", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in p256 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-DSA in the separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/p384
+  purls: [pkg:cargo/p384]
+  kem:
+    status: none
+    sources: ["https://docs.rs/p384/0.14.0/p384/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-KEM%22+OR+Kyber+OR+quantum&type=issues", "https://github.com/RustCrypto/KEMs/tree/master/ml-kem"]
+    note: "No ML-KEM in p384 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-KEM in the separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://docs.rs/p384/0.14.0/p384/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-DSA%22+OR+Dilithium+OR+quantum&type=issues", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in p384 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-DSA in the separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/p521
+  purls: [pkg:cargo/p521]
+  kem:
+    status: none
+    sources: ["https://docs.rs/p521/0.14.0/p521/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-KEM%22+OR+Kyber+OR+quantum&type=issues", "https://github.com/RustCrypto/KEMs/tree/master/ml-kem"]
+    note: "No ML-KEM in p521 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-KEM in the separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://docs.rs/p521/0.14.0/p521/", "https://github.com/search?q=repo%3ARustCrypto%2Felliptic-curves+%22ML-DSA%22+OR+Dilithium+OR+quantum&type=issues", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in p521 0.14.0 (latest on crates.io) nor on the master branch, and no issue or pull request in RustCrypto/elliptic-curves proposes it. RustCrypto ships ML-DSA in the separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/pairing
+  purls: ["pkg:cargo/pairing"]
+  kem:
+    status: none
+    sources: ["https://github.com/zkcrypto/pairing/blob/3a4c0202e434c313f1f7cf5abcaa2cf93771faac/CHANGELOG.md", "https://github.com/zkcrypto/pairing/blob/3a4c0202e434c313f1f7cf5abcaa2cf93771faac/src/lib.rs", "https://docs.rs/pairing/0.16.0/pairing/bls12_381/index.html", "https://github.com/zkcrypto/pairing/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-KEM or Kyber up to 0.24.2 (latest, 2026-11-11) or main; pairing defines pairing-friendly curve traits (releases up to 0.16.0 also shipped BLS12-381) with no KEM or encryption API, and no issue or PR mentions post-quantum support."
+  signature:
+    status: none
+    sources: ["https://github.com/zkcrypto/pairing/blob/3a4c0202e434c313f1f7cf5abcaa2cf93771faac/CHANGELOG.md", "https://github.com/zkcrypto/pairing/blob/3a4c0202e434c313f1f7cf5abcaa2cf93771faac/src/lib.rs", "https://docs.rs/pairing/0.16.0/pairing/bls12_381/index.html", "https://github.com/zkcrypto/pairing/issues?q=quantum%20OR%20ML-KEM%20OR%20ML-DSA%20OR%20Kyber%20OR%20Dilithium"]
+    note: "No ML-DSA or Dilithium up to 0.24.2 (latest, 2026-11-11) or main; it provides bilinear pairings (BLS12-381 in releases up to 0.16.0), and no issue or PR mentions post-quantum support."
+  checked_at: 2026-11-11
+- library: rust/pbkdf2
+  purls: ["pkg:cargo/pbkdf2"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/pgp
+  purls: [pkg:cargo/pgp]
+  kem:
+    status: available
+    since: "0.21.0"
+    apis: [pgp.composed.KeyType.MlKem768X25519, pgp.composed.KeyType.MlKem1024X448, pgp.composed.SubkeyParamsBuilder.key_type]
+    sources: ["https://github.com/rpgp/rpgp/blob/v0.21.0/CHANGELOG.md", "https://github.com/rpgp/rpgp/blob/v0.21.0/docs/FAQ.md", "https://github.com/rpgp/rpgp/blob/v0.21.0/Cargo.toml", "https://github.com/rpgp/rpgp/blob/v0.21.0/src/composed/key/builder.rs", "https://github.com/rpgp/rpgp/blob/v0.20.0/docs/FAQ.md", "https://crates.io/api/v1/crates/pgp"]
+    note: "The RFC 9980 composites ML-KEM-768+X25519 and ML-KEM-1024+X448 need the non-default `pqc` Cargo feature. 0.20.0 and earlier had a draft under `draft-pqc`, for testing only, set aside."
+  signature:
+    status: available
+    since: "0.21.0"
+    apis: [pgp.composed.KeyType.MlDsa65Ed25519, pgp.composed.KeyType.MlDsa87Ed448, pgp.composed.SecretKeyParamsBuilder.key_type]
+    sources: ["https://github.com/rpgp/rpgp/blob/v0.21.0/CHANGELOG.md", "https://github.com/rpgp/rpgp/blob/v0.21.0/docs/FAQ.md", "https://github.com/rpgp/rpgp/blob/v0.21.0/Cargo.toml", "https://github.com/rpgp/rpgp/blob/v0.21.0/src/composed/key/builder.rs", "https://github.com/rpgp/rpgp/blob/v0.20.0/docs/FAQ.md", "https://crates.io/api/v1/crates/pgp"]
+    note: "The RFC 9980 composites ML-DSA-65+Ed25519 and ML-DSA-87+Ed448 need the non-default `pqc` Cargo feature. 0.20.0 and earlier had a draft under `draft-pqc`, for testing only, set aside."
+  checked_at: 2026-11-11
+- library: rust/pkcs1
+  purls: [pkg:cargo/pkcs1]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/pkcs1/v0.8.0/pkcs1/src/lib.rs", "https://www.rfc-editor.org/rfc/rfc8017", "https://github.com/RustCrypto/formats/issues?q=pkcs1+ML-KEM"]
+    note: "pkcs1 encodes and decodes only RSA keys (PKCS#1, RFC 8017); 0.8.0 (latest, 2026-11-02) and master have no ML-KEM. No issue or pull request plans it."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/pkcs1/v0.8.0/pkcs1/src/lib.rs", "https://www.rfc-editor.org/rfc/rfc8017", "https://github.com/RustCrypto/formats/issues?q=pkcs1+ML-DSA"]
+    note: "pkcs1 encodes and decodes only RSA keys (PKCS#1, RFC 8017); 0.8.0 (latest, 2026-11-02) and master have no ML-DSA. No issue or pull request plans it."
+  checked_at: 2026-11-11
+- library: rust/pkcs8
+  purls: [pkg:cargo/pkcs8]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/pkcs8/v0.11.0/pkcs8/README.md", "https://github.com/RustCrypto/formats/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in 0.11.0 (latest, 2026-04-27) or master; the crate is algorithm-agnostic, names no key algorithm itself, and no issue or PR plans ML-KEM for it. Its README lists RSA, EC, Ed25519 and X25519 keys as tested."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/issues/1749", "https://github.com/RustCrypto/signatures/pull/891", "https://github.com/RustCrypto/formats/issues?q=ML-DSA"]
+    note: "No ML-DSA or Dilithium in 0.11.0 (latest, 2026-04-27) or master: the private key field is opaque bytes and no issue or PR plans ML-DSA for pkcs8. A maintainer points ML-DSA users to the separate ml-dsa crate, which implements pkcs8's traits itself."
+  checked_at: 2026-11-11
+- library: rust/poly1305
+  purls: ["pkg:cargo/poly1305"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/pqcrypto
+  purls: ["pkg:cargo/pqcrypto"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/pqcrypto-kyber
+  purls: ["pkg:cargo/pqcrypto-kyber"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/rcgen
+  purls: [pkg:cargo/rcgen]
+  kem:
+    status: none
+    sources: ["https://github.com/rustls/rcgen/blob/v0.14.10/rcgen/src/sign_algo.rs", "https://github.com/rustls/rcgen/issues?q=ML-KEM"]
+    note: "No ML-KEM in 0.14.10 (latest, 2026-08-28) or main: rcgen's key types are RSA, ECDSA, Ed25519 and ML-DSA, and no issue or PR asks for ML-KEM."
+  signature:
+    status: available
+    since: "0.14.10"
+    apis: [rcgen.PKCS_ML_DSA_44, rcgen.PKCS_ML_DSA_65, rcgen.PKCS_ML_DSA_87, rcgen.KeyPair.generate_for]
+    sources: ["https://github.com/rustls/rcgen/pull/447", "https://github.com/rustls/rcgen/blob/v0.14.10/rcgen/Cargo.toml", "https://github.com/rustls/rcgen/blob/v0.14.10/rcgen/src/sign_algo.rs", "https://docs.rs/rcgen/0.14.10/rcgen/static.PKCS_ML_DSA_44.html", "https://docs.rs/rcgen/0.14.9/rcgen/static.PKCS_ML_DSA_44.html", "https://crates.io/api/v1/crates/rcgen"]
+    note: "Needs the non-default `aws_lc_rs` Cargo feature, as the default `ring` backend has no ML-DSA. 0.14.4 to 0.14.9 had the constants only behind the unstable `aws_lc_rs_unstable` feature, set aside."
+  checked_at: 2026-11-11
 - library: rust/ring
   purls: [pkg:cargo/ring]
   kem:
@@ -3386,6 +4144,328 @@
     status: none
     sources: ["https://github.com/briansmith/ring/issues/1452"]
     note: "No ML-DSA in ring 0.17.14 nor on main; issue #1452 (post-quantum algorithms) closed in favour of #1685, which covers KEM only and is not planned."
+  checked_at: 2026-11-11
+- library: rust/ripemd
+  purls: ["pkg:cargo/ripemd"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/rsa
+  purls: [pkg:cargo/rsa]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/RSA/issues?q=ML-KEM", "https://github.com/RustCrypto/KEMs/tree/master/ml-kem"]
+    note: "No ML-KEM in rsa 0.10.0 (latest on crates.io) nor on master, and no issue or pull request asks for it. ML-KEM is in RustCrypto's separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/RSA/issues?q=ML-DSA", "https://github.com/RustCrypto/signatures/tree/master/ml-dsa"]
+    note: "No ML-DSA in rsa 0.10.0 (latest on crates.io) nor on master, and no issue or pull request asks for it. ML-DSA is in RustCrypto's separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/rusoto_kms
+  purls: [pkg:cargo/rusoto_kms]
+  kem:
+    status: none
+    sources:
+      - "https://github.com/rusoto/rusoto/issues/1651#issuecomment-1108012975"
+      - "https://github.com/rusoto/rusoto/blob/master/CHANGELOG.md"
+      - "https://github.com/awslabs/aws-sdk-rust/releases/tag/release-2026-10-26"
+    note: "Discontinued: Rusoto is in maintenance mode and 0.48.0 (2022-04-24) was announced as its final release, with no ML-KEM, so move to aws-sdk-kms. Its successor aws-sdk-kms has ML-KEM since 1.127.0."
+  signature:
+    status: none
+    sources:
+      - "https://github.com/rusoto/rusoto/issues/1651#issuecomment-1108012975"
+      - "https://github.com/rusoto/rusoto/blob/master/CHANGELOG.md"
+      - "https://github.com/awslabs/aws-sdk-rust/releases/tag/release-2025-06-12"
+    note: "Discontinued: Rusoto is in maintenance mode and 0.48.0 (2022-04-24) was announced as its final release, with no ML-DSA, so move to aws-sdk-kms. Its successor aws-sdk-kms has ML-DSA since 1.76.0."
+  checked_at: 2026-11-11
+- library: rust/russh
+  purls: [pkg:cargo/russh]
+  kem:
+    status: available
+    since: "0.54.6"
+    apis: [russh.kex.MLKEM768X25519_SHA256, russh.Preferred.DEFAULT]
+    sources: ["https://github.com/Eugeny/russh/releases/tag/v0.54.6", "https://github.com/Eugeny/russh/pull/585", "https://docs.rs/russh/0.54.6/russh/kex/constant.MLKEM768X25519_SHA256.html", "https://docs.rs/russh/0.54.5/russh/kex/index.html"]
+    note: "Hybrid key exchange mlkem768x25519-sha256 (FIPS 203 ML-KEM-768 with X25519), in the default build and first in Preferred::DEFAULT; 0.54.5 does not have it."
+  signature:
+    status: none
+    sources: ["https://github.com/Eugeny/russh/issues?q=ml-dsa"]
+    note: "No ML-DSA host key or signature in 0.65.1 (latest) or main, and no issue or pull request asks for it."
+  checked_at: 2026-11-11
+- library: rust/russh-keys
+  purls: [pkg:cargo/russh-keys]
+  kem:
+    status: none
+    sources: ["https://github.com/Eugeny/russh/releases/tag/v0.50.0", "https://crates.io/api/v1/crates/russh-keys", "https://github.com/Eugeny/russh/releases/tag/v0.54.6"]
+    note: "Discontinued: russh-keys was merged into russh as russh::keys in russh 0.50.0, and its last release (0.50.0-beta.7, 2025-01-08; 0.49.2 stable) has no ML-KEM. Move to pkg:cargo/russh, which has the hybrid mlkem768x25519-sha256 key exchange since 0.54.6."
+  signature:
+    status: none
+    sources: ["https://github.com/Eugeny/russh/releases/tag/v0.50.0", "https://crates.io/api/v1/crates/russh-keys", "https://github.com/Eugeny/russh/issues?q=ml-dsa"]
+    note: "Discontinued: russh-keys was merged into russh as russh::keys in russh 0.50.0, and its last release (0.50.0-beta.7; 0.49.2 stable) has no ML-DSA. The successor pkg:cargo/russh has no ML-DSA either."
+  checked_at: 2026-11-11
+- library: rust/rustls
+  purls: [pkg:cargo/rustls]
+  kem:
+    status: available
+    since: "0.23.22"
+    apis: [rustls.crypto.aws_lc_rs.kx_group.X25519MLKEM768, rustls.crypto.aws_lc_rs.kx_group.MLKEM768, rustls.crypto.aws_lc_rs.DEFAULT_KX_GROUPS, rustls.crypto.aws_lc_rs.ALL_KX_GROUPS, rustls.NamedGroup.X25519MLKEM768, rustls.NamedGroup.MLKEM768, rustls.crypto.aws_lc_rs.kx_group.SECP256R1MLKEM768, rustls.crypto.aws_lc_rs.kx_group.MLKEM1024]
+    sources: ["https://github.com/rustls/rustls/releases/tag/v%2F0.23.22", "https://docs.rs/rustls/0.23.22/rustls/crypto/aws_lc_rs/kx_group/index.html", "https://github.com/rustls/rustls/blob/v/0.23.22/rustls/Cargo.toml", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.27", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.28", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.37"]
+    note: "Hybrid X25519MLKEM768 in the aws-lc-rs provider, the default Cargo feature, offered by default and preferred first since 0.23.27; the optional ring provider has no ML-KEM. Up to 0.23.21 rustls only defined the TLS codepoints and the implementation lived in the separate rustls-post-quantum crate."
+  signature:
+    status: available
+    since: "0.23.44"
+    apis: [rustls.SignatureScheme.ML_DSA_44, rustls.SignatureScheme.ML_DSA_65, rustls.SignatureScheme.ML_DSA_87, rustls.crypto.aws_lc_rs.sign.any_supported_type, rustls.crypto.aws_lc_rs.default_provider]
+    sources: ["https://github.com/rustls/rustls/releases/tag/v%2F0.23.44", "https://github.com/rustls/rustls/blob/v/0.23.44/rustls/src/crypto/aws_lc_rs/sign.rs", "https://docs.rs/rustls/0.23.44/rustls/enum.SignatureScheme.html", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.29"]
+    note: "ML-DSA certificates (signing and verification) in the default aws-lc-rs provider; 0.23.29 to 0.23.43 only defined the SignatureScheme codepoints for external providers. The ring provider has no ML-DSA."
+  checked_at: 2026-11-11
+- library: rust/rustls-native-certs
+  purls: [pkg:cargo/rustls-native-certs]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/rustls-pki-types
+  purls: ["pkg:cargo/rustls-pki-types"]
+  kem:
+    status: none
+    sources: ["https://github.com/rustls/pki-types/blob/v/1.16.0/src/alg_id.rs", "https://github.com/rustls/pki-types/issues?q=ML-KEM%20OR%20mlkem%20OR%20kyber%20OR%20post-quantum"]
+    note: "No ML-KEM in 1.16.0 (latest, 2026-11-10) or main: its key types and AlgorithmIdentifier constants cover RSA, EC, Ed25519/Ed448 and ML-DSA only, and no issue or PR mentions ML-KEM, Kyber or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/rustls/pki-types/blob/v/1.16.0/src/alg_id.rs", "https://github.com/rustls/pki-types/pull/78", "https://docs.rs/rustls-pki-types/1.16.0/rustls_pki_types/trait.SignatureVerificationAlgorithm.html", "https://github.com/rustls/pki-types/issues?q=ML-DSA", "https://github.com/rustls/webpki/releases/tag/v%2F0.103.14"]
+    note: "1.12.0 added the id-ml-dsa-44/65/87 AlgorithmIdentifier constants, but the crate never uses them: verification comes from a SignatureVerificationAlgorithm implementation the caller supplies. rustls-webpki verifies ML-DSA with its aws-lc-rs feature since 0.103.14."
+  checked_at: 2026-11-11
+- library: rust/rustls-webpki
+  purls: [pkg:cargo/rustls-webpki]
+  kem:
+    status: none
+    sources: ["https://github.com/rustls/webpki/blob/v/0.103.16/src/lib.rs", "https://github.com/rustls/webpki/issues?q=ML-KEM%20OR%20mlkem%20OR%20kyber"]
+    note: "No ML-KEM in 0.103.16 (latest, 2026-10-20) or main, and no issue or PR asks for it: the crate verifies certificate chains and signatures (RSA, ECDSA, Ed25519, ML-DSA) and performs no key agreement or encapsulation."
+  signature:
+    status: available
+    since: "0.103.14"
+    apis: [webpki.aws_lc_rs.ML_DSA_44, webpki.aws_lc_rs.ML_DSA_65, webpki.aws_lc_rs.ML_DSA_87, webpki.ALL_VERIFICATION_ALGS]
+    sources: ["https://github.com/rustls/webpki/releases/tag/v%2F0.103.14", "https://github.com/rustls/webpki/blob/v/0.103.14/src/lib.rs", "https://github.com/rustls/webpki/blob/v/0.103.14/Cargo.toml", "https://github.com/rustls/webpki/releases/tag/v%2F0.103.4", "https://github.com/rustls/rustls/blob/v/0.23.44/rustls/Cargo.toml"]
+    note: "ML-DSA-44/65/87 certificate signature verification with the aws-lc-rs backend feature, which every algorithm of the crate needs (ring or aws-lc-rs) and rustls enables by default; the ring backend has no ML-DSA. 0.103.4 to 0.103.13 exposed it only behind the opt-in aws-lc-rs-unstable feature."
+  checked_at: 2026-11-11
+- library: rust/schannel
+  purls: [pkg:cargo/schannel]
+  kem:
+    status: none
+    sources: ["https://github.com/steffengy/schannel-rs/blob/v0.1.30/src/schannel_cred.rs", "https://github.com/steffengy/schannel-rs/issues?q=ML-KEM%20OR%20ML-DSA%20OR%20kyber%20OR%20dilithium%20OR%20quantum"]
+    note: "No ML-KEM in 0.1.30 (latest, 2026-10-16) or master: its key-exchange algorithm ids are the legacy SChannel RSA, DH and ECDH ones, and its TLS 1.3 credentials leave the groups to Windows with no selector. No issue or pull request mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/steffengy/schannel-rs/blob/v0.1.30/src/schannel_cred.rs", "https://github.com/steffengy/schannel-rs/issues?q=ML-KEM%20OR%20ML-DSA%20OR%20kyber%20OR%20dilithium%20OR%20quantum"]
+    note: "No ML-DSA in 0.1.30 or master: the signature algorithm ids are RsaSign, DssSign and Ecdsa. No issue or pull request mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: rust/scrypt
+  purls: ["pkg:cargo/scrypt"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/sec1
+  purls: [pkg:cargo/sec1]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/sec1/v0.8.1/sec1/README.md", "https://github.com/RustCrypto/formats/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in 0.8.1 (latest, 2026-03-31) or master; the crate encodes elliptic-curve private keys and points only, and no issue or PR mentions ML-KEM for it."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/sec1/v0.8.1/sec1/README.md", "https://github.com/RustCrypto/formats/issues?q=ML-DSA"]
+    note: "No ML-DSA or Dilithium in 0.8.1 (latest, 2026-03-31) or master; SEC1 is an elliptic-curve key format only, and no issue or PR mentions ML-DSA for it."
+  checked_at: 2026-11-11
+- library: rust/secp256k1
+  purls: [pkg:cargo/secp256k1]
+  kem:
+    status: none
+    sources: ["https://git.rust-bitcoin.org/rust-bitcoin/rust-secp256k1/src/tag/secp256k1-0.33.1/src/lib.rs", "https://git.rust-bitcoin.org/rust-bitcoin/rust-secp256k1/issues?q=quantum&type=all&state=all"]
+    note: "The crate offers ECDH and ElligatorSwift key exchange on secp256k1 only, with no ML-KEM or Kyber up to 0.33.1 (latest, 2026-08-29) or master. No issue or PR, on its current host or the archived GitHub repository, mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://git.rust-bitcoin.org/rust-bitcoin/rust-secp256k1/src/tag/secp256k1-0.33.1/src/lib.rs", "https://git.rust-bitcoin.org/rust-bitcoin/rust-secp256k1/issues?q=quantum&type=all&state=all"]
+    note: "Signatures are ECDSA, BIP-340 Schnorr and MuSig2 on secp256k1 only, with no ML-DSA or Dilithium up to 0.33.1 (latest, 2026-08-29) or master. No issue or PR mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: rust/security-framework
+  purls: [pkg:cargo/security-framework]
+  kem:
+    status: none
+    sources: ["https://github.com/kornelski/rust-security-framework/blob/v3.7.0/security-framework/src/key.rs", "https://github.com/kornelski/rust-security-framework/blob/v3.7.0/security-framework-sys/src/key.rs", "https://github.com/kornelski/rust-security-framework/issues?q=ML-KEM%20OR%20ML-DSA%20OR%20kyber%20OR%20dilithium%20OR%20quantum"]
+    note: "No ML-KEM or Kyber in 3.7.0 (latest, 2026-02-20) or main: key types are RSA, DSA, EC and symmetric ciphers, and the SecKey algorithms are RSA and EC (ECDH, ECIES). No issue or pull request mentions ML-KEM or post-quantum."
+  signature:
+    status: none
+    sources: ["https://github.com/kornelski/rust-security-framework/blob/v3.7.0/security-framework-sys/src/key.rs", "https://github.com/kornelski/rust-security-framework/issues?q=ML-KEM%20OR%20ML-DSA%20OR%20kyber%20OR%20dilithium%20OR%20quantum"]
+    note: "No ML-DSA or Dilithium in 3.7.0 or main: SecKey signatures are RSA (PKCS#1 v1.5, PSS) and ECDSA only. No issue or pull request mentions ML-DSA or post-quantum."
+  checked_at: 2026-11-11
+- library: rust/sequoia-openpgp
+  purls: [pkg:cargo/sequoia-openpgp]
+  kem:
+    status: available
+    since: "2.4.0"
+    apis: [sequoia_openpgp.packet.key.Key6.generate_mlkem768_x25519, sequoia_openpgp.packet.key.Key6.generate_mlkem1024_x448, sequoia_openpgp.cert.CipherSuite.MLDSA65_Ed25519, sequoia_openpgp.cert.CipherSuite.MLDSA87_Ed448, sequoia_openpgp.cert.CertBuilder.set_cipher_suite]
+    sources: ["https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/NEWS", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/Cargo.toml", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/crypto/backend/openssl/asymmetric.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/crypto/backend/nettle/asymmetric.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/build.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/cert/builder.rs", "https://crates.io/api/v1/crates/sequoia-openpgp"]
+    note: "RFC 9980 ML-KEM-768+X25519 and ML-KEM-1024+X448 need the `crypto-openssl` backend feature (with `default-features = false`) and OpenSSL 3.5 or later; the default Nettle backend lacks them. The `crypto-rust` backend also has them but is set aside, as it is not production-ready and needs `allow-experimental-crypto`."
+  signature:
+    status: available
+    since: "2.4.0"
+    apis: [sequoia_openpgp.packet.key.Key6.generate_mldsa65_ed25519, sequoia_openpgp.packet.key.Key6.generate_mldsa87_ed448, sequoia_openpgp.cert.CipherSuite.MLDSA65_Ed25519, sequoia_openpgp.cert.CipherSuite.MLDSA87_Ed448, sequoia_openpgp.cert.CertBuilder.set_cipher_suite]
+    sources: ["https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/NEWS", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/Cargo.toml", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/crypto/backend/openssl/asymmetric.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/crypto/backend/nettle/asymmetric.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/build.rs", "https://gitlab.com/sequoia-pgp/sequoia/-/blob/openpgp/v2.4.0/openpgp/src/cert/builder.rs", "https://crates.io/api/v1/crates/sequoia-openpgp"]
+    note: "RFC 9980 ML-DSA-65+Ed25519 and ML-DSA-87+Ed448 need the `crypto-openssl` backend feature (with `default-features = false`) and OpenSSL 3.5 or later; the default Nettle backend lacks them. The `crypto-rust` backend also has them but is set aside, as it is not production-ready and needs `allow-experimental-crypto`."
+  checked_at: 2026-11-11
+- library: rust/sha1
+  purls: ["pkg:cargo/sha1"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/sha2
+  purls: ["pkg:cargo/sha2"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/sha3
+  purls: ["pkg:cargo/sha3"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/sm2
+  purls: [pkg:cargo/sm2]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/elliptic-curves/blob/sm2/v0.14.0/sm2/README.md", "https://github.com/RustCrypto/elliptic-curves/issues?q=ML-KEM", "https://docs.rs/ml-kem/0.3.4/ml_kem/"]
+    note: "The crate offers SM2 public-key encryption (SM2PKE) and no ML-KEM or Kyber up to 0.14.0 (latest, 2026-10-02) or master, and no issue or PR in its repository mentions ML-KEM or post-quantum. RustCrypto ships ML-KEM in the separate ml-kem crate."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/elliptic-curves/blob/sm2/v0.14.0/sm2/README.md", "https://github.com/RustCrypto/elliptic-curves/issues?q=quantum", "https://docs.rs/ml-dsa/0.1.2/ml_dsa/"]
+    note: "The crate offers SM2DSA and no ML-DSA or Dilithium up to 0.14.0 (latest, 2026-10-02) or master, and no issue or PR in its repository mentions ML-DSA or post-quantum. RustCrypto ships ML-DSA in the separate ml-dsa crate."
+  checked_at: 2026-11-11
+- library: rust/sm3
+  purls: ["pkg:cargo/sm3"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/sm4
+  purls: ["pkg:cargo/sm4"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/snow
+  purls: [pkg:cargo/snow]
+  kem:
+    status: none
+    sources: ["https://github.com/mcginty/snow/blob/v0.10.0/Cargo.toml", "https://github.com/mcginty/snow/blob/v0.10.0/src/params/mod.rs", "https://github.com/mcginty/snow/blob/main/src/params/mod.rs", "https://github.com/mcginty/snow/pull/210"]
+    note: "No ML-KEM up to 0.10.0 (latest, 2025-07-19) or main: the only KEM is pre-standard Kyber1024 for Noise HFS, behind the non-default `hfs` and `use-pqcrypto-kyber1024` features. A user's PR adding ML-KEM-768 (#210, open since 2026-06) has no answer from the maintainer."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: rust/sodiumoxide
+  purls: [pkg:cargo/sodiumoxide]
+  kem:
+    status: none
+    sources: ["https://rustsec.org/advisories/RUSTSEC-2021-0137.html", "https://github.com/sodiumoxide/sodiumoxide", "https://docs.rs/sodiumoxide/0.2.7/sodiumoxide/crypto/index.html", "https://github.com/brndnmtthws/dryoc/releases/tag/v2.0.0"]
+    note: "sodiumoxide is deprecated (RUSTSEC-2021-0137) and its repository archived; the last release, 0.2.7 (2021-06-24), has no ML-KEM. The advisory names no direct fork but lists alternatives such as dryoc, which has ML-KEM-768 from 2.0.0, and libsodium-sys-stable."
+  signature:
+    status: none
+    sources: ["https://rustsec.org/advisories/RUSTSEC-2021-0137.html", "https://github.com/sodiumoxide/sodiumoxide", "https://docs.rs/sodiumoxide/0.2.7/sodiumoxide/crypto/index.html"]
+    note: "sodiumoxide is deprecated (RUSTSEC-2021-0137) and its repository archived; the last release, 0.2.7 (2021-06-24), has no ML-DSA. The advisory names no direct fork but lists alternatives such as dryoc and libsodium-sys-stable."
+  checked_at: 2026-11-11
+- library: rust/spki
+  purls: [pkg:cargo/spki]
+  kem:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/spki/v0.8.1/spki/README.md", "https://github.com/RustCrypto/formats/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in 0.8.1 (latest, 2026-10-05) or master; the crate is algorithm-agnostic, names no key algorithm itself, and no issue or PR plans ML-KEM for it."
+  signature:
+    status: none
+    sources: ["https://github.com/RustCrypto/formats/blob/spki/v0.8.1/spki/README.md", "https://github.com/RustCrypto/signatures/pull/891", "https://github.com/RustCrypto/formats/issues?q=ML-DSA"]
+    note: "No ML-DSA or Dilithium in 0.8.1 (latest, 2026-10-05) or master, and no issue or PR plans it for spki. ML-DSA public keys are encoded by the separate ml-dsa crate, which implements spki's traits itself."
+  checked_at: 2026-11-11
+- library: rust/ssh2
+  purls: [pkg:cargo/ssh2]
+  kem:
+    status: none
+    sources: ["https://docs.rs/ssh2/0.9.7/ssh2/struct.Session.html", "https://github.com/rust-lang/ssh2-rs/pull/374", "https://github.com/libssh2/libssh2/blob/a210464622240e589543ca848186decda225e3fa/src/openssl.h", "https://github.com/libssh2/libssh2/pull/1644", "https://github.com/libssh2/libssh2/releases", "https://github.com/rust-lang/ssh2-rs/issues?q=mlkem"]
+    note: "ssh2 names no ML-KEM; the key exchange is libssh2's, chosen by a string passed to Session::method_pref. ssh2 0.9.7 bundles an unreleased libssh2 master that negotiates mlkem768x25519-sha256 when built against OpenSSL 3.5 or later."
+  signature:
+    status: none
+    sources: ["https://docs.rs/ssh2/0.9.7/ssh2/enum.HostKeyType.html", "https://github.com/rust-lang/ssh2-rs/issues?q=ml-dsa"]
+    note: "No ML-DSA in ssh2 0.9.7 (latest), whose host key types are RSA, DSS, ECDSA and Ed25519, and no issue or pull request asks for it."
+  checked_at: 2026-11-11
+- library: rust/tfhe
+  purls: ["pkg:cargo/tfhe"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/thrussh
+  purls: ["pkg:cargo/thrussh"]
+  kem:
+    status: available
+    since: "0.44.0"
+    apis: ["thrussh.Preferred.DEFAULT_CLIENT", "thrussh.Preferred.DEFAULT_SERVER"]
+    sources: ["https://docs.rs/crate/thrussh/0.43.0/source/src/kex.rs", "https://docs.rs/crate/thrussh/0.43.0/source/src/negotiation.rs", "https://docs.rs/crate/thrussh/0.42.0/source/src/kex.rs", "https://docs.rs/crate/thrussh/0.44.0/source/src/kex.rs", "https://nest.pijul.com/pijul/thrussh:main/change"]
+    note: "Hybrid key exchange mlkem768x25519-sha256 (FIPS 203 ML-KEM-768 with X25519), in the default build and first in both default Preferred lists. 0.43.0 added it but encoded the shared secret wrongly, failing about half the handshakes with other implementations, and is set aside."
+  signature:
+    status: none
+    sources: ["https://docs.rs/crate/thrussh/0.49.0/source/src/negotiation.rs", "https://nest.pijul.com/pijul/thrussh/discussion"]
+    note: "No ML-DSA host key or signature in 0.49.0 (latest), only Ed25519, RSA and ECDSA, and no discussion on the project's Nest asks for it."
+  checked_at: 2026-11-11
+- library: rust/tokio-rustls
+  purls: [pkg:cargo/tokio-rustls]
+  kem:
+    status: none
+    sources: ["https://github.com/rustls/tokio-rustls/blob/v/0.26.6/Cargo.toml", "https://github.com/rustls/tokio-rustls/issues?q=ML-KEM%20OR%20mlkem%20OR%20quantum%20OR%20kyber", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.22"]
+    note: "No ML-KEM API in 0.26.6 (latest, 2026-09-28) or main, and no issue or PR asks for it: the handshake is done by its rustls dependency, configured through the rustls ClientConfig or ServerConfig the caller passes. rustls offers X25519MLKEM768 in its default aws-lc-rs provider since 0.23.22, which tokio-rustls 0.26 enables with its default aws_lc_rs feature."
+  signature:
+    status: none
+    sources: ["https://github.com/rustls/tokio-rustls/blob/v/0.26.6/Cargo.toml", "https://github.com/rustls/tokio-rustls/issues?q=ML-DSA%20OR%20mldsa%20OR%20dilithium%20OR%20quantum", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.44"]
+    note: "No ML-DSA API in 0.26.6 (latest, 2026-09-28) or main, and no issue or PR asks for it: certificates are signed and verified by its rustls dependency through the config the caller passes. rustls supports ML-DSA certificates in its default aws-lc-rs provider since 0.23.44."
+  checked_at: 2026-11-11
+- library: rust/totp-rs
+  purls: ["pkg:cargo/totp-rs"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/webpki
+  purls: [pkg:cargo/webpki]
+  kem:
+    status: not_applicable
+  signature:
+    status: none
+    sources: ["https://docs.rs/webpki/0.22.4/webpki/", "https://crates.io/api/v1/crates/webpki", "https://github.com/briansmith/webpki/pulls?q=is%3Apr%20ML-DSA%20OR%20dilithium%20OR%20quantum", "https://github.com/rustls/webpki/blob/v/0.103.16/README.md", "https://github.com/rustls/webpki/blob/v/0.103.16/src/lib.rs"]
+    note: "No ML-DSA in 0.22.4 (latest, 2023-10-09) or main: it verifies only RSA, ECDSA P-256/P-384 and Ed25519 signatures through ring, and no pull request mentions ML-DSA (issues are disabled). Move to its maintained fork rustls-webpki (pkg:cargo/rustls-webpki), which verifies ML-DSA-44/65/87 in 0.103.16 with its non-default aws-lc-rs feature."
+  checked_at: 2026-11-11
+- library: rust/whirlpool
+  purls: ["pkg:cargo/whirlpool"]
+  kem:
+    status: not_applicable
+  signature:
+    status: not_applicable
+- library: rust/x25519-dalek
+  purls: [pkg:cargo/x25519-dalek]
+  kem:
+    status: none
+    sources: ["https://github.com/dalek-cryptography/curve25519-dalek/tree/x25519-3.0.0/x25519-dalek", "https://github.com/dalek-cryptography/curve25519-dalek/issues?q=ML-KEM", "https://docs.rs/ml-kem/0.3.4/ml_kem/"]
+    note: "No ML-KEM or X25519MLKEM768 in x25519-dalek 3.0.0 (latest) nor on main, and no issue or PR plans it. ML-KEM in Rust is the separate RustCrypto ml-kem crate (pkg:cargo/ml-kem), another library."
+  signature:
+    status: not_applicable
+  checked_at: 2026-11-11
+- library: rust/x509-parser
+  purls: [pkg:cargo/x509-parser]
+  kem:
+    status: none
+    sources: ["https://github.com/rusticata/x509-parser/blob/33b15d2db5a19b15c17bb15fa57b08691316ee95/src/public_key.rs", "https://github.com/rusticata/x509-parser/issues?q=ML-KEM"]
+    note: "No ML-KEM or Kyber in 0.18.1 (latest, 2026-02-05) or master; parsed public keys are RSA, EC, DSA and GOST, anything else is Unknown, and no issue or PR plans ML-KEM."
+  signature:
+    status: none
+    sources: ["https://github.com/rusticata/x509-parser/blob/33b15d2db5a19b15c17bb15fa57b08691316ee95/src/public_key.rs", "https://github.com/rusticata/x509-parser/blob/33b15d2db5a19b15c17bb15fa57b08691316ee95/src/verify.rs", "https://github.com/rusticata/x509-parser/issues?q=ML-DSA"]
+    note: "No ML-DSA or Dilithium in 0.18.1 (latest, 2026-02-05) or master: an ML-DSA key parses only as Unknown and the optional verify features map no ML-DSA algorithm. No issue or PR mentions ML-DSA."
   checked_at: 2026-11-11
 - library: typescript/crypto
   purls: []
