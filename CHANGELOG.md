@@ -8,6 +8,10 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+### Fixed
+
+- A scoped npm purl spelled with a literal `@` (`pkg:npm/@scope/name`) now finds its `libraries.yaml` entry.
+
 ## [1.2.0] - 2026-11-12
 
 ### Added
