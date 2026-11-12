@@ -8,6 +8,15 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-12
+
+### Fixed
+
+- A dependency purl in another case than `libraries.yaml`'s now finds its entry. A Go purl with a
+  lowercased namespace (`github.com/protonmail/go-crypto`) was reported `blocked` although the library
+  supports ML-KEM and ML-DSA.
+- A dependency with no purl now reads "PQC support of X is unknown (no purl)" instead of claiming no PQC.
+
 ## [1.2.1] - 2026-11-12
 
 ### Fixed
@@ -52,7 +61,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.0.0...v1.1.0
