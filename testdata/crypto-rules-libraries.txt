@@ -103,6 +103,7 @@ go/utls	pkg:golang/github.com/refraction-networking/utls
 go/vault-sdk	pkg:golang/github.com/hashicorp/vault/sdk
 go/wireguard	pkg:golang/golang.zx2c4.com/wireguard
 go/xcrypto	pkg:golang/golang.org/x/crypto
+go/xsys	pkg:golang/golang.org/x/sys
 java/aerogear-otp-java	pkg:maven/org.jboss.aerogear/aerogear-otp-java
 java/apache-sshd	pkg:maven/org.apache.sshd/sshd-common,pkg:maven/org.apache.sshd/sshd-core
 java/argon2-jvm	pkg:maven/de.mkammerer/argon2-jvm
