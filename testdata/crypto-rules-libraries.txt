@@ -103,8 +103,10 @@ go/utls	pkg:golang/github.com/refraction-networking/utls
 go/vault-sdk	pkg:golang/github.com/hashicorp/vault/sdk
 go/wireguard	pkg:golang/golang.zx2c4.com/wireguard
 go/xcrypto	pkg:golang/golang.org/x/crypto
+go/xsys	pkg:golang/golang.org/x/sys
 java/aerogear-otp-java	pkg:maven/org.jboss.aerogear/aerogear-otp-java
 java/apache-sshd	pkg:maven/org.apache.sshd/sshd-common,pkg:maven/org.apache.sshd/sshd-core
+java/apksig	pkg:maven/com.android.tools.build/apksig
 java/argon2-jvm	pkg:maven/de.mkammerer/argon2-jvm
 java/aws-kms	pkg:maven/software.amazon.awssdk/kms
 java/aws-kms-v1	pkg:maven/com.amazonaws/aws-java-sdk-kms
@@ -122,6 +124,7 @@ java/fusionauth-jwt	pkg:maven/io.fusionauth/fusionauth-jwt
 java/gcp-kms	pkg:maven/com.google.cloud/google-cloud-kms
 java/googleauth	pkg:maven/com.warrenstrange/googleauth
 java/hutool-crypto	pkg:maven/cn.hutool/hutool-crypto
+java/hutool-jwt	pkg:maven/cn.hutool/hutool-jwt
 java/i2p-eddsa	pkg:maven/net.i2p.crypto/eddsa
 java/jasypt	pkg:maven/org.jasypt/jasypt
 java/java-jwt	pkg:maven/com.auth0/java-jwt
@@ -379,6 +382,7 @@ rust/sequoia-openpgp	pkg:cargo/sequoia-openpgp
 rust/sha1	pkg:cargo/sha1
 rust/sha2	pkg:cargo/sha2
 rust/sha3	pkg:cargo/sha3
+rust/siphasher	pkg:cargo/siphasher
 rust/sm2	pkg:cargo/sm2
 rust/sm3	pkg:cargo/sm3
 rust/sm4	pkg:cargo/sm4
