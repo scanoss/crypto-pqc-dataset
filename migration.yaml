@@ -30,7 +30,7 @@ sizes:
   - { algorithm: Ed25519, item: signature, bytes: 64, citation: "RFC 8032, Section 5.1.6" }
   - { algorithm: RSA-2048, item: signature, bytes: 256, citation: "RFC 8017, Section 8.2.1 — the signature is k octets, the length of the modulus" }
 
-# crypto_rules libraries that implement JOSE/JWT, for size_risk "jwt". The
+# Rule set libraries that implement JOSE/JWT, for size_risk "jwt". The
 # citation is the library's documentation.
 jwt_libraries:
   - { library: c/libjwt, purls: ["pkg:github/benmcollins/libjwt"], citation: "https://github.com/benmcollins/libjwt/blob/HEAD/README.md" }

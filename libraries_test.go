@@ -59,7 +59,7 @@ func sorted(s []string) []string {
 	return out
 }
 
-// Every crypto_rules library has an entry, or is listed as pending.
+// Every library of the rule set has an entry, or is listed as pending.
 func TestLibrariesCoverage(t *testing.T) {
 	snapshot := readSnapshot(t)
 	pending := map[string]bool{}
