@@ -137,7 +137,7 @@ classified. That vocabulary, in `testdata/cyclonedx-1.7-algorithm-families.txt`,
 `algorithmFamily` enumeration of the CycloneDX 1.7 specification.
 
 The migration path reads [`migration.yaml`](migration.yaml): the path for a known primitive and
-operation, cited key and signature sizes, and the `crypto_rules` libraries that implement JOSE/JWT,
+operation, cited key and signature sizes, and the rule set's libraries that implement JOSE/JWT,
 with their purls. Every row cites its source.
 
 ### Migration path
@@ -160,7 +160,7 @@ the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a 
 
 ### PQC support per library
 
-[`libraries.yaml`](libraries.yaml) says, for each `crypto_rules` library, whether it offers ML-KEM
+[`libraries.yaml`](libraries.yaml) says, for each library the detection rule set covers, whether it offers ML-KEM
 (`kem`) and ML-DSA (`signature`). It feeds the `upgrade` and `blocked` migration paths.
 
 | Key | Meaning |
@@ -173,7 +173,7 @@ the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a 
 
 Tests keep it complete and current:
 
-- `testdata/crypto-rules-libraries.txt` lists the `crypto_rules` libraries: id and purls.
+- `testdata/crypto-rules-libraries.txt` lists the rule set's libraries: id and purls.
 - Every library in that list has an entry, or is listed in `testdata/libraries-pending.txt`, and
   every entry's purls match the list.
 - A `planned` or `none` entry checked more than three months ago fails, so it is researched again.

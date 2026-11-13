@@ -17,7 +17,7 @@ type Finding struct {
 	Primitive string // metadata algorithmPrimitive
 	Operation string // metadata operation
 	// Source is "direct" for the project's code, "dependency" (scan output) or
-	// "indirect" (scanoss.api) for code inside a dependency.
+	// "indirect" (API responses) for code inside a dependency.
 	Source            string
 	DependencyModule  string
 	DependencyPurl    string // with or without a version
