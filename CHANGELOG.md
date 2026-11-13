@@ -8,12 +8,12 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-13
+
 ### Added
 
-- `MigrationPriority` ranks a quantum-vulnerable finding `P1`, `P2` or `P3` from its reachability and
-  use, with a stable rule code, a reason and the family's earliest deadline; `Priority.Compare` orders a
-  migration plan, and `Reachability.Valid` flags a reachability value outside
-  `reachable`, `unreachable` and `unknown`.
+- `MigrationPriority` ranks a quantum-vulnerable finding `P1`, `P2` or `P3` by reachability and use, with a
+  rule code, reason and deadline; `Priority.Compare` orders a migration plan.
 
 ## [1.2.2] - 2026-11-12
 
@@ -68,7 +68,8 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   families.
 - `Classify` also reads a certificate's `certificateAlgorithm` and `signatureAlgorithm`.
 
-[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/scanoss/crypto-pqc-dataset/compare/v1.1.0...v1.2.0
