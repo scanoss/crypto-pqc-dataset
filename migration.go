@@ -133,12 +133,20 @@ func matchPath(ref *reference, f Finding) (pathRule, bool) {
 	return pathRule{}, false
 }
 
+// The algorithmPrimitive values of a finding that decide its use.
+const (
+	primitiveSignature = "signature"
+	primitiveKeyAgree  = "key-agree"
+	primitiveKEM       = "kem"
+	primitivePKE       = "pke"
+)
+
 // supportKind is the post-quantum primitive that replaces the finding's use.
 func supportKind(f Finding) SupportKind {
 	switch f.Primitive {
-	case "signature":
+	case primitiveSignature:
 		return SupportSignature
-	case "key-agree", "pke", "kem":
+	case primitiveKeyAgree, primitivePKE, primitiveKEM:
 		return SupportKEM
 	}
 	if family, _, ok := Resolve(f.Family); ok && family.Kind == KindSignature {

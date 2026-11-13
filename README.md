@@ -158,6 +158,28 @@ the family `kind`, with `inferred` set. `size_risk` is `jwt` for a use inside a 
 `ComponentPath` returns a component's worst path and the count per path. Findings that are not
 `vulnerable` get no path.
 
+### Migration priority
+
+`MigrationPriority` says how soon one quantum-vulnerable finding should migrate, from whether the
+project's code reaches it and what the finding is used for:
+
+| Level | Rule | Meaning |
+|---|---|---|
+| `P1` | `reachable_key_exchange` | Reachable key exchange or encryption: data recorded today can be decrypted later. |
+| `P1` | `reachable_use_unknown` | Reachable, but the finding does not tell its use: ranked as key exchange. |
+| `P2` | `reachable_signature` | Reachable signature. |
+| `P3` | `unreachable` | Not reached by the project's code. |
+| `P3` | `reachability_unknown` | Reachability unknown, or a value outside `reachable` / `unreachable` / `unknown`. |
+
+The use comes from the primitive (`signature`; `key-agree`, `kem`); for `pke` or any other
+primitive, from the operation (`sign`, `verify`; `encrypt`, `decrypt`, `encapsulate`,
+`decapsulate`); else from the family `kind`. A `dual` or unknown family with neither is an unknown
+use. `rule` is a stable code for consumers that translate the English `reason`. The priority also
+carries the family's earliest deadline year and the migration path. `Priority.Compare` orders a
+migration plan: level, then the closest deadline (none last), then the cheapest path.
+`Reachability.Valid` reports whether a value is `reachable`, `unreachable` or `unknown`. Findings
+that are not `vulnerable` get no priority.
+
 ### PQC support per library
 
 [`libraries.yaml`](libraries.yaml) says, for each `crypto_rules` library, whether it offers ML-KEM

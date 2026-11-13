@@ -8,6 +8,13 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+### Added
+
+- `MigrationPriority` ranks a quantum-vulnerable finding `P1`, `P2` or `P3` from its reachability and
+  use, with a stable rule code, a reason and the family's earliest deadline; `Priority.Compare` orders a
+  migration plan, and `Reachability.Valid` flags a reachability value outside
+  `reachable`, `unreachable` and `unknown`.
+
 ## [1.2.2] - 2026-11-12
 
 ### Fixed

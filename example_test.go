@@ -5,6 +5,7 @@ package pqcdataset_test
 
 import (
 	"fmt"
+	"slices"
 
 	pqcdataset "github.com/scanoss/crypto-pqc-dataset"
 )
@@ -49,4 +50,31 @@ func ExampleResolve() {
 	// rsassa_pss RSA 0 true
 	// RSA-2048 RSA 2048 true
 	// RIPEMD-128  0 false
+}
+
+func ExampleMigrationPriority() {
+	f := pqcdataset.Finding{Status: pqcdataset.Vulnerable, Family: "ECDH", Primitive: "key-agree", Source: "direct"}
+	m, _ := pqcdataset.MigrationPath(f, nil)
+	p, _ := pqcdataset.MigrationPriority(f, m, pqcdataset.ReachabilityReachable)
+	fmt.Println(p.Level, p.Rule, p.Path)
+	fmt.Println(p.Reason)
+	// Output:
+	// P1 reachable_key_exchange redesign
+	// reachable key exchange or encryption: recorded data can be decrypted later
+}
+
+func ExamplePriority_Compare() {
+	plan := []pqcdataset.Priority{
+		{Level: pqcdataset.PriorityLevelP3, Path: pqcdataset.Upgrade},
+		{Level: pqcdataset.PriorityLevelP1, DeadlineYear: 2030, Path: pqcdataset.Redesign},
+		{Level: pqcdataset.PriorityLevelP1, DeadlineYear: 2030, Path: pqcdataset.Upgrade},
+	}
+	slices.SortFunc(plan, pqcdataset.Priority.Compare)
+	for _, p := range plan {
+		fmt.Println(p.Level, p.Path)
+	}
+	// Output:
+	// P1 upgrade
+	// P1 redesign
+	// P3 upgrade
 }
