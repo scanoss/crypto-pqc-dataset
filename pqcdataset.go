@@ -279,6 +279,14 @@ var tlsGroupFamilies = map[string]string{
 	"secp256r1": "ECDH", "secp384r1": "ECDH", "secp521r1": "ECDH",
 	"ffdhe2048": "DH", "ffdhe3072": "DH", "ffdhe4096": "DH",
 	"ffdhe6144": "DH", "ffdhe8192": "DH",
+	// OpenSSL's default list also names SM2 as a TLS group (RFC 8998) and the
+	// SM2+ML-KEM hybrid, which has no family of its own and lands in the
+	// generic Hybrid family. The GOST groups (GC256A..GC512C, RFC 9189) are
+	// deliberately NOT mapped: the dataset's GOST family is the symmetric
+	// cipher one (not_applicable), which would be the wrong verdict for a key
+	// agreement — and a stock OpenSSL never offers them anyway (the default
+	// list is filtered by what the loaded providers support).
+	"curvesm2": "SM2", "curvesm2mlkem768": "Hybrid",
 }
 
 // ResolveTLSGroup resolves an IANA TLS supported-group spelling — a
