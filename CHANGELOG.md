@@ -8,6 +8,23 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
 
 ## [Unreleased]
 
+### Added
+
+- `tls_default_groups` in `libraries.yaml`: per-version default TLS key-exchange
+  groups (IANA spellings, newest-first, every row cited), with
+  `DefaultTLSGroups(purlOrID, version)` answering the newest row the version
+  reaches — by purl or by library id — and nothing below the oldest row. First
+  data: go/crypto, rust/rustls, c/openssl, c/aws-lc and java/bouncycastle, each
+  row verified against a tagged upstream source. python/ssl carries no rows (its
+  defaults are the linked OpenSSL's) and java/jca none either (keyed by a JDK
+  version no scan captures).
+- `ResolveTLSGroup`: resolves an IANA TLS supported-group spelling in its
+  key-exchange context, so `secp256r1` (and the `prime256v1`/`P-256` spellings
+  OpenSSL also accepts) answers ECDH/key-agreement instead of the dual-use EC
+  family, and the `ffdhe*` groups answer DH instead of nothing. The GOST TLS
+  groups stay unresolved on purpose; `curveSM2` keeps the dual kind as a
+  documented limitation until the dataset grows an SM2 key-agreement family.
+
 ## [1.3.0] - 2026-11-13
 
 ### Added

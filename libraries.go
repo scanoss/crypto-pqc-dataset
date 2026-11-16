@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -140,8 +141,21 @@ func purlBase(purl string) string {
 }
 
 func sameSupport(a, b *Library) bool {
-	return a.KEM.Status == b.KEM.Status && a.KEM.Since == b.KEM.Since &&
-		a.Signature.Status == b.Signature.Status && a.Signature.Since == b.Signature.Since
+	if a.KEM.Status != b.KEM.Status || a.KEM.Since != b.KEM.Since ||
+		a.Signature.Status != b.Signature.Status || a.Signature.Since != b.Signature.Since ||
+		len(a.TLSDefaultGroups) != len(b.TLSDefaultGroups) {
+		return false
+	}
+	// Same reason as KEM/Signature: two libraries backed by one purl must
+	// agree, or DefaultTLSGroups by purl silently answers for whichever
+	// entry was parsed last.
+	for i := range a.TLSDefaultGroups {
+		x, y := a.TLSDefaultGroups[i], b.TLSDefaultGroups[i]
+		if x.Since != y.Since || !slices.Equal(x.Groups, y.Groups) {
+			return false
+		}
+	}
+	return true
 }
 
 // DefaultTLSGroups returns the default TLS key-exchange groups a library
@@ -154,7 +168,7 @@ func (l *Libraries) DefaultTLSGroups(purlOrID, version string) ([]string, bool) 
 	e := l.byPurl[strings.ToLower(purlBase(purlOrID))]
 	if e == nil {
 		for i := range l.entries {
-			if l.entries[i].Library == purlOrID {
+			if strings.EqualFold(l.entries[i].Library, purlOrID) {
 				e = &l.entries[i]
 				break
 			}
@@ -223,6 +237,11 @@ func (e *Library) validate() error {
 		}
 		if len(row.Sources) == 0 {
 			return fmt.Errorf("tls_default_groups[%d]: no sources", i)
+		}
+		for _, src := range row.Sources {
+			if !strings.HasPrefix(src, "https://") && !strings.HasPrefix(src, "http://") {
+				return fmt.Errorf("tls_default_groups[%d]: source %q is not a URL", i, src)
+			}
 		}
 		// Newest-first and strictly so: lookup answers with the first row the
 		// version reaches, and two rows with one Since would shadow each other.
