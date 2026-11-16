@@ -270,6 +270,34 @@ func (f *Family) clone() Family {
 	return c
 }
 
+// tlsGroupFamilies overrides the family of the IANA TLS supported-group
+// spellings whose bare name resolves to the wrong use: a TLS group is by
+// definition a key exchange, but "secp256r1" alone is also a signing curve
+// and resolves to the dual-use EC family (whose migration path is never the
+// cheap one), and the finite-field ffdhe groups resolve to nothing at all.
+var tlsGroupFamilies = map[string]string{
+	"secp256r1": "ECDH", "secp384r1": "ECDH", "secp521r1": "ECDH",
+	"ffdhe2048": "DH", "ffdhe3072": "DH", "ffdhe4096": "DH",
+	"ffdhe6144": "DH", "ffdhe8192": "DH",
+}
+
+// ResolveTLSGroup resolves an IANA TLS supported-group spelling — a
+// tls_default_groups row's group, or a group a rule extracted from code — to
+// its family, in its own context: a TLS group is a key exchange, so the
+// ambiguous curve names resolve to ECDH (kind key-agreement) and the ffdhe
+// groups to DH, instead of what the bare spelling would resolve to. Every
+// other spelling (x25519, x448, the hybrids, pure ML-KEM) already resolves
+// correctly and is delegated to Resolve; an unknown name is a miss, never a
+// guess.
+func ResolveTLSGroup(name string) (Family, bool) {
+	if fam, ok := tlsGroupFamilies[strings.ToLower(strings.TrimSpace(name))]; ok {
+		f, _, resolved := Resolve(fam)
+		return f, resolved
+	}
+	f, _, resolved := Resolve(name)
+	return f, resolved
+}
+
 // StatusOf returns the PQC status of a spelling, Unassessed when it does not
 // resolve. Unlike Classify, it does not split compound names such as "SHA256-RSA".
 func StatusOf(spelling string) Status {
