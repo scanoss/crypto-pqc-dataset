@@ -5,6 +5,7 @@ package pqcdataset
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"slices"
 	"strings"
@@ -304,5 +305,66 @@ func TestParseLibrariesRejectsCaseClashes(t *testing.T) {
 `))
 	if err == nil {
 		t.Error("two libraries sharing a purl in different case parsed without error")
+	}
+}
+
+func TestDefaultTLSGroups(t *testing.T) {
+	libs := DefaultLibraries()
+
+	// A standard library has no purl; the lookup answers by library id, and
+	// the newest row the version reaches wins.
+	groups, ok := libs.DefaultTLSGroups("go/crypto", "1.25.3")
+	if !ok || groups[0] != "X25519MLKEM768" {
+		t.Fatalf("go/crypto@1.25.3 = %v, %v; want the 1.24 row first-group X25519MLKEM768", groups, ok)
+	}
+	if groups, ok = libs.DefaultTLSGroups("go/crypto", "1.23.1"); !ok || groups[0] != "X25519Kyber768Draft00" {
+		t.Fatalf("go/crypto@1.23.1 = %v, %v; want the 1.23 row", groups, ok)
+	}
+	// A version older than every row gets no answer: the data only speaks for
+	// versions it can cite.
+	if _, ok = libs.DefaultTLSGroups("go/crypto", "1.22.0"); ok {
+		t.Fatal("go/crypto@1.22.0 answered; want no answer below the oldest row")
+	}
+
+	// By purl, version spelled with or without v, qualifiers ignored.
+	if groups, ok = libs.DefaultTLSGroups("pkg:cargo/rustls@0.23.30", "0.23.30"); !ok || groups[0] != "X25519MLKEM768" {
+		t.Fatalf("rustls@0.23.30 = %v, %v; want the 0.23.27 row", groups, ok)
+	}
+	if groups, ok = libs.DefaultTLSGroups("pkg:cargo/rustls", "0.23.25"); !ok || groups[len(groups)-1] != "X25519MLKEM768" {
+		t.Fatalf("rustls@0.23.25 = %v, %v; want the 0.23.22 row, hybrid last", groups, ok)
+	}
+
+	// No entry, or an entry without rows, is a clean miss.
+	if _, ok = libs.DefaultTLSGroups("pkg:cargo/does-not-exist", "1.0.0"); ok {
+		t.Fatal("unknown purl answered")
+	}
+	if _, ok = libs.DefaultTLSGroups("pkg:cargo/ring", "0.17.0"); ok {
+		t.Fatal("an entry without tls_default_groups rows answered")
+	}
+
+	// The returned slice is a copy: mutating it must not corrupt the data.
+	groups, _ = libs.DefaultTLSGroups("go/crypto", "1.24.0")
+	groups[0] = "mutated"
+	if again, _ := libs.DefaultTLSGroups("go/crypto", "1.24.0"); again[0] != "X25519MLKEM768" {
+		t.Fatal("DefaultTLSGroups returned its backing array")
+	}
+}
+
+func TestTLSDefaultGroupsValidation(t *testing.T) {
+	base := `- library: t/l
+  purls: [pkg:cargo/t]
+  kem: {status: none, sources: ["https://x"]}
+  signature: {status: none, sources: ["https://x"]}
+  tls_default_groups:
+%s`
+	for name, rows := range map[string]string{
+		"bad version":    "    - {since: \"not-a-version\", groups: [x25519], sources: [\"https://x\"]}\n",
+		"no groups":      "    - {since: \"1.0\", groups: [], sources: [\"https://x\"]}\n",
+		"no sources":     "    - {since: \"1.0\", groups: [x25519], sources: []}\n",
+		"not descending": "    - {since: \"1.0\", groups: [x25519], sources: [\"https://x\"]}\n    - {since: \"2.0\", groups: [x25519], sources: [\"https://x\"]}\n",
+	} {
+		if _, err := ParseLibraries([]byte(fmt.Sprintf(base, rows))); err == nil {
+			t.Errorf("%s: parsed; want an error", name)
+		}
 	}
 }

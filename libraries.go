@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	modsemver "golang.org/x/mod/semver"
+
 	"go.yaml.in/yaml/v3"
 )
 
@@ -45,14 +47,28 @@ type Support struct {
 	Note    string        `yaml:"note"`
 }
 
+// TLSDefaultGroups is one row of a library's default TLS key-exchange groups:
+// the groups a version from Since (inclusive) offers when the code configures
+// none, spelled as the IANA TLS Supported Groups registry spells them
+// (x25519, secp256r1, X25519MLKEM768). Rows are listed newest-first and the
+// first row whose Since the version reaches answers, so a version older than
+// every row has no answer: the entry only speaks for versions it can cite.
+type TLSDefaultGroups struct {
+	Since   string   `yaml:"since"`
+	Groups  []string `yaml:"groups"`
+	Sources []string `yaml:"sources"`
+	Note    string   `yaml:"note"`
+}
+
 // Library is one libraries.yaml entry. A library published as several
 // packages lists every purl.
 type Library struct {
-	Library   string   `yaml:"library"`
-	Purls     []string `yaml:"purls"`
-	KEM       Support  `yaml:"kem"`
-	Signature Support  `yaml:"signature"`
-	CheckedAt string   `yaml:"checked_at"`
+	Library          string             `yaml:"library"`
+	Purls            []string           `yaml:"purls"`
+	KEM              Support            `yaml:"kem"`
+	Signature        Support            `yaml:"signature"`
+	TLSDefaultGroups []TLSDefaultGroups `yaml:"tls_default_groups"`
+	CheckedAt        string             `yaml:"checked_at"`
 }
 
 // Libraries is the PQC support of each library, looked up by purl.
@@ -128,6 +144,33 @@ func sameSupport(a, b *Library) bool {
 		a.Signature.Status == b.Signature.Status && a.Signature.Since == b.Signature.Since
 }
 
+// DefaultTLSGroups returns the default TLS key-exchange groups a library
+// version offers when the code configures none, looked up by purl or by the
+// entry's library id (a standard library such as go/crypto has no purl). The
+// second result is false when the library has no entry, carries no
+// tls_default_groups rows, or the version predates every row — the data only
+// speaks for versions it can cite.
+func (l *Libraries) DefaultTLSGroups(purlOrID, version string) ([]string, bool) {
+	e := l.byPurl[strings.ToLower(purlBase(purlOrID))]
+	if e == nil {
+		for i := range l.entries {
+			if l.entries[i].Library == purlOrID {
+				e = &l.entries[i]
+				break
+			}
+		}
+	}
+	if e == nil {
+		return nil, false
+	}
+	for _, row := range e.TLSDefaultGroups {
+		if versionAtLeast(version, row.Since) {
+			return append([]string(nil), row.Groups...), true
+		}
+	}
+	return nil, false
+}
+
 // Entries returns a copy of every entry.
 func (l *Libraries) Entries() []Library {
 	return append([]Library(nil), l.entries...)
@@ -169,6 +212,22 @@ func (e *Library) validate() error {
 	for kind, s := range map[SupportKind]Support{SupportKEM: e.KEM, SupportSignature: e.Signature} {
 		if err := s.validate(e.CheckedAt); err != nil {
 			return fmt.Errorf("%s: %w", kind, err)
+		}
+	}
+	for i, row := range e.TLSDefaultGroups {
+		if !modsemver.IsValid(canonicalVersion(row.Since)) {
+			return fmt.Errorf("tls_default_groups[%d]: since %q is not a version", i, row.Since)
+		}
+		if len(row.Groups) == 0 {
+			return fmt.Errorf("tls_default_groups[%d]: no groups", i)
+		}
+		if len(row.Sources) == 0 {
+			return fmt.Errorf("tls_default_groups[%d]: no sources", i)
+		}
+		// Newest-first and strictly so: lookup answers with the first row the
+		// version reaches, and two rows with one Since would shadow each other.
+		if i > 0 && versionAtLeast(row.Since, e.TLSDefaultGroups[i-1].Since) {
+			return fmt.Errorf("tls_default_groups[%d]: since %q is not older than the row above (%q); list rows newest-first", i, row.Since, e.TLSDefaultGroups[i-1].Since)
 		}
 	}
 	return nil

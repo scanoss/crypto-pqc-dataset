@@ -886,6 +886,15 @@
     apis: [mldsa.GenerateKey, mldsa.MLDSA44, mldsa.MLDSA65, mldsa.MLDSA87, mldsa.NewPrivateKey, mldsa.NewPublicKey, mldsa.PrivateKey.Sign, mldsa.PrivateKey.SignDeterministic, mldsa.Verify, tls.MLDSA44, tls.MLDSA65, tls.MLDSA87, x509.MLDSA44, x509.MLDSA65, x509.MLDSA87]
     sources: ["https://go.dev/doc/go1.27", "https://pkg.go.dev/crypto/mldsa"]
     note: "Go 1.27 also added ML-DSA keys and signatures to crypto/x509 and ML-DSA SignatureScheme values for TLS 1.3 in crypto/tls."
+  tls_default_groups:
+    - since: "1.24"
+      groups: [X25519MLKEM768, x25519, secp256r1, secp384r1, secp521r1]
+      sources: ["https://go.dev/doc/go1.24", "https://github.com/golang/go/blob/go1.26.0/src/crypto/tls/defaults.go"]
+      note: "defaultCurvePreferences, what a nil Config.CurvePreferences offers; GODEBUG tlsmlkem=0 drops the hybrid. Verified in the go1.26.0 source: the hybrids added later (SecP256r1MLKEM768, SecP384r1MLKEM1024, MLKEM1024) are supported but NOT in the default preferences."
+    - since: "1.23"
+      groups: [X25519Kyber768Draft00, x25519, secp256r1, secp384r1, secp521r1]
+      sources: ["https://go.dev/doc/go1.23", "https://go.dev/doc/go1.24"]
+      note: "The pre-standard X25519Kyber768Draft00, enabled by default (GODEBUG tlskyber=0 drops it); 1.24 replaced it with X25519MLKEM768. Earlier versions' defaults predate this entry and get no answer."
   checked_at: 2026-11-11
 - library: go/crypto11
   purls: ["pkg:golang/github.com/ThalesIgnite/crypto11"]
@@ -4219,6 +4228,19 @@
     apis: [rustls.SignatureScheme.ML_DSA_44, rustls.SignatureScheme.ML_DSA_65, rustls.SignatureScheme.ML_DSA_87, rustls.crypto.aws_lc_rs.sign.any_supported_type, rustls.crypto.aws_lc_rs.default_provider]
     sources: ["https://github.com/rustls/rustls/releases/tag/v%2F0.23.44", "https://github.com/rustls/rustls/blob/v/0.23.44/rustls/src/crypto/aws_lc_rs/sign.rs", "https://docs.rs/rustls/0.23.44/rustls/enum.SignatureScheme.html", "https://github.com/rustls/rustls/releases/tag/v%2F0.23.29"]
     note: "ML-DSA certificates (signing and verification) in the default aws-lc-rs provider; 0.23.29 to 0.23.43 only defined the SignatureScheme codepoints for external providers. The ring provider has no ML-DSA."
+  tls_default_groups:
+    - since: "0.23.27"
+      groups: [X25519MLKEM768, x25519, secp256r1, secp384r1]
+      sources: ["https://github.com/rustls/rustls/releases/tag/v%2F0.23.27", "https://github.com/rustls/rustls/blob/v/0.23.44/rustls/src/crypto/aws_lc_rs/mod.rs"]
+      note: "DEFAULT_KX_GROUPS of the aws-lc-rs provider (the default Cargo feature), with prefer-post-quantum on by default since 0.23.27: the hybrid offered first. Verified in the 0.23.44 crate source. The optional ring provider stays classical ([x25519, secp256r1, secp384r1]); a consumer that swaps providers or features diverges from these rows."
+    - since: "0.23.22"
+      groups: [x25519, secp256r1, secp384r1, X25519MLKEM768]
+      sources: ["https://github.com/rustls/rustls/releases/tag/v%2F0.23.22"]
+      note: "The hybrid enters the aws-lc-rs DEFAULT_KX_GROUPS, offered last, until prefer-post-quantum became a default feature in 0.23.27."
+    - since: "0.23.0"
+      groups: [x25519, secp256r1, secp384r1]
+      sources: ["https://docs.rs/rustls/0.23.0/rustls/crypto/aws_lc_rs/constant.DEFAULT_KX_GROUPS.html"]
+      note: "Classical only, both providers."
   checked_at: 2026-11-11
 - library: rust/rustls-native-certs
   purls: [pkg:cargo/rustls-native-certs]
