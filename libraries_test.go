@@ -313,7 +313,7 @@ func TestDefaultTLSGroups(t *testing.T) {
 
 	// A standard library has no purl; the lookup answers by library id, and
 	// the newest row the version reaches wins.
-	groups, ok := libs.DefaultTLSGroups("go/crypto", "1.25.3")
+	groups, ok := libs.DefaultTLSGroups("Go/Crypto", "1.25.3") // the id lookup is case-insensitive, like the purl one
 	if !ok || groups[0] != "X25519MLKEM768" {
 		t.Fatalf("go/crypto@1.25.3 = %v, %v; want the 1.24 row first-group X25519MLKEM768", groups, ok)
 	}
@@ -351,21 +351,53 @@ func TestDefaultTLSGroups(t *testing.T) {
 }
 
 func TestTLSDefaultGroupsValidation(t *testing.T) {
+	// The base entry must be valid on its own, or every case below fails for
+	// an unrelated reason and this test gates nothing.
 	base := `- library: t/l
   purls: [pkg:cargo/t]
   kem: {status: none, sources: ["https://x"]}
   signature: {status: none, sources: ["https://x"]}
+  checked_at: 2026-01-01
   tls_default_groups:
 %s`
-	for name, rows := range map[string]string{
-		"bad version":    "    - {since: \"not-a-version\", groups: [x25519], sources: [\"https://x\"]}\n",
-		"no groups":      "    - {since: \"1.0\", groups: [], sources: [\"https://x\"]}\n",
-		"no sources":     "    - {since: \"1.0\", groups: [x25519], sources: []}\n",
-		"not descending": "    - {since: \"1.0\", groups: [x25519], sources: [\"https://x\"]}\n    - {since: \"2.0\", groups: [x25519], sources: [\"https://x\"]}\n",
+	if _, err := ParseLibraries([]byte(fmt.Sprintf(base, "    - {since: \"1.0\", groups: [x25519], sources: [\"https://x\"]}\n"))); err != nil {
+		t.Fatalf("the base entry itself does not parse (%v); every case below would fail for the wrong reason", err)
+	}
+	for name, c := range map[string]struct{ rows, want string }{
+		"bad version":    {"    - {since: \"not-a-version\", groups: [x25519], sources: [\"https://x\"]}\n", "is not a version"},
+		"no groups":      {"    - {since: \"1.0\", groups: [], sources: [\"https://x\"]}\n", "no groups"},
+		"no sources":     {"    - {since: \"1.0\", groups: [x25519], sources: []}\n", "no sources"},
+		"source not URL": {"    - {since: \"1.0\", groups: [x25519], sources: [\"not a url\"]}\n", "is not a URL"},
+		"not descending": {"    - {since: \"1.0\", groups: [x25519], sources: [\"https://x\"]}\n    - {since: \"2.0\", groups: [x25519], sources: [\"https://x\"]}\n", "newest-first"},
+		"equal since":    {"    - {since: \"1.0\", groups: [x25519], sources: [\"https://x\"]}\n    - {since: \"1.0.0\", groups: [x448], sources: [\"https://x\"]}\n", "newest-first"},
 	} {
-		if _, err := ParseLibraries([]byte(fmt.Sprintf(base, rows))); err == nil {
+		_, err := ParseLibraries([]byte(fmt.Sprintf(base, c.rows)))
+		if err == nil {
 			t.Errorf("%s: parsed; want an error", name)
+		} else if !strings.Contains(err.Error(), c.want) {
+			t.Errorf("%s: error %q does not mention %q", name, err, c.want)
 		}
+	}
+
+	// Two libraries backed by one purl must agree on their default groups, or
+	// the lookup by purl is ambiguous (last-write-wins).
+	shared := `- library: t/a
+  purls: [pkg:cargo/t]
+  kem: {status: none, sources: ["https://x"]}
+  signature: {status: none, sources: ["https://x"]}
+  checked_at: 2026-01-01
+  tls_default_groups:
+    - {since: "1.0", groups: [x25519], sources: ["https://x"]}
+- library: t/b
+  purls: [pkg:cargo/t]
+  kem: {status: none, sources: ["https://x"]}
+  signature: {status: none, sources: ["https://x"]}
+  checked_at: 2026-01-01
+  tls_default_groups:
+    - {since: "1.0", groups: [secp256r1], sources: ["https://x"]}
+`
+	if _, err := ParseLibraries([]byte(shared)); err == nil || !strings.Contains(err.Error(), "different support") {
+		t.Errorf("shared purl with different tls_default_groups: err = %v; want a different-support error", err)
 	}
 }
 
@@ -390,13 +422,34 @@ func TestResolveTLSGroup(t *testing.T) {
 	if _, ok := ResolveTLSGroup("not-a-group"); ok {
 		t.Error("an unknown spelling resolved; want a miss, never a guess")
 	}
-	// Every group in every tls_default_groups row must resolve: a row whose
-	// group the dataset cannot name would yield silent unassessed findings.
+	if _, ok := ResolveTLSGroup("GC256A"); ok {
+		t.Error("a GOST TLS group resolved; the dataset's GOST family is the symmetric one and must stay a miss")
+	}
+	// OpenSSL accepts several spellings of one group; they must agree.
+	a, _ := ResolveTLSGroup("secp256r1")
+	for _, alias := range []string{"prime256v1", "P-256"} {
+		if f, ok := ResolveTLSGroup(alias); !ok || f.Name != a.Name {
+			t.Errorf("ResolveTLSGroup(%q) = %s, %v; want the secp256r1 family (%s)", alias, f.Name, ok, a.Name)
+		}
+	}
+	// The SM2 group: pinned as the KNOWN LIMITATION the map's comment
+	// documents — kind stays dual because the dataset has no SM2
+	// key-agreement family. When one exists, this pin makes the fix visible.
+	if f, ok := ResolveTLSGroup("curveSM2"); !ok || f.Name != "SM2" || f.Kind != "dual" {
+		t.Errorf("ResolveTLSGroup(curveSM2) = %s/%s, %v; the documented limitation moved", f.Name, f.Kind, ok)
+	}
+	if f, ok := ResolveTLSGroup("curveSM2MLKEM768"); !ok || string(f.PQCStatus) != "hybrid" {
+		t.Errorf("ResolveTLSGroup(curveSM2MLKEM768) = %s/%s, %v; want the hybrid status", f.Name, f.PQCStatus, ok)
+	}
+	// Every group in every tls_default_groups row must resolve TO A FAMILY
+	// WITH A STATUS: a row whose group the dataset cannot name, or names
+	// with an empty verdict, would yield silent unassessed findings.
 	for _, e := range DefaultLibraries().Entries() {
 		for _, row := range e.TLSDefaultGroups {
 			for _, g := range row.Groups {
-				if _, ok := ResolveTLSGroup(g); !ok {
-					t.Errorf("%s: tls_default_groups group %q does not resolve", e.Library, g)
+				f, ok := ResolveTLSGroup(g)
+				if !ok || f.Name == "" || f.PQCStatus == "" {
+					t.Errorf("%s: tls_default_groups group %q resolves to %q/%q (ok=%v)", e.Library, g, f.Name, f.PQCStatus, ok)
 				}
 			}
 		}

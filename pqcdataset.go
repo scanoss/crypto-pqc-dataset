@@ -277,15 +277,27 @@ func (f *Family) clone() Family {
 // cheap one), and the finite-field ffdhe groups resolve to nothing at all.
 var tlsGroupFamilies = map[string]string{
 	"secp256r1": "ECDH", "secp384r1": "ECDH", "secp521r1": "ECDH",
-	"ffdhe2048": "DH", "ffdhe3072": "DH", "ffdhe4096": "DH",
+	"secp224r1": "ECDH",
+	// OpenSSL accepts the SECG/legacy spellings of the same groups in
+	// SSL_CTX_set1_groups_list, so a group extracted from code may arrive in
+	// any of them; they must resolve exactly like their registry spelling.
+	"prime256v1": "ECDH", "p-256": "ECDH", "p-384": "ECDH", "p-521": "ECDH",
+	// The brainpool TLS 1.3 groups (RFC 8734, IANA 31-33).
+	"brainpoolp256r1tls13": "ECDH", "brainpoolp384r1tls13": "ECDH",
+	"brainpoolp512r1tls13": "ECDH",
+	"ffdhe2048":            "DH", "ffdhe3072": "DH", "ffdhe4096": "DH",
 	"ffdhe6144": "DH", "ffdhe8192": "DH",
 	// OpenSSL's default list also names SM2 as a TLS group (RFC 8998) and the
 	// SM2+ML-KEM hybrid, which has no family of its own and lands in the
-	// generic Hybrid family. The GOST groups (GC256A..GC512C, RFC 9189) are
-	// deliberately NOT mapped: the dataset's GOST family is the symmetric
-	// cipher one (not_applicable), which would be the wrong verdict for a key
-	// agreement — and a stock OpenSSL never offers them anyway (the default
-	// list is filtered by what the loaded providers support).
+	// generic Hybrid family. KNOWN LIMITATION: the SM2 family's kind is dual,
+	// so curveSM2 keeps the dual-use migration priority — the very trap this
+	// map removes for secp256r1 — because the dataset has no SM2
+	// key-agreement family to redirect to; TestResolveTLSGroup pins it so a
+	// future family makes the fix visible. The GOST groups (GC256A..GC512C,
+	// RFC 9189) are deliberately NOT mapped: the dataset's GOST family is the
+	// symmetric cipher one (not_applicable), which would be the wrong verdict
+	// for a key agreement — and a stock OpenSSL never offers them anyway (the
+	// default list is filtered by what the loaded providers support).
 	"curvesm2": "SM2", "curvesm2mlkem768": "Hybrid",
 }
 

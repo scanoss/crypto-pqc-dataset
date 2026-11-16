@@ -909,10 +909,14 @@
     sources: ["https://go.dev/doc/go1.27", "https://pkg.go.dev/crypto/mldsa"]
     note: "Go 1.27 also added ML-DSA keys and signatures to crypto/x509 and ML-DSA SignatureScheme values for TLS 1.3 in crypto/tls."
   tls_default_groups:
+    - since: "1.26"
+      groups: [X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024, x25519, secp256r1, secp384r1, secp521r1]
+      sources: ["https://github.com/golang/go/blob/go1.26.0/src/crypto/tls/defaults.go", "https://go.dev/doc/go1.26"]
+      note: "Go 1.26 added the SecP hybrids to the default preferences (GODEBUG tlssecpmlkem=0 restores the pre-1.26 default). Go 1.27 keeps these seven; its MLKEM1024 is supported but not a default (verified at the go1.27.0 tag)."
     - since: "1.24"
       groups: [X25519MLKEM768, x25519, secp256r1, secp384r1, secp521r1]
-      sources: ["https://go.dev/doc/go1.24", "https://github.com/golang/go/blob/go1.26.0/src/crypto/tls/defaults.go"]
-      note: "defaultCurvePreferences, what a nil Config.CurvePreferences offers; GODEBUG tlsmlkem=0 drops the hybrid. Verified in the go1.26.0 source: the hybrids added later (SecP256r1MLKEM768, SecP384r1MLKEM1024, MLKEM1024) are supported but NOT in the default preferences."
+      sources: ["https://go.dev/doc/go1.24", "https://github.com/golang/go/blob/go1.24.0/src/crypto/tls/defaults.go"]
+      note: "defaultCurvePreferences, what a nil Config.CurvePreferences offers; GODEBUG tlsmlkem=0 drops the hybrid. Holds for 1.24 and 1.25."
     - since: "1.23"
       groups: [X25519Kyber768Draft00, x25519, secp256r1, secp384r1, secp521r1]
       sources: ["https://go.dev/doc/go1.23", "https://go.dev/doc/go1.24"]
@@ -4266,8 +4270,8 @@
       note: "The hybrid enters the aws-lc-rs DEFAULT_KX_GROUPS, offered last, until prefer-post-quantum became a default feature in 0.23.27."
     - since: "0.23.0"
       groups: [x25519, secp256r1, secp384r1]
-      sources: ["https://docs.rs/rustls/0.23.0/rustls/crypto/aws_lc_rs/constant.DEFAULT_KX_GROUPS.html"]
-      note: "Classical only, both providers."
+      sources: ["https://github.com/rustls/rustls/blob/v/0.23.0/rustls/src/crypto/ring/kx.rs"]
+      note: "Classical only, both providers; at 0.23.0 the list is the ALL_KX_GROUPS static (the DEFAULT_KX_GROUPS spelling only exists from 0.23.22)."
   checked_at: 2026-11-11
 - library: rust/rustls-native-certs
   purls: [pkg:cargo/rustls-native-certs]

@@ -192,6 +192,7 @@ that are not `vulnerable` get no priority.
 | `kem`, `signature` | `status`: `available`, `planned`, `none` or `not_applicable`. |
 | `kem.since`, `kem.apis`, `kem.sources` | Required when `available`: the first version with the API, its fully qualified names and the sources. `planned` requires `sources`. |
 | `checked_at` | `YYYY-MM-DD`, not in the future; required for `planned` and `none`. |
+| `tls_default_groups` | Optional: the default TLS key-exchange groups per version, newest-first — `since` (version), `groups` (IANA spellings), `sources` (URLs), `note`. `DefaultTLSGroups(purlOrID, version)` answers the newest row the version reaches, and nothing below the oldest row; `ResolveTLSGroup` resolves each group spelling in its key-exchange context. |
 
 Tests keep it complete and current:
 
