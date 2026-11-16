@@ -228,7 +228,18 @@ func (e *Library) validate() error {
 			return fmt.Errorf("%s: %w", kind, err)
 		}
 	}
-	for i, row := range e.TLSDefaultGroups {
+	if err := validateTLSDefaultGroups(e.TLSDefaultGroups); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateTLSDefaultGroups checks one entry's tls_default_groups rows: every
+// row versioned, non-empty and cited with URLs, and the rows newest-first and
+// strictly so — lookup answers with the first row the version reaches, and two
+// rows with one Since would shadow each other.
+func validateTLSDefaultGroups(rows []TLSDefaultGroups) error {
+	for i, row := range rows {
 		if !modsemver.IsValid(canonicalVersion(row.Since)) {
 			return fmt.Errorf("tls_default_groups[%d]: since %q is not a version", i, row.Since)
 		}
@@ -243,10 +254,8 @@ func (e *Library) validate() error {
 				return fmt.Errorf("tls_default_groups[%d]: source %q is not a URL", i, src)
 			}
 		}
-		// Newest-first and strictly so: lookup answers with the first row the
-		// version reaches, and two rows with one Since would shadow each other.
-		if i > 0 && versionAtLeast(row.Since, e.TLSDefaultGroups[i-1].Since) {
-			return fmt.Errorf("tls_default_groups[%d]: since %q is not older than the row above (%q); list rows newest-first", i, row.Since, e.TLSDefaultGroups[i-1].Since)
+		if i > 0 && versionAtLeast(row.Since, rows[i-1].Since) {
+			return fmt.Errorf("tls_default_groups[%d]: since %q is not older than the row above (%q); list rows newest-first", i, row.Since, rows[i-1].Since)
 		}
 	}
 	return nil
