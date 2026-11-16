@@ -14,8 +14,10 @@ The dataset version is the module tag (`vX.Y.Z`) and is exposed by `Version()`.
   groups (IANA spellings, newest-first, every row cited), with
   `DefaultTLSGroups(purlOrID, version)` answering the newest row the version
   reaches — by purl or by library id — and nothing below the oldest row. First
-  data: go/crypto, rust/rustls, c/openssl, c/aws-lc and java/bouncycastle, each
-  row verified against a tagged upstream source. python/ssl carries no rows (its
+  data: go/crypto, rust/rustls, c/openssl, c/aws-lc, java/bouncycastle and
+  javascript/node-tls (whose defaults are the bundled OpenSSL's — verified in
+  Node's own deps, LTS backports of OpenSSL 3.5 noted), each row verified
+  against a tagged upstream source. python/ssl carries no rows (its
   defaults are the linked OpenSSL's) and java/jca none either (keyed by a JDK
   version no scan captures).
 - `ResolveTLSGroup`: resolves an IANA TLS supported-group spelling in its

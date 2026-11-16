@@ -2553,6 +2553,15 @@
     status: none
     sources: ["https://nodejs.org/docs/v26.13.1/api/tls.html", "https://github.com/nodejs/node/blob/v26.13.1/src/crypto/crypto_context.cc", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md", "https://nodejs.org/en/blog/release/v24.5.0", "https://nodejs.org/en/blog/release/v22.20.0"]
     note: "The tls module has no ML-DSA API of its own: the sigalgs option passes an OpenSSL sigalgs string, and the mldsa44/65/87 TLS schemes come from the bundled OpenSSL 3.5 or later, which lists them by default. Node.js bundles OpenSSL 3.5 since 24.5.0 and 22.20.0."
+  tls_default_groups:
+    - since: "25.0.0"
+      groups: [X25519MLKEM768, x25519, secp256r1, X448, secp384r1, secp521r1, ffdhe2048, ffdhe3072]
+      sources: ["https://github.com/nodejs/node/blob/v25.0.0/deps/openssl/openssl/ssl/t1_lib.c", "https://github.com/nodejs/node/blob/v25.0.0/deps/openssl/openssl/VERSION.dat", "https://github.com/nodejs/node/blob/v25.0.0/src/crypto/crypto_context.cc"]
+      note: "Node's own defaults are the bundled OpenSSL's: the default ecdhCurve 'auto' makes crypto_context.cc skip SSL_CTX_set1_curves_list entirely, so the bundled TLS_DEFAULT_GROUP_LIST applies — OpenSSL 3.5's hybrid-first list from Node 25 on (VERSION.dat 3.5.4, verified in Node's own deps). BRANCH CAVEAT these linear rows cannot express: inside the LTS lines, 22.20.0+ and 24.5.0+ also bundle OpenSSL 3.5 (verified: 22.19.0/24.4.0/23.0.0 are 3.0), so those patch ranges really offer the hybrid list while this table answers them the classical row below; the verdict is unaffected either way, since both lists keep classical groups."
+    - since: "20.0.0"
+      groups: [x25519, secp256r1, X448, secp521r1, secp384r1, ffdhe2048, ffdhe3072, ffdhe4096, ffdhe6144, ffdhe8192]
+      sources: ["https://github.com/nodejs/node/blob/v24.0.0/deps/openssl/openssl/ssl/t1_lib.c", "https://github.com/nodejs/node/blob/v20.0.0/deps/openssl/openssl/VERSION.dat"]
+      note: "The bundled OpenSSL 3.0 classical default (minus the provider-filtered GOST groups), verified in Node's own deps at v24.0.0 (3.0.16) and the bundle version at v20.0.0 (3.0.8). Node releases before 20 predate this entry and get no answer. The Node version itself is not captured from a scan today (package.json engines / .nvmrc are candidates): like the go/crypto rows, these are latent until that capture lands."
   checked_at: 2026-11-11
 - library: javascript/noise-protocol
   purls: [pkg:npm/noise-protocol]
