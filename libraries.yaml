@@ -412,11 +412,11 @@
   tls_default_groups:
     - since: "4.0"
       groups: [X25519MLKEM768, SecP256r1MLKEM768, curveSM2MLKEM768, x25519, secp256r1, X448, secp384r1, secp521r1, curveSM2, ffdhe2048, ffdhe3072]
-      sources: ["https://github.com/openssl/openssl/blob/master/ssl/t1_lib.c", "https://github.com/openssl/openssl/blob/master/CHANGES.md"]
+      sources: ["https://github.com/openssl/openssl/blob/openssl-4.0.0/ssl/t1_lib.c", "https://github.com/openssl/openssl/blob/openssl-4.0.0/CHANGES.md"]
       note: "TLS_DEFAULT_GROUP_LIST on master (4.x): 4.0 appended SecP256r1MLKEM768 and curveSM2MLKEM768 after X25519MLKEM768 and inserted curveSM2 (CHANGES, 'Changes between 3.6 and 4.0.0'). The ?-prefixed entries are dropped silently when the loaded providers do not implement them, so a stock build offers the subset its providers support."
     - since: "3.5"
       groups: [X25519MLKEM768, x25519, secp256r1, X448, secp384r1, secp521r1, ffdhe2048, ffdhe3072]
-      sources: ["https://github.com/openssl/openssl/blob/master/CHANGES.md"]
+      sources: ["https://github.com/openssl/openssl/blob/openssl-3.5.0/ssl/t1_lib.c", "https://github.com/openssl/openssl/blob/openssl-3.5.0/CHANGES.md"]
       note: "Quoted verbatim in CHANGES ('Changes between 3.4 and 3.5.0'): two key shares (X25519MLKEM768 and X25519) sent by default; GOST groups and FFDHE groups larger than 3072 bits no longer enabled by default."
     - since: "3.0"
       groups: [x25519, secp256r1, X448, secp521r1, secp384r1, ffdhe2048, ffdhe3072, ffdhe4096, ffdhe6144, ffdhe8192]
