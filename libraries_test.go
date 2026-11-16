@@ -368,3 +368,37 @@ func TestTLSDefaultGroupsValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestResolveTLSGroup(t *testing.T) {
+	for _, c := range []struct{ name, family, kind string }{
+		// The two context overrides: a TLS group is a key exchange, so the
+		// curve names must not land in the dual-use EC family, and the ffdhe
+		// groups must resolve at all.
+		{"secp256r1", "ECDH", "key-agreement"},
+		{"secp521r1", "ECDH", "key-agreement"},
+		{"ffdhe2048", "DH", "key-agreement"},
+		// Delegated: already correct on their own.
+		{"x25519", "ECDH", "key-agreement"},
+		{"X25519MLKEM768", "X25519MLKEM768", ""},
+		{"X25519Kyber768Draft00", "X25519MLKEM768", ""},
+	} {
+		f, ok := ResolveTLSGroup(c.name)
+		if !ok || f.Name != c.family || string(f.Kind) != c.kind {
+			t.Errorf("ResolveTLSGroup(%q) = %s/%s, %v; want %s/%s", c.name, f.Name, f.Kind, ok, c.family, c.kind)
+		}
+	}
+	if _, ok := ResolveTLSGroup("not-a-group"); ok {
+		t.Error("an unknown spelling resolved; want a miss, never a guess")
+	}
+	// Every group in every tls_default_groups row must resolve: a row whose
+	// group the dataset cannot name would yield silent unassessed findings.
+	for _, e := range DefaultLibraries().Entries() {
+		for _, row := range e.TLSDefaultGroups {
+			for _, g := range row.Groups {
+				if _, ok := ResolveTLSGroup(g); !ok {
+					t.Errorf("%s: tls_default_groups group %q does not resolve", e.Library, g)
+				}
+			}
+		}
+	}
+}
