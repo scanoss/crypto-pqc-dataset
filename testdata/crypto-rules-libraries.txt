@@ -398,4 +398,3 @@ rust/webpki	pkg:cargo/webpki
 rust/whirlpool	pkg:cargo/whirlpool
 rust/x25519-dalek	pkg:cargo/x25519-dalek
 rust/x509-parser	pkg:cargo/x509-parser
-typescript/crypto	-
