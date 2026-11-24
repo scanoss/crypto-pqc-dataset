@@ -239,6 +239,7 @@ python/certbot	pkg:pypi/certbot
 python/coincurve	pkg:pypi/coincurve
 python/crypt	-
 python/cryptography	pkg:pypi/cryptography
+python/ctypes	-
 python/ecdsa	pkg:pypi/ecdsa
 python/eth-account	pkg:pypi/eth-account
 python/eth-hash	pkg:pypi/eth-hash
@@ -269,6 +270,7 @@ python/pykmip	pkg:pypi/pykmip
 python/pynacl	pkg:pypi/pynacl
 python/pyopenssl	pkg:pypi/pyopenssl
 python/pyotp	pkg:pypi/pyotp
+python/pypdf	pkg:pypi/pypdf
 python/python-gnupg	pkg:pypi/python-gnupg
 python/python-jose	pkg:pypi/python-jose
 python/random	-
@@ -279,6 +281,7 @@ python/ssl	-
 python/tenseal	pkg:pypi/tenseal
 python/truststore	pkg:pypi/truststore
 python/twofish	pkg:pypi/twofish
+python/websockets	pkg:pypi/websockets
 python/werkzeug	pkg:pypi/werkzeug
 ruby/digest	-
 ruby/openssl	-
