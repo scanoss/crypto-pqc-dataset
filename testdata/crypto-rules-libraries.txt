@@ -172,6 +172,9 @@ javascript/ethereumjs-util-scoped	pkg:npm/%40ethereumjs/util
 javascript/ethers	pkg:npm/ethers
 javascript/fast-jwt	pkg:npm/fast-jwt
 javascript/fast-sha256	pkg:npm/fast-sha256
+javascript/fastify-cookie	pkg:npm/%40fastify/cookie
+javascript/gatsby	-
+javascript/gatsby-core-utils	pkg:npm/gatsby-core-utils
 javascript/google-cloud-kms	pkg:npm/%40google-cloud/kms
 javascript/hash-js	pkg:npm/hash.js
 javascript/iron-webcrypto	pkg:npm/iron-webcrypto
