@@ -103,8 +103,10 @@ go/utls	pkg:golang/github.com/refraction-networking/utls
 go/vault-sdk	pkg:golang/github.com/hashicorp/vault/sdk
 go/wireguard	pkg:golang/golang.zx2c4.com/wireguard
 go/xcrypto	pkg:golang/golang.org/x/crypto
+go/xsys	pkg:golang/golang.org/x/sys
 java/aerogear-otp-java	pkg:maven/org.jboss.aerogear/aerogear-otp-java
 java/apache-sshd	pkg:maven/org.apache.sshd/sshd-common,pkg:maven/org.apache.sshd/sshd-core
+java/apksig	pkg:maven/com.android.tools.build/apksig
 java/argon2-jvm	pkg:maven/de.mkammerer/argon2-jvm
 java/aws-kms	pkg:maven/software.amazon.awssdk/kms
 java/aws-kms-v1	pkg:maven/com.amazonaws/aws-java-sdk-kms
@@ -122,6 +124,7 @@ java/fusionauth-jwt	pkg:maven/io.fusionauth/fusionauth-jwt
 java/gcp-kms	pkg:maven/com.google.cloud/google-cloud-kms
 java/googleauth	pkg:maven/com.warrenstrange/googleauth
 java/hutool-crypto	pkg:maven/cn.hutool/hutool-crypto
+java/hutool-jwt	pkg:maven/cn.hutool/hutool-jwt
 java/i2p-eddsa	pkg:maven/net.i2p.crypto/eddsa
 java/jasypt	pkg:maven/org.jasypt/jasypt
 java/java-jwt	pkg:maven/com.auth0/java-jwt
@@ -169,6 +172,9 @@ javascript/ethereumjs-util-scoped	pkg:npm/%40ethereumjs/util
 javascript/ethers	pkg:npm/ethers
 javascript/fast-jwt	pkg:npm/fast-jwt
 javascript/fast-sha256	pkg:npm/fast-sha256
+javascript/fastify-cookie	pkg:npm/%40fastify/cookie
+javascript/gatsby	-
+javascript/gatsby-core-utils	pkg:npm/gatsby-core-utils
 javascript/google-cloud-kms	pkg:npm/%40google-cloud/kms
 javascript/hash-js	pkg:npm/hash.js
 javascript/iron-webcrypto	pkg:npm/iron-webcrypto
@@ -233,6 +239,7 @@ python/certbot	pkg:pypi/certbot
 python/coincurve	pkg:pypi/coincurve
 python/crypt	-
 python/cryptography	pkg:pypi/cryptography
+python/ctypes	-
 python/ecdsa	pkg:pypi/ecdsa
 python/eth-account	pkg:pypi/eth-account
 python/eth-hash	pkg:pypi/eth-hash
@@ -263,6 +270,7 @@ python/pykmip	pkg:pypi/pykmip
 python/pynacl	pkg:pypi/pynacl
 python/pyopenssl	pkg:pypi/pyopenssl
 python/pyotp	pkg:pypi/pyotp
+python/pypdf	pkg:pypi/pypdf
 python/python-gnupg	pkg:pypi/python-gnupg
 python/python-jose	pkg:pypi/python-jose
 python/random	-
@@ -273,6 +281,7 @@ python/ssl	-
 python/tenseal	pkg:pypi/tenseal
 python/truststore	pkg:pypi/truststore
 python/twofish	pkg:pypi/twofish
+python/websockets	pkg:pypi/websockets
 python/werkzeug	pkg:pypi/werkzeug
 ruby/digest	-
 ruby/openssl	-
@@ -379,6 +388,7 @@ rust/sequoia-openpgp	pkg:cargo/sequoia-openpgp
 rust/sha1	pkg:cargo/sha1
 rust/sha2	pkg:cargo/sha2
 rust/sha3	pkg:cargo/sha3
+rust/siphasher	pkg:cargo/siphasher
 rust/sm2	pkg:cargo/sm2
 rust/sm3	pkg:cargo/sm3
 rust/sm4	pkg:cargo/sm4
@@ -394,4 +404,3 @@ rust/webpki	pkg:cargo/webpki
 rust/whirlpool	pkg:cargo/whirlpool
 rust/x25519-dalek	pkg:cargo/x25519-dalek
 rust/x509-parser	pkg:cargo/x509-parser
-typescript/crypto	-
